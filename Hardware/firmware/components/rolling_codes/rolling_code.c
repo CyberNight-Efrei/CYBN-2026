@@ -1,0 +1,234 @@
+#include <stdint.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <inttypes.h>
+#include "nvs.h"
+#include "nvs_flash.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_log.h"
+#include "esp_bt.h"
+#include "esp_bt_main.h"
+#include "esp_gap_bt_api.h"
+#include "esp_bt_device.h"
+#include "esp_spp_api.h"
+
+#include "rolling_codes.h"
+#include "crypto.h"
+
+#define FLAG "CYBN{la_stack_bluetooth_etait_galere_a_implementer_mdr}"
+
+#define SPP_TAG "ROLLING_CODES"
+#define SPP_SERVER_NAME "ROLLING_CODES_SERVER"
+
+static const char local_device_name[] = "CYBERNIGHT-SMARTLOCK";
+static const esp_spp_mode_t esp_spp_mode = ESP_SPP_MODE_CB;
+static const bool esp_spp_enable_l2cap_ertm = true;
+
+static const esp_spp_sec_t sec_mask = ESP_SPP_SEC_AUTHENTICATE;
+static const esp_spp_role_t role_slave = ESP_SPP_ROLE_SLAVE;
+
+static const char status_message[] = "Battery: 76%\nPosition: LOCKED\nAuthor: 0x7fff00";
+static const char lock_message[] = "ok";
+static const char unlock_message[] = FLAG;
+static const char unknown_command_message[] = "Unknown command.\nAvailable: STATUS, LOCK, UNLOCK";
+static const char wrong_length_message[] = "Err: wrong length";
+static const char wrong_code_message[] = "Err: wrong code";
+static const char correct_code_message[] = "ok";
+
+static uint32_t previous_code;
+
+static enum conn_status_t {
+    NOT_CONNECTED,
+    NOT_AUTHENTICATED,
+    AUTHENTICATED,
+    TO_DISCONNECT
+} conn_status = NOT_CONNECTED;
+
+static uint32_t conn_handle;
+
+static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
+{
+    switch (event)
+    {
+    case ESP_SPP_INIT_EVT:
+        if (param->init.status == ESP_SPP_SUCCESS)
+        {
+            esp_spp_start_srv(sec_mask, role_slave, 1, SPP_SERVER_NAME);
+        }
+        else
+        {
+            ESP_LOGE(SPP_TAG, "ESP_SPP_INIT_EVT status:%d", param->init.status);
+        }
+        break;
+    case ESP_SPP_START_EVT:
+        if (param->start.status == ESP_SPP_SUCCESS)
+        {
+            esp_bt_gap_set_device_name(local_device_name);
+            esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE);
+        }
+        else
+        {
+            ESP_LOGE(SPP_TAG, "ESP_SPP_START_EVT status:%d", param->start.status);
+        }
+        break;
+    case ESP_SPP_SRV_OPEN_EVT:
+        if (conn_status != NOT_CONNECTED)
+        {
+            esp_spp_disconnect(param->open.handle);
+            ESP_LOGI(SPP_TAG, "Connection rejected: already in use");
+        }
+        else
+        {
+            conn_status = NOT_AUTHENTICATED;
+            conn_handle = param->open.handle;
+            uint32_t p = previous_code;
+            previous_code = next_code();
+            esp_spp_write(param->open.handle, sizeof(p), (uint8_t *)(&p));
+            ESP_LOGI(SPP_TAG, "Handle %d connected", conn_handle);
+            ESP_LOGI(SPP_TAG, "Initializing auth. p: %x", p);
+        }
+        break;
+    case ESP_SPP_CLOSE_EVT:
+        if (param->close.handle == conn_handle && conn_status != NOT_CONNECTED)
+        {
+            conn_status = NOT_CONNECTED;
+        }
+        ESP_LOGI(SPP_TAG, "Handle %d disconnected", param->close.handle);
+        break;
+    case ESP_SPP_DATA_IND_EVT:
+        if (param->data_ind.handle != conn_handle)
+        {
+            esp_spp_disconnect(param->data_ind.handle);
+            break;
+        }
+
+        switch (conn_status)
+        {
+        case NOT_CONNECTED:
+            /* wtf */
+            esp_spp_disconnect(param->data_ind.handle);
+            break;
+        case NOT_AUTHENTICATED:
+            if (param->data_ind.len != sizeof(previous_code))
+            {
+                conn_status = TO_DISCONNECT;
+                esp_spp_write(param->data_ind.handle, strlen(wrong_length_message), (uint8_t *)wrong_length_message);
+                ESP_LOGI(SPP_TAG, "Wrong code length: %d instead of %d", param->data_ind.len, sizeof(previous_code));
+                break;
+            }
+
+            uint32_t x;
+            memcpy(&x, param->data_ind.data, sizeof(x));
+
+            if (x != previous_code)
+            {
+                conn_status = TO_DISCONNECT;
+                esp_spp_write(param->data_ind.handle, strlen(wrong_code_message), (uint8_t *)wrong_code_message);
+                ESP_LOGI(SPP_TAG, "Wrong code : %x instead of %x", x, previous_code);
+                break;
+            }
+
+            conn_status = AUTHENTICATED;
+            esp_spp_write(param->data_ind.handle, strlen(correct_code_message), (uint8_t *)correct_code_message);
+            ESP_LOGI(SPP_TAG, "Auth!");
+            break;
+        case AUTHENTICATED:
+            if (strncmp((char *)param->data_ind.data, "LOCK", strlen("LOCK")) == 0)
+            {
+                esp_spp_write(param->data_ind.handle, strlen(lock_message), (uint8_t *)lock_message);
+                ESP_LOGI(SPP_TAG, "Lock");
+            }
+            else if (strncmp((char *)param->data_ind.data, "UNLOCK", strlen("UNLOCK")) == 0)
+            {
+                esp_spp_write(param->data_ind.handle, strlen(unlock_message), (uint8_t *)unlock_message);
+                ESP_LOGI(SPP_TAG, "Unlock");
+            }
+            else if (strncmp((char *)param->data_ind.data, "STATUS", strlen("STATUS")) == 0)
+            {
+                esp_spp_write(param->data_ind.handle, strlen(status_message), (uint8_t *)status_message);
+                ESP_LOGI(SPP_TAG, "Status");
+            }
+            else
+            {
+                esp_spp_write(param->data_ind.handle, strlen(unknown_command_message), (uint8_t *)unknown_command_message);
+                ESP_LOGI(SPP_TAG, "Unkown command");
+            }
+            break;
+        default:
+            break;
+        }
+        break;
+    case ESP_SPP_WRITE_EVT:
+        if (param->write.handle != conn_handle || conn_status == TO_DISCONNECT)
+        {
+            esp_spp_disconnect(param->write.handle);
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+void rolling_codes_init(void)
+{
+    code_init();
+    previous_code = next_code();
+
+    esp_err_t ret;
+
+    ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_BLE));
+
+    esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+    if ((ret = esp_bt_controller_init(&bt_cfg)) != ESP_OK)
+    {
+        ESP_LOGE(SPP_TAG, "%s initialize controller failed: %s", __func__, esp_err_to_name(ret));
+        return;
+    }
+
+    if ((ret = esp_bt_controller_enable(ESP_BT_MODE_CLASSIC_BT)) != ESP_OK)
+    {
+        ESP_LOGE(SPP_TAG, "%s enable controller failed: %s", __func__, esp_err_to_name(ret));
+        return;
+    }
+
+    esp_bluedroid_config_t bluedroid_cfg = BT_BLUEDROID_INIT_CONFIG_DEFAULT();
+    bluedroid_cfg.ssp_en = false;
+    if ((ret = esp_bluedroid_init_with_cfg(&bluedroid_cfg)) != ESP_OK)
+    {
+        ESP_LOGE(SPP_TAG, "%s initialize bluedroid failed: %s", __func__, esp_err_to_name(ret));
+        return;
+    }
+
+    if ((ret = esp_bluedroid_enable()) != ESP_OK)
+    {
+        ESP_LOGE(SPP_TAG, "%s enable bluedroid failed: %s", __func__, esp_err_to_name(ret));
+        return;
+    }
+
+    if ((ret = esp_spp_register_callback(esp_spp_cb)) != ESP_OK)
+    {
+        ESP_LOGE(SPP_TAG, "%s spp register failed: %s", __func__, esp_err_to_name(ret));
+        return;
+    }
+
+    esp_spp_cfg_t bt_spp_cfg = {
+        .mode = esp_spp_mode,
+        .enable_l2cap_ertm = esp_spp_enable_l2cap_ertm,
+        .tx_buffer_size = 0, /* Only used for ESP_SPP_MODE_VFS mode */
+    };
+    if ((ret = esp_spp_enhanced_init(&bt_spp_cfg)) != ESP_OK)
+    {
+        ESP_LOGE(SPP_TAG, "%s spp init failed: %s", __func__, esp_err_to_name(ret));
+        return;
+    }
+
+    /*
+     * Set default parameters for Legacy Pairing
+     * Use variable pin, input pin code when pairing
+     */
+    esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_FIXED;
+    esp_bt_pin_code_t pin_code = {'1', '2', '3', '4'};
+    esp_bt_gap_set_pin(pin_type, 4, pin_code);
+}

@@ -1,0 +1,3 @@
+idf_component_register(SRCS "rolling_code.c" "crypto.c"
+                    PRIV_REQUIRES bt nvs_flash
+                    INCLUDE_DIRS ".")
