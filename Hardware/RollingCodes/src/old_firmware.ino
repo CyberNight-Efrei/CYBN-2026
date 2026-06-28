@@ -2,6 +2,7 @@
 
 #define SEED 0x0
 #define KEY 0x0
+#define ROUNDS 3431937419U
 #define FLAG "CYBN{NOT_A_FLAG}"
 
 #define BT_STATE_PIN 2
@@ -80,6 +81,8 @@ void loop()
             if (x == code)
             {
                 conn_status = AUTHENTICATED;
+                Serial.print("ok");
+                Serial.flush();
             }
             else
             {
@@ -113,7 +116,7 @@ void loop()
             }
             else if (strcmp(incoming_command, "STATUS") == 0)
             {
-                Serial.print("Battery: 76%\nPosition: LOCKED\nAuthor: 0x7fff00");
+                Serial.print("Battery: 76%\nPosition: LOCKED\nAuthor: gregoire");
             }
             else
             {
