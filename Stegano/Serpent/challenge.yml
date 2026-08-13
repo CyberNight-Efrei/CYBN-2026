@@ -1,0 +1,47 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Serpent"
+category: Stegano
+description: |-
+  Vous n'avez jamais trouvé ce que cachaient mon lapin ou mon escargot... Peut-être arriverez-vous à déceler le secret de mon serpent ?
+
+attribution: "NozZy"
+
+flags:
+    # A static case sensitive flag
+    - CYBN{REDACTED}
+
+
+tags:
+    - Hard
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+# connection_info is used to provide a link, hostname, or instructions on how to connect to a challenge
+# ========== Do NOT use if provided for docker above =============
+
+# Only provided files to challengers
+# NO directories, accept archives (.zip, .7z, .tgz)
+files:
+    - src/serpent.png
+
+
+# Specifies what version of the challenge specification was used.
+# Subject to change until ctfcli v1.0.0
+version: "0.1"
