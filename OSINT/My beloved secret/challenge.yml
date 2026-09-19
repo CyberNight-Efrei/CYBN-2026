@@ -1,0 +1,34 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "My beloved secret"
+category: OSINT
+description: |-
+  J'ai retrouvé ce dossier d'un ancien projet en fouillant dans mon ordi. L'époque où je partageais des outils que je concevais. Par contre, incapable de remettre la main sur la clé utilisée pour le secret que j'avais gardé.
+
+attribution: "AUTHOR"
+
+flags:
+    # A static case sensitive flag
+    - CYBN{l0ok1Ng_oN_1nT3rNEt_15_Ez_R1gH7?}
+
+tags:
+    - Easy
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+files:
+    - src/TIAEDT.py
+    - src/secret.txt
