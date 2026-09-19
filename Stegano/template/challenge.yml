@@ -1,0 +1,38 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "template"
+category: Stegano
+description: |-
+  Mon boss vient de m'envoyer ce fichier, et m'a dit que je pouvais m'en servir comme template pour les nouvelles affiches.py
+
+  J'avoue ne rien avoir compris à ce fichier, je n'arrive même pas à l'ouvrir.
+
+attribution: "AUTHOR"
+
+flags:
+    # A static case sensitive flag
+    - CYBN{M4yb3_Th15_I5_@_Fl4g?}
+
+tags:
+    - Easy
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+
+# Only provided files to challengers
+# NO directories, accept archives (.zip, .7z, .tgz)
+files:
+    - src/template
