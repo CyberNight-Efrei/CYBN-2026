@@ -1,0 +1,69 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Not Secured Access"
+category: Forensics
+description: |-
+  Mesdames, Messieurs, l'heure est grave.
+
+  Notre organisation, la NSA, suspecte une malveillance interne.
+  Un fichier sensible - accessible uniquement depuis les postes du 17e étage - a été retrouvé mis en vente sur le dark web. Ce dernier a par la suite été rendu public.
+
+  Grâce à cette révélation publique, nous avons pu confirmer plusieurs choses :
+  - La crédibilité de la fuite : il s'agt bien du vrai fichier
+  - La date de la fuite : le contenu du fichier nous permet d'estimer précisément sa copie le jour du 14 septembre de cette année.
+
+  Puisque une malveuillance interne est suspectée, nous faisons appel à une entité externe pour analyser les différents éléments, et repérer le coupable.
+
+  Tous les niveaux d'accréditation ne permettent pas d'accéder à ce fichier, et je doutez qu'un employé de chez nous ait été assez naïf pour effectuer ceci sur son propre poste. Nous ne recrutons que les meilleurs après tout.
+
+  A vous d'identifier :
+  1. Le nom du coupable
+  2. Le nom du poste où le vol a été effectué
+  3. Le moment approximatif où à eu lieu le vol, arrondi à la dizaine de minute la plus proche (eg. 12:27 -> 12:30 ; 18:56 -> 19:00 ; 09:42 -> 09:40)
+
+  Format : `CYBN{Nom-COUPABLE_NOMPOSTE_hh:mm}`
+
+  Exemple :
+  1. Michel DURAND
+  2. DESKTOP123456
+  3. 15:47
+  Flag : `CYBN{Michel-DURAND_DESKTOP123456_15:50}`
+
+attribution: "NozZy"
+
+flags:
+    # A static case sensitive flag created with a dictionary
+    - {
+        type: "static",
+        content: "CYBN{Clément-TAL_NSA-J2XV2AHD_16:00}",
+        data: "case_insensitive",
+    }
+
+tags:
+    - Medium
+# </============ REQUIRED ============>
+
+# <============ OPTIONAL ============>
+
+
+# Can be removed if unused
+attempts: 5
+
+# Only provided files to challengers
+# NO directories, accept archives (.zip, .7z, .tgz)
+files:
+    - src/tropdechoses
