@@ -11,7 +11,7 @@
 14-09-2026 08:39:22.289 [Authorized] 558a42b1-48b6-47b3-93a2-8fe2a83c5681 EXIT "558a42b1-48b6-47b3-93a2-8fe2a83c5681 was authorized to exit"
 14-09-2026 08:47:12.497 [Authorized] 08b88a15-8cfb-4a1e-8f15-d835e5004430 ENTRY "08b88a15-8cfb-4a1e-8f15-d835e5004430 was authorized to enter"
 14-09-2026 08:52:33.170 [Authorized] 43e97baa-f428-42f0-ab73-cb2882e94686 ENTRY "43e97baa-f428-42f0-ab73-cb2882e94686 was authorized to enter"
-14-09-2026 09:02:23.788 [Authorized] 558a42b1-48b6-47b3-93a2-8fe2a83c5681 ENTRY "558a42b1-48b6-47b3-93a2-8fe2a83c5681 was authorized to exit"
+14-09-2026 09:02:23.788 [Authorized] 558a42b1-48b6-47b3-93a2-8fe2a83c5681 ENTRY "558a42b1-48b6-47b3-93a2-8fe2a83c5681 was authorized to enter"
 14-09-2026 10:29:27.718 [Authorized] 781d0349-1aa2-4f6b-b0a9-fd7b7b812db3 EXIT "781d0349-1aa2-4f6b-b0a9-fd7b7b812db3 was authorized to exit"
 14-09-2026 10:43:02.492 [Authorized] 781d0349-1aa2-4f6b-b0a9-fd7b7b812db3 ENTRY "781d0349-1aa2-4f6b-b0a9-fd7b7b812db3 was authorized to enter"
 14-09-2026 10:49:51.768 [Authorized] 01e4d1c9-3955-4309-a5dc-43d37f1c1eb3 EXIT "01e4d1c9-3955-4309-a5dc-43d37f1c1eb3 was authorized to exit"
