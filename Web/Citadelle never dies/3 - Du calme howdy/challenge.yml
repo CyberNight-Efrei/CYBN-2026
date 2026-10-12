@@ -1,0 +1,35 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+name: "Citadelle never dies - Du calme howdy"
+category: Web
+description: |-
+  # Le Roi s'en mêle
+
+  Les comptables ont été jetés aux oubliettes. À partir d'**un trillion d'écus** (10^18), c'est le Roi qui vérifie en personne.
+
+  Le Roi ne croit que ce qu'il voit : il **rejoue ta partie, achat par achat**, selon les règles du jeu, et il ne mesure le temps qu'avec **son propre sceau**.
+  Le moindre achat que tu n'aurais pas pu te payer, le moindre clic de trop, et tu repars bredouille.
+
+  Il ne se justifie auprès de personne.
+
+  Format : `CYBN{...}`
+attribution: "Mathu_lmn"
+
+flags:
+    - CYBN{L4_C1t4d3ll3_N3_M3uRt_J4m41s_H0wdy}
+
+tags:
+    - Hard
+
+connection_info: http://CHANGEME:3000
+
+next: null

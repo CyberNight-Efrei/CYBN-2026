@@ -1,0 +1,38 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Citadelle never dies - Le trésorier"
+category: Web
+description: |-
+  # Le trésorier se méfie
+
+  Après l'affaire des mille milliards, le trésorier a embauché des comptables.
+  Désormais, au-delà d'**un billiard d'écus** (10^15), il épluche chaque livre de comptes avant de payer.
+
+  Il est pointilleux, mais au moins il explique toujours pourquoi il refuse.
+
+  Format : `CYBN{...}`
+attribution: "Mathu_lmn"
+
+flags:
+    - CYBN{Th3_Tr34sur3r_C4n_C0unt_bUt_N0t_W41t}
+
+tags:
+    - Medium
+
+connection_info: http://CHANGEME:3000
+
+requirements:
+    - "Citadelle never dies - Getting started"
+
+next: "Citadelle never dies - Du calme howdy"
