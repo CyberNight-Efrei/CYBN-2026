@@ -1,0 +1,21 @@
+#badge {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  padding: 6px 12px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#badge .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #2ecc71;
+}
+.hidden { display: none; }

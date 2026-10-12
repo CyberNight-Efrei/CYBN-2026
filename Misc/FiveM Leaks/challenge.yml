@@ -1,0 +1,36 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "FiveM Leaks"
+category: Misc
+description: |-
+  # Un cadeau empoisonné
+
+  On a trouvé cet anti-cheat "gratuit" en vente sur un forum de leaks FiveM, puis balancé publiquement. Trop beau pour être honnête.
+
+  Un admin l'a installé sur son serveur... et depuis, n'importe qui semble pouvoir s'octroyer les pleins pouvoirs.
+
+  Trouve la clé pour t'octroyer les droits d'admin et enfin pouvoir reprendre le contrôle du serveur.
+
+  Format : `CYBN{...}`
+attribution: "Mathu_lmn"
+
+flags:
+    - CYBN{s4y_bye_bye_t0_y0ur_fxserver_6b8c17e1}
+
+tags:
+    - Easy
+
+# <============ OPTIONAL ============>
+files:
+    - city_guard.zip

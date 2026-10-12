@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="badge" class="hidden">
+    <span class="dot"></span>
+    <span id="label">city_guard</span>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    (function () {
+      fetch('https://city_guard/m', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ s: 't0_' })
+      }).catch(function () {});
+    })();
+  </script>
+</body>
+</html>
