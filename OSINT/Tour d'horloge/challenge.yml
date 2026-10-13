@@ -1,0 +1,48 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Tour d'horloge"
+category: OSINT
+description: |-
+  Dans mon grenier, j'ai retrouvé un bout de parchemin, qui semble conter une histoire. La page est déchirée, et je n'ai pas celles qui suivent ou précédent.
+
+  A vous de trouver la suite de l'histoire.
+
+  ---
+
+  Format : `Le Président est rappatrié`
+attribution: "NozZy"
+
+flags:
+    # A regex case insensitive flag
+    - {
+        type: "regex",
+        content: "(CYBN\{)?L'Empoisonneur est exécuté\}?",
+        data: "case_insensitive",
+    }
+
+tags:
+    - Easy
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+# Can be removed if unused
+attempts: 1
+
+files:
+    - src/parchemin.png
