@@ -1,0 +1,37 @@
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+
+name: "Le message de trop"
+category: Crypto
+description: |-
+  Radio CyberNight échange des messages chiffrés avec plusieurs correspondants.
+  Une station pirate a intercepté une vingtaine de transmissions destinées à des récepteurs différents.
+
+  Dans la précipitation, un opérateur semble avoir diffusé une information confidentielle
+  un peu trop largement. Retrouvez le message de trop.
+
+  Format : `CYBN{...}`
+attribution: "ThaySan"
+
+flags:
+    - {
+        type: "static",
+        content: "CYBN{br04dc45t_1s_n0t_pr1v4t3}",
+        data: "case_sensitive",
+    }
+
+tags:
+    - Medium
+
+files:
+    - dist/messages.json
+
+version: "0.1"
+
