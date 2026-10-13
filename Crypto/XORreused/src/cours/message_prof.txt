@@ -1,0 +1,10 @@
+Hugo,
+
+Après discussion avec le jury, ton oral aura lieu en salle B204.
+Tu devras expliquer pourquoi "ça marche sur mon PC" ne constitue pas
+une démonstration cryptographique.
+
+Ton code individuel est :
+CYBN{hug0_4_8_0ct3ts_m41s_0_sur_20}
+
+Merci de venir avec ton projet et, si possible, une méthode de déchiffrement.
