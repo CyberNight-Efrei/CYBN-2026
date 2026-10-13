@@ -1,0 +1,40 @@
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+
+name: "Direction XORal de rattrapage"
+category: Crypto
+description: |-
+  Après avoir contesté sa note en cryptographie, Hugo a voulu démontrer le génie de son
+  ransomware "incassable". Il l'a testé sur le dossier contenant sa convocation au
+  rattrapage. Depuis, il soutient que perdre la clé faisait partie de la démonstration.
+
+  L'équipe pédagogique vous transmet les fichiers chiffrés ainsi que son chef-d'oeuvre
+  en Python. Retrouvez le code d'accès indiqué sur la convocation.
+
+  Format : `CYBN{...}`
+attribution: "ThaySan"
+
+flags:
+    - {
+        type: "static",
+        content: "CYBN{hug0_4_8_0ct3ts_m41s_0_sur_20}",
+        data: "case_sensitive",
+    }
+
+tags:
+    - Easy
+
+files:
+    - dist/background.png.locked
+    - dist/music.mp3.locked
+    - dist/message_prof.txt.locked
+    - dist/locker.py
+
+version: "0.1"
