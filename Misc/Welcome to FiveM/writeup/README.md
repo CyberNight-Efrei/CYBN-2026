@@ -1,4 +1,4 @@
-# FiveM Leaks
+# Welcome to FiveM
 
 La ressource a l'air d'un anti-cheat normal. Le `html/script.js` est un gros blob obfusqué qui ressemble à une backdoor (faux C2 WebSocket, faux keylogger, VM à opcodes...) : c'est un **leurre**, gardé derrière `_armed` qui vaut toujours `false`, et sa charge réelle ne fait qu'afficher un badge.
 
