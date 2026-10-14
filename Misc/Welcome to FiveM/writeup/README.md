@@ -28,4 +28,4 @@ Quatre subtilités spécifiques à CfxLua / FiveM :
 python solve.py city_guard
 ```
 
-`CYBN{s4y_bye_bye_t0_y0ur_fxserver}`
+`CYBN{s4y_bye_bye_t0_y0ur_fxserver_6b8c17e1}`
