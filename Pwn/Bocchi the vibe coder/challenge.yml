@@ -1,0 +1,81 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic_docker
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Bocchi the vibe coder!"
+category: Pwn
+description: |-
+  # Bocchi the vibe coder!
+
+  Hitori a décidé d'arrêter la guitare électrique pour se mettre au vibe coding et au
+  lean management spé Jira + daily + rétrospective bien solide afin d'assurer
+  l'amélioration continue.
+
+  Lors de l'icebreaker d'usage, le jour de son arrivée à slopTechInformatik, elle demande :
+
+  *"Pourquoi utiliser Nginx quand je peux vibe coder mon propre serveur web ? En plus j'ai
+  utilisé Sonnet 4.6, alors là ils ont aucune chance...*
+  *Tu veux tester ? Ok mais je veux pas te donner le code source parce que j'imagine un
+  modèle propriétaire autour du futur produit (avec un mode payant où tu pourrais même faire
+  des POST !). Pour l'instant tu peux faire que des GET, je suis en train de bosser sur les
+  autres verbes.*
+
+  *En plus c'est pratique parce que je peux développer dans le même dossier où je lance la
+  démo, comme ça tu verras les nouvelles features en live et t'auras même pas à attendre ma
+  CI gitlab."*
+
+  ```
+  PIE      : OUI
+  NX       : OUI
+  ASLR     : OUI
+  Canary   : NON
+  ```
+
+  ---
+
+  Format : `CYBN{...}`
+attribution: "Nohor"
+
+flags:
+    - {
+        type: "static",
+        content: "CYBN{bwaaaa_bawww_bawawawaaabababwaaaw_?}",
+        data: "case_sensitive",
+    }
+
+tags:
+    - Hard
+# </============ REQUIRED ============>
+
+
+# <============ CHALLENGE DOCKER ============>
+
+type: dynamic_docker
+
+extra:
+  dynamic_score: 1      # 1 = True / 0 = False
+  dynamic_initial: 500  # NE PAS TOUCHER
+  dynamic_decay: 30     # NE PAS TOUCHER
+  dynamic_minimum: 100  # NE PAS TOUCHER
+
+  docker_image: pwn_bocchi-the-vibe-coder   # RESPECT FORMAT (shortname please)
+
+  redirect_type: tcp   # serveur HTTP maison derrière socat
+  redirect_port: 8080  # App port, do not mind overlaps
+
+# </============ CHALLENGE DOCKER ============>
+
+
+# <============ OPTIONAL ============>
+
+# Specifies what version of the challenge specification was used.
+version: "0.1"
