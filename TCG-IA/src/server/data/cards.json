@@ -1,0 +1,1162 @@
+[
+  {
+    "slug": "rockitten",
+    "name": "Rockitten",
+    "type": "earth",
+    "rarity": "common",
+    "hp": 80,
+    "stats": {
+      "attack": 80,
+      "defense": 40,
+      "speed": 70
+    },
+    "attacks": [
+      {
+        "name": "Ram",
+        "damage": 60,
+        "type": "normal",
+        "cost": 2
+      },
+      {
+        "name": "Mudslide",
+        "damage": 90,
+        "type": "earth",
+        "cost": 3
+      }
+    ],
+    "lore": "It uses its tiny rock ears for snuggling.",
+    "image": "/creatures/rockitten.png",
+    "number": 1
+  },
+  {
+    "slug": "aardorn",
+    "name": "Aardorn",
+    "type": "normal",
+    "rarity": "common",
+    "hp": 90,
+    "stats": {
+      "attack": 80,
+      "defense": 60,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Gnaw",
+        "damage": 40,
+        "type": "normal",
+        "cost": 1
+      },
+      {
+        "name": "Lick Lash",
+        "damage": 60,
+        "type": "normal",
+        "cost": 2
+      }
+    ],
+    "lore": "When born it is placed in an anthill and left to eat its way out.",
+    "image": "/creatures/aardorn.png",
+    "number": 2
+  },
+  {
+    "slug": "agnite",
+    "name": "Agnite",
+    "type": "fire",
+    "rarity": "common",
+    "hp": 90,
+    "stats": {
+      "attack": 60,
+      "defense": 70,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Gnaw",
+        "damage": 40,
+        "type": "normal",
+        "cost": 1
+      },
+      {
+        "name": "Fire Claw",
+        "damage": 70,
+        "type": "fire",
+        "cost": 3
+      }
+    ],
+    "lore": "It is playful, but must be taught early on to keep its fire in check.",
+    "image": "/creatures/agnite.png",
+    "number": 3
+  },
+  {
+    "slug": "tweesher",
+    "name": "Tweesher",
+    "type": "frost",
+    "rarity": "common",
+    "hp": 70,
+    "stats": {
+      "attack": 80,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Ice Claw",
+        "damage": 50,
+        "type": "frost",
+        "cost": 2
+      },
+      {
+        "name": "Peck",
+        "damage": 50,
+        "type": "sky",
+        "cost": 2
+      }
+    ],
+    "lore": "The colder the weather, the harder its beak. At below 0 degrees, it is harder than diamond.",
+    "image": "/creatures/tweesher.png",
+    "number": 4
+  },
+  {
+    "slug": "cardiling",
+    "name": "Cardiling",
+    "type": "fire",
+    "rarity": "common",
+    "hp": 70,
+    "stats": {
+      "attack": 80,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Wing Tip",
+        "damage": 50,
+        "type": "sky",
+        "cost": 2
+      },
+      {
+        "name": "Breathe Fire",
+        "damage": 90,
+        "type": "fire",
+        "cost": 3
+      }
+    ],
+    "lore": "One wouldn't expect it to breathe fire, until it does.",
+    "image": "/creatures/cardiling.png",
+    "number": 5
+  },
+  {
+    "slug": "budaye",
+    "name": "Budaye",
+    "type": "wood",
+    "rarity": "common",
+    "hp": 70,
+    "stats": {
+      "attack": 60,
+      "defense": 60,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Stick",
+        "damage": 60,
+        "type": "wood",
+        "cost": 2
+      },
+      {
+        "name": "Tail Lash",
+        "damage": 50,
+        "type": "normal",
+        "cost": 2
+      }
+    ],
+    "lore": "It can convince any group to cooperate for the common good with some encouraging mewls and waves.",
+    "image": "/creatures/budaye.png",
+    "number": 6
+  },
+  {
+    "slug": "cataspike",
+    "name": "Cataspike",
+    "type": "metal",
+    "rarity": "common",
+    "hp": 100,
+    "stats": {
+      "attack": 40,
+      "defense": 70,
+      "speed": 50
+    },
+    "attacks": [
+      {
+        "name": "Bullet",
+        "damage": 50,
+        "type": "metal",
+        "cost": 2
+      },
+      {
+        "name": "Buzz",
+        "damage": 50,
+        "type": "lightning",
+        "cost": 2
+      }
+    ],
+    "lore": "It learns to fight from observation. Left to its own devices, it uses its spike to pick up rubbish.",
+    "image": "/creatures/cataspike.png",
+    "number": 7
+  },
+  {
+    "slug": "dollfin",
+    "name": "Dollfin",
+    "type": "water",
+    "rarity": "common",
+    "hp": 110,
+    "stats": {
+      "attack": 60,
+      "defense": 80,
+      "speed": 40
+    },
+    "attacks": [
+      {
+        "name": "Goad",
+        "damage": 70,
+        "type": "normal",
+        "cost": 3
+      },
+      {
+        "name": "Flood",
+        "damage": 60,
+        "type": "water",
+        "cost": 2
+      }
+    ],
+    "lore": "Each one follows a ship from place to place, exploring the world.",
+    "image": "/creatures/dollfin.png",
+    "number": 8
+  },
+  {
+    "slug": "nudiflot_male",
+    "name": "Nudiflot",
+    "type": "water",
+    "rarity": "common",
+    "hp": 80,
+    "stats": {
+      "attack": 40,
+      "defense": 40,
+      "speed": 70
+    },
+    "attacks": [
+      {
+        "name": "Flood",
+        "damage": 60,
+        "type": "water",
+        "cost": 2
+      },
+      {
+        "name": "Feint",
+        "damage": 40,
+        "type": "normal",
+        "cost": 1
+      }
+    ],
+    "lore": "Its feathery antennas snap off if it is attacked, confusing the predator.",
+    "image": "/creatures/nudiflot_male.png",
+    "number": 9
+  },
+  {
+    "slug": "fruitera",
+    "name": "Fruitera",
+    "type": "wood",
+    "rarity": "common",
+    "hp": 70,
+    "stats": {
+      "attack": 80,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Leaf Stab",
+        "damage": 50,
+        "type": "wood",
+        "cost": 2
+      },
+      {
+        "name": "Splinter",
+        "damage": 50,
+        "type": "wood",
+        "cost": 2
+      }
+    ],
+    "lore": "FRUITERA is greedy for fruit, and carries as much as it can. When startled, it drops all its fruit, gathers it all up again, and only then runs away.",
+    "image": "/creatures/fruitera.png",
+    "number": 10
+  },
+  {
+    "slug": "lambert",
+    "name": "Lambert",
+    "type": "wood",
+    "rarity": "common",
+    "hp": 70,
+    "stats": {
+      "attack": 60,
+      "defense": 60,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Sting",
+        "damage": 50,
+        "type": "venom",
+        "cost": 2
+      },
+      {
+        "name": "Blossom",
+        "damage": 50,
+        "type": "wood",
+        "cost": 2
+      }
+    ],
+    "lore": "It is placed in its nut by its parent, who then sends it into the world.",
+    "image": "/creatures/lambert.png",
+    "number": 11
+  },
+  {
+    "slug": "pairagrin",
+    "name": "Pairagrin",
+    "type": "sky",
+    "rarity": "common",
+    "hp": 70,
+    "stats": {
+      "attack": 80,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Peck",
+        "damage": 50,
+        "type": "sky",
+        "cost": 2
+      },
+      {
+        "name": "Whirlwind",
+        "damage": 50,
+        "type": "sky",
+        "cost": 2
+      }
+    ],
+    "lore": "The young form of Pairagrim, it is a generally happy creature. It struggles to fly until the two heads learn to work together.",
+    "image": "/creatures/pairagrin.png",
+    "number": 12
+  },
+  {
+    "slug": "anoleaf",
+    "name": "Anoleaf",
+    "type": "wood",
+    "rarity": "common",
+    "hp": 90,
+    "stats": {
+      "attack": 80,
+      "defense": 60,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Leaf Stab",
+        "damage": 50,
+        "type": "wood",
+        "cost": 2
+      },
+      {
+        "name": "Feint",
+        "damage": 40,
+        "type": "normal",
+        "cost": 1
+      }
+    ],
+    "lore": "It considers the plants growing near it to be its brothers and sisters.",
+    "image": "/creatures/anoleaf.png",
+    "number": 13
+  },
+  {
+    "slug": "chenipode",
+    "name": "Chenipode",
+    "type": "normal",
+    "rarity": "common",
+    "hp": 100,
+    "stats": {
+      "attack": 40,
+      "defense": 70,
+      "speed": 50
+    },
+    "attacks": [
+      {
+        "name": "Rock",
+        "damage": 60,
+        "type": "earth",
+        "cost": 2
+      },
+      {
+        "name": "Quicksand",
+        "damage": 90,
+        "type": "earth",
+        "cost": 3
+      }
+    ],
+    "lore": "It bites onto shoelaces and trouser legs when it wants to travel.",
+    "image": "/creatures/chenipode.png",
+    "number": 14
+  },
+  {
+    "slug": "squabbit",
+    "name": "Squabbit",
+    "type": "heroic",
+    "rarity": "common",
+    "hp": 90,
+    "stats": {
+      "attack": 80,
+      "defense": 60,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Thunderball",
+        "damage": 90,
+        "type": "earth",
+        "cost": 3
+      },
+      {
+        "name": "Shadow Boxing",
+        "damage": 50,
+        "type": "heroic",
+        "cost": 2
+      }
+    ],
+    "lore": "To prove themselves, they will fight tooth and nail over even the smallest thing.",
+    "image": "/creatures/squabbit.png",
+    "number": 15
+  },
+  {
+    "slug": "vivipere",
+    "name": "Vivipere",
+    "type": "normal",
+    "rarity": "common",
+    "hp": 90,
+    "stats": {
+      "attack": 40,
+      "defense": 60,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Hammerhead",
+        "damage": 40,
+        "type": "earth",
+        "cost": 1
+      },
+      {
+        "name": "Quicksand",
+        "damage": 90,
+        "type": "earth",
+        "cost": 3
+      }
+    ],
+    "lore": "It hatches in great numbers in the summer, but the rest of its lifespan is a mystery.",
+    "image": "/creatures/vivipere.png",
+    "number": 16
+  },
+  {
+    "slug": "bursa",
+    "name": "Bursa",
+    "type": "fire",
+    "rarity": "common",
+    "hp": 70,
+    "stats": {
+      "attack": 40,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Fire Ball",
+        "damage": 50,
+        "type": "fire",
+        "cost": 2
+      },
+      {
+        "name": "Muddle",
+        "damage": 40,
+        "type": "cosmic",
+        "cost": 1
+      }
+    ],
+    "lore": "It rejects fire as basic, and produces only the fire of the mind.",
+    "image": "/creatures/bursa.png",
+    "number": 17
+  },
+  {
+    "slug": "dandylion",
+    "name": "Dandylion",
+    "type": "wood",
+    "rarity": "common",
+    "hp": 80,
+    "stats": {
+      "attack": 80,
+      "defense": 40,
+      "speed": 70
+    },
+    "attacks": [
+      {
+        "name": "Pollen Blast",
+        "damage": 60,
+        "type": "wood",
+        "cost": 2
+      },
+      {
+        "name": "Fester",
+        "damage": 90,
+        "type": "venom",
+        "cost": 3
+      }
+    ],
+    "lore": "It gives birth to one litter in its life. Then it wanders the world trying to find them.",
+    "image": "/creatures/dandylion.png",
+    "number": 18
+  },
+  {
+    "slug": "rockat",
+    "name": "Rockat",
+    "type": "earth",
+    "rarity": "uncommon",
+    "hp": 80,
+    "stats": {
+      "attack": 80,
+      "defense": 40,
+      "speed": 70
+    },
+    "attacks": [
+      {
+        "name": "Ram",
+        "damage": 60,
+        "type": "normal",
+        "cost": 2
+      },
+      {
+        "name": "Mudslide",
+        "damage": 90,
+        "type": "earth",
+        "cost": 3
+      }
+    ],
+    "lore": "Despite its considerable weight, its footfalls are silent.",
+    "image": "/creatures/rockat.png",
+    "number": 19
+  },
+  {
+    "slug": "aardart",
+    "name": "Aardart",
+    "type": "normal",
+    "rarity": "uncommon",
+    "hp": 90,
+    "stats": {
+      "attack": 80,
+      "defense": 60,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Gnaw",
+        "damage": 40,
+        "type": "normal",
+        "cost": 1
+      },
+      {
+        "name": "Lick Lash",
+        "damage": 60,
+        "type": "normal",
+        "cost": 2
+      }
+    ],
+    "lore": "It keeps count of every ant it has eaten, and celebrates significant numbers.",
+    "image": "/creatures/aardart.png",
+    "number": 20
+  },
+  {
+    "slug": "agnidon",
+    "name": "Agnidon",
+    "type": "fire",
+    "rarity": "uncommon",
+    "hp": 90,
+    "stats": {
+      "attack": 60,
+      "defense": 70,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Gnaw",
+        "damage": 40,
+        "type": "normal",
+        "cost": 1
+      },
+      {
+        "name": "Fire Claw",
+        "damage": 70,
+        "type": "fire",
+        "cost": 3
+      }
+    ],
+    "lore": "It prefers four legs, but can stand on two to open doors, push over trees or hold things.",
+    "image": "/creatures/agnidon.png",
+    "number": 21
+  },
+  {
+    "slug": "bamboon",
+    "name": "Bamboon",
+    "type": "wood",
+    "rarity": "uncommon",
+    "hp": 70,
+    "stats": {
+      "attack": 60,
+      "defense": 60,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Stick",
+        "damage": 60,
+        "type": "wood",
+        "cost": 2
+      },
+      {
+        "name": "Staff Smash",
+        "damage": 100,
+        "type": "metal",
+        "cost": 4
+      }
+    ],
+    "lore": "It fights with its bamboo staff, which it also uses for balance.",
+    "image": "/creatures/bamboon.png",
+    "number": 22
+  },
+  {
+    "slug": "cardiwing",
+    "name": "Cardiwing",
+    "type": "fire",
+    "rarity": "uncommon",
+    "hp": 70,
+    "stats": {
+      "attack": 80,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Wing Tip",
+        "damage": 50,
+        "type": "sky",
+        "cost": 2
+      },
+      {
+        "name": "Breathe Fire",
+        "damage": 90,
+        "type": "fire",
+        "cost": 3
+      }
+    ],
+    "lore": "Its song is remarkable, but few dare keep an explosive songbird.",
+    "image": "/creatures/cardiwing.png",
+    "number": 23
+  },
+  {
+    "slug": "bigfin",
+    "name": "Bigfin",
+    "type": "water",
+    "rarity": "uncommon",
+    "hp": 110,
+    "stats": {
+      "attack": 60,
+      "defense": 80,
+      "speed": 40
+    },
+    "attacks": [
+      {
+        "name": "Goad",
+        "damage": 70,
+        "type": "normal",
+        "cost": 3
+      },
+      {
+        "name": "Flood",
+        "damage": 60,
+        "type": "water",
+        "cost": 2
+      }
+    ],
+    "lore": "A whole ecosystem exists on its back, so it tries not to go underwater.",
+    "image": "/creatures/bigfin.png",
+    "number": 24
+  },
+  {
+    "slug": "axolightl",
+    "name": "Axolightl",
+    "type": "water",
+    "rarity": "uncommon",
+    "hp": 80,
+    "stats": {
+      "attack": 40,
+      "defense": 40,
+      "speed": 70
+    },
+    "attacks": [
+      {
+        "name": "Starfall",
+        "damage": 50,
+        "type": "cosmic",
+        "cost": 2
+      },
+      {
+        "name": "Midnight Mantle",
+        "damage": 50,
+        "type": "shadow",
+        "cost": 2
+      }
+    ],
+    "lore": "It lights the deep waters with its tail, marking a safe shelter for fish.",
+    "image": "/creatures/axolightl.png",
+    "number": 25
+  },
+  {
+    "slug": "djinnbo",
+    "name": "Djinnbo",
+    "type": "fire",
+    "rarity": "uncommon",
+    "hp": 70,
+    "stats": {
+      "attack": 40,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Fire Ball",
+        "damage": 50,
+        "type": "fire",
+        "cost": 2
+      },
+      {
+        "name": "Fire Claw",
+        "damage": 70,
+        "type": "fire",
+        "cost": 3
+      }
+    ],
+    "lore": "It is mistakenly believed that it is a human who died in a fire. Actually, its relatives did.",
+    "image": "/creatures/djinnbo.png",
+    "number": 26
+  },
+  {
+    "slug": "bugnin",
+    "name": "Bugnin",
+    "type": "metal",
+    "rarity": "uncommon",
+    "hp": 100,
+    "stats": {
+      "attack": 80,
+      "defense": 70,
+      "speed": 50
+    },
+    "attacks": [
+      {
+        "name": "Buzz",
+        "damage": 50,
+        "type": "lightning",
+        "cost": 2
+      },
+      {
+        "name": "Splinter",
+        "damage": 50,
+        "type": "wood",
+        "cost": 2
+      }
+    ],
+    "lore": "Its sword is actually an antenna grown and snapped off for that purpose.",
+    "image": "/creatures/bugnin.png",
+    "number": 27
+  },
+  {
+    "slug": "propellercat",
+    "name": "Propellercat",
+    "type": "normal",
+    "rarity": "uncommon",
+    "hp": 70,
+    "stats": {
+      "attack": 80,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Wing Tip",
+        "damage": 50,
+        "type": "sky",
+        "cost": 2
+      },
+      {
+        "name": "Blade",
+        "damage": 50,
+        "type": "metal",
+        "cost": 2
+      }
+    ],
+    "lore": "Is it a new species, or just the pet of an inventor?",
+    "image": "/creatures/propellercat.png",
+    "number": 28
+  },
+  {
+    "slug": "legko",
+    "name": "Legko",
+    "type": "wood",
+    "rarity": "uncommon",
+    "hp": 90,
+    "stats": {
+      "attack": 40,
+      "defense": 60,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Sting",
+        "damage": 50,
+        "type": "venom",
+        "cost": 2
+      },
+      {
+        "name": "Blossom",
+        "damage": 50,
+        "type": "wood",
+        "cost": 2
+      }
+    ],
+    "lore": "Long thought to be legless, its leaves are actually vestigial limbs.",
+    "image": "/creatures/legko.png",
+    "number": 29
+  },
+  {
+    "slug": "eyenemy",
+    "name": "Eyenemy",
+    "type": "cosmic",
+    "rarity": "uncommon",
+    "hp": 90,
+    "stats": {
+      "attack": 40,
+      "defense": 60,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Bullet",
+        "damage": 50,
+        "type": "metal",
+        "cost": 2
+      },
+      {
+        "name": "Spit Poison",
+        "damage": 50,
+        "type": "venom",
+        "cost": 2
+      }
+    ],
+    "lore": "It feeds on beautiful views and other spectacular sights.",
+    "image": "/creatures/eyenemy.png",
+    "number": 30
+  },
+  {
+    "slug": "agnigon",
+    "name": "Agnigon",
+    "type": "fire",
+    "rarity": "rare",
+    "hp": 90,
+    "stats": {
+      "attack": 60,
+      "defense": 70,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Gnaw",
+        "damage": 40,
+        "type": "normal",
+        "cost": 1
+      },
+      {
+        "name": "Fire Claw",
+        "damage": 70,
+        "type": "fire",
+        "cost": 3
+      }
+    ],
+    "lore": "It is called a 'false dragon', because it appears to be a dragon, but actually evolved from a different line of ancient reptiles.",
+    "image": "/creatures/agnigon.png",
+    "number": 31
+  },
+  {
+    "slug": "jemuar",
+    "name": "Jemuar",
+    "type": "earth",
+    "rarity": "rare",
+    "hp": 80,
+    "stats": {
+      "attack": 80,
+      "defense": 40,
+      "speed": 70
+    },
+    "attacks": [
+      {
+        "name": "Ram",
+        "damage": 60,
+        "type": "normal",
+        "cost": 2
+      },
+      {
+        "name": "Mudslide",
+        "damage": 90,
+        "type": "earth",
+        "cost": 3
+      }
+    ],
+    "lore": "The gems on its back are the type found when it was born. There are extensive ROCKITTEN breeding facilities over diamond veins.",
+    "image": "/creatures/jemuar.png",
+    "number": 32
+  },
+  {
+    "slug": "cardinale",
+    "name": "Cardinale",
+    "type": "fire",
+    "rarity": "rare",
+    "hp": 70,
+    "stats": {
+      "attack": 80,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Wing Tip",
+        "damage": 50,
+        "type": "sky",
+        "cost": 2
+      },
+      {
+        "name": "Breathe Fire",
+        "damage": 90,
+        "type": "fire",
+        "cost": 3
+      }
+    ],
+    "lore": "It hates all predators with a passion, and makes war with them and their young when it can.",
+    "image": "/creatures/cardinale.png",
+    "number": 33
+  },
+  {
+    "slug": "moloch",
+    "name": "Moloch",
+    "type": "wood",
+    "rarity": "rare",
+    "hp": 100,
+    "stats": {
+      "attack": 80,
+      "defense": 70,
+      "speed": 50
+    },
+    "attacks": [
+      {
+        "name": "Sting",
+        "damage": 50,
+        "type": "venom",
+        "cost": 2
+      },
+      {
+        "name": "Blossom",
+        "damage": 50,
+        "type": "wood",
+        "cost": 2
+      }
+    ],
+    "lore": "It can stiffen or soften its skin to respond to friends and foes.",
+    "image": "/creatures/moloch.png",
+    "number": 34
+  },
+  {
+    "slug": "bolt",
+    "name": "Bolt",
+    "type": "metal",
+    "rarity": "rare",
+    "hp": 110,
+    "stats": {
+      "attack": 40,
+      "defense": 80,
+      "speed": 40
+    },
+    "attacks": [
+      {
+        "name": "Bullet",
+        "damage": 50,
+        "type": "metal",
+        "cost": 2
+      },
+      {
+        "name": "Shuriken",
+        "damage": 90,
+        "type": "metal",
+        "cost": 3
+      }
+    ],
+    "lore": "The presence of a BOLT makes a NUT clamp down harder and spark more energy.",
+    "image": "/creatures/bolt.png",
+    "number": 35
+  },
+  {
+    "slug": "pigabyte",
+    "name": "Pigabyte",
+    "type": "metal",
+    "rarity": "rare",
+    "hp": 110,
+    "stats": {
+      "attack": 40,
+      "defense": 80,
+      "speed": 40
+    },
+    "attacks": [
+      {
+        "name": "Sunburst",
+        "damage": 40,
+        "type": "fire",
+        "cost": 1
+      },
+      {
+        "name": "Wall of Steel",
+        "damage": 50,
+        "type": "metal",
+        "cost": 2
+      }
+    ],
+    "lore": "Scientists found that the best computers have organic implants.",
+    "image": "/creatures/pigabyte.png",
+    "number": 36
+  },
+  {
+    "slug": "ignibus",
+    "name": "Ignibus",
+    "type": "fire",
+    "rarity": "holo",
+    "hp": 110,
+    "stats": {
+      "attack": 60,
+      "defense": 80,
+      "speed": 40
+    },
+    "attacks": [
+      {
+        "name": "Fire Ball",
+        "damage": 50,
+        "type": "fire",
+        "cost": 2
+      },
+      {
+        "name": "One-Two",
+        "damage": 80,
+        "type": "heroic",
+        "cost": 3
+      }
+    ],
+    "lore": "When threatened it retreats into its shell and cools down dramatically by venting steam. It could be mistaken for a rock.",
+    "image": "/creatures/ignibus.png",
+    "number": 37
+  },
+  {
+    "slug": "allagon",
+    "name": "Allagon",
+    "type": "metal",
+    "rarity": "holo",
+    "hp": 90,
+    "stats": {
+      "attack": 60,
+      "defense": 70,
+      "speed": 60
+    },
+    "attacks": [
+      {
+        "name": "Tail Lash",
+        "damage": 50,
+        "type": "normal",
+        "cost": 2
+      },
+      {
+        "name": "Bullet",
+        "damage": 50,
+        "type": "metal",
+        "cost": 2
+      }
+    ],
+    "lore": "ALLAGON are drawn to relics made from the metals left behind by their ancestors, and will be violent to retrieve them.",
+    "image": "/creatures/allagon.png",
+    "number": 38
+  },
+  {
+    "slug": "tux",
+    "name": "Tux",
+    "type": "frost",
+    "rarity": "holo",
+    "hp": 70,
+    "stats": {
+      "attack": 80,
+      "defense": 50,
+      "speed": 80
+    },
+    "attacks": [
+      {
+        "name": "Peck",
+        "damage": 50,
+        "type": "sky",
+        "cost": 2
+      },
+      {
+        "name": "Flow",
+        "damage": 70,
+        "type": "water",
+        "cost": 3
+      }
+    ],
+    "lore": "Most comfortable in arctic climes, TUX hunt weaker prey by leaping upon it, and crack open the shells or armor of stronger prey by sliding it along the ice into hard rocks.",
+    "image": "/creatures/tux.png",
+    "number": 39
+  },
+  {
+    "slug": "zunna",
+    "name": "Zunna",
+    "type": "normal",
+    "rarity": "secret",
+    "hp": 110,
+    "stats": {
+      "attack": 40,
+      "defense": 80,
+      "speed": 40
+    },
+    "attacks": [
+      {
+        "name": "Constrict",
+        "damage": 50,
+        "type": "normal",
+        "cost": 2
+      },
+      {
+        "name": "Goad",
+        "damage": 70,
+        "type": "normal",
+        "cost": 3
+      }
+    ],
+    "lore": "Cheerful ZUNNA sucks up all the food it can find into its stomach.",
+    "image": "/creatures/zunna.png",
+    "number": 40
+  }
+]

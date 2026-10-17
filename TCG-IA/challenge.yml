@@ -1,0 +1,38 @@
+value: 500
+type: dynamic_docker
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+  dynamic_score: 1
+  dynamic_initial: 500
+  dynamic_decay: 30
+  dynamic_minimum: 100
+  docker_image: web_cybermon-ia
+  redirect_type: http
+  redirect_port: 8080
+
+state: visible
+
+name: "Trompe-l'oeil"
+category: Web
+description: |-
+  Cybermon Online vient d'ouvrir un atelier capable de transformer une simple illustration en carte jouable.
+
+  Mais après le vol d'une carte interdite, la plateforme affirme avoir supprimé les dernières traces du Projet Black Deck. Les fichiers ont peut-être disparu, mais le modèle, entraîné avant ce nettoyage, n'a sans doute rien oublié.
+
+  Faites-lui générer une légende contenant **"black deck"** et ramenez la dernière carte à la surface.
+
+  Format : `CYBN{...}`
+attribution: "ThaySan"
+
+flags:
+  - type: static
+    content: "CYBN{REDACTED}"
+    data: case_sensitive
+
+tags:
+  - Hard
+
+version: "0.1"
