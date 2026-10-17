@@ -1,0 +1,8 @@
+services:
+  bocchi:
+    build: .
+    image: pwn_bocchi-the-vibe-coder
+    container_name: pwn_bocchi-the-vibe-coder
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
