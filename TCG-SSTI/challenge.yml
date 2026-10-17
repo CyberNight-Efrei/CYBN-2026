@@ -1,0 +1,36 @@
+value: 500
+type: dynamic_docker
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+  dynamic_score: 1
+  dynamic_initial: 500
+  dynamic_decay: 30
+  dynamic_minimum: 100
+  docker_image: web_cybermon-ssti
+  redirect_type: http
+  redirect_port: 8080
+
+state: visible
+
+name: "Echange moi si tu peux"
+category: Web
+description: |-
+  Après le bannissement d'un collectionneur impliqué dans un trafic de cartes interdites, Cybermon Online a remplacé les échanges informels par un centre d'échange sécurisé. Les joueurs peuvent désormais publier un classeur, proposer des cartes et accompagner leurs demandes d'un message personnalisé.
+
+  La plateforme affirme avoir retiré toutes les cartes du Projet Black Deck. Pourtant, son inventaire global comptabilise encore une carte interdite qui n'apparaît dans aucune collection. Si personne ne la possède, sa copie est probablement conservée directement sur le serveur.
+
+  Format : `CYBN{...}`
+attribution: "ThaySan"
+
+flags:
+  - type: static
+    content: "CYBN{REDACTED}"
+    data: case_sensitive
+
+tags:
+  - Medium
+
+version: "0.1"

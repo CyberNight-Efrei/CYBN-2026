@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+import { db } from "./src/db/models.js";
+import { grantPromotionCard } from "./src/services/promotions.js";
+
+try {
+  await grantPromotionCard();
+  console.log("Carte Suprême ajoutée à votre collection.");
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  await db.close();
+}

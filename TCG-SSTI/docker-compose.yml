@@ -1,0 +1,31 @@
+services:
+  challenge:
+    build: .
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${FRONTEND_PORT:-8080}:8080"
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      DB_PATH: /data/cybermon.sqlite
+      INSTANCE_ID: ${COMPOSE_PROJECT_NAME:-cybermon}
+      DEFAULT_PLAYER_ID: ${DEFAULT_PLAYER_ID:-5}
+      PLAYER_NAME: ${PLAYER_NAME:-Alex}
+      FLAG: ${FLAG:-CYBN{0000000000000000}}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      PACK_COOLDOWN_MS: ${PACK_COOLDOWN_MS:-1500}
+    volumes:
+      - database:/data
+    tmpfs:
+      - /app/secret:rw,noexec,nosuid,nodev,mode=0700,uid=1000,gid=1000
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      start_period: 20s
+      retries: 10
+
+volumes:
+  database:
