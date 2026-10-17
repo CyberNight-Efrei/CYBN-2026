@@ -1,0 +1,36 @@
+value: 500
+type: dynamic_docker
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+  dynamic_score: 1
+  dynamic_initial: 500
+  dynamic_decay: 30
+  dynamic_minimum: 100
+  docker_image: web_cybermon-idor
+  redirect_type: http
+  redirect_port: 8080
+
+state: visible
+
+name: "Le collectionneur banni"
+category: Web
+description: |-
+  Un collectionneur affirmait posséder une carte issue du Projet Black Deck. Accusé de trafic de cartes interdites, son compte a été banni et sa collection rendue privée.
+
+  Son profil existe toujours sur Cybermon Online, et certaines de ses données semblent encore accessibles. Retrouvez sa collection et récupérez la première carte interdite.
+
+  Format : `CYBN{...}`
+attribution: "ThaySan"
+
+flags:
+  - type: static
+    content: "CYBN{REDACTED}"
+    data: case_sensitive
+
+tags:
+  - Easy
+
+version: "0.1"
