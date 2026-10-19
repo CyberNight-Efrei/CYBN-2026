@@ -6,7 +6,7 @@ NAME="${CAT}_${CHALL}"
 
 # Ports définis en dur : associations par index
 PORTS=(8080)
-HOST_PORTS=(5001)
+HOST_PORTS=(4001)
 
 RUN=false
 PRIV=false
