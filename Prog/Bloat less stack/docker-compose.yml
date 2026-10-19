@@ -1,0 +1,17 @@
+services:
+  bloat-less-stack:
+    build: .
+    image: prog_bloat-less-stack
+    container_name: prog_bloat-less-stack
+    ports:
+      - "8080:8080"
+    read_only: true
+    tmpfs:
+      - /sandbox:exec,rw,nosuid,nodev,size=128m,mode=1777
+    security_opt:
+      - "no-new-privileges:true"
+    cap_drop:
+      - ALL
+    pids_limit: 128
+    mem_limit: 512m
+    restart: unless-stopped

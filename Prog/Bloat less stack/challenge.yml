@@ -1,0 +1,65 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic_docker
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Bloat less stack"
+category: Prog
+description: |-
+  # Bloat less stack
+
+  Vous voici perdu au milieu de la forêt (pas si interdite et secrète que ça
+  mais néanmoins terrifiante parce qu'il pleut en plus et puis il fait pas chaud
+  et y'a du vent oulala c'est une forêt vraiment pas sympathique).
+  Et vous croisez Totoro et sa bande qui attendent à ce qu'il dit un bus en
+  forme de chat ? Il vous faut un ticket mais la borne a pas l'air pratique,
+  elle affiche juste un message étrange. Est-ce qu'on peut récupérer un ticket ?
+
+  Format : `CYBN{...}`
+attribution: "Crumble"
+
+flags:
+    - {
+        type: "static",
+        content: "CYBN{LE_Chat-bus_ARRiVE_ATTenTION_AU_DEPaRT}",
+        data: "case_sensitive",
+    }
+
+tags:
+    - Medium
+# </============ REQUIRED ============>
+
+
+# <============ CHALLENGE DOCKER ============>
+
+type: dynamic_docker
+
+extra:
+  dynamic_score: 1      # 1 = True / 0 = False
+  dynamic_initial: 500  # NE PAS TOUCHER
+  dynamic_decay: 30     # NE PAS TOUCHER
+  dynamic_minimum: 100  # NE PAS TOUCHER
+
+  docker_image: prog_bloat-less-stack   # RESPECT FORMAT (shortname please)
+
+  redirect_type: http   # interface web
+  redirect_port: 8080   # App port, do not mind overlaps
+
+# </============ CHALLENGE DOCKER ============>
+
+
+# <============ OPTIONAL ============>
+
+# Specifies what version of the challenge specification was used.
+version: "0.1"
