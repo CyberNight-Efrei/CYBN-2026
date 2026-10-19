@@ -6,7 +6,7 @@ NAME="${CAT}_${CHALL}"
 
 # Ports définis en dur : associations par index
 PORTS=(22)
-HOST_PORTS=(7003)
+HOST_PORTS=(7001)
 
 RUN=false
 PRIV=false
@@ -25,29 +25,47 @@ if [ "${#PORTS[@]}" -ne "${#HOST_PORTS[@]}" ]; then
     exit 1
 fi
 
-# Build image
+# Arrêter et supprimer uniquement les conteneurs associés à l'image NAME
+if [ "$RUN" = true ] && docker image inspect "$NAME" >/dev/null 2>&1; then
+    mapfile -t CONTAINERS < <(docker ps -aq --filter "ancestor=$NAME")
+
+    if [ "${#CONTAINERS[@]}" -gt 0 ]; then
+        echo "Stopping containers associated with image: $NAME"
+        docker rm -f "${CONTAINERS[@]}" || exit 1
+    fi
+fi
+
+# Construire l'image
 docker build --tag="$NAME" . || exit 1
 
 if [ "$RUN" = true ]; then
+    # Construire les arguments de ports
+    PORT_ARGS=()
+
     for i in "${!PORTS[@]}"; do
         PORT="${PORTS[$i]}"
         HOST_PORT="${HOST_PORTS[$i]}"
-        CONTAINER_NAME="${NAME}_${PORT}"
 
-        docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
-
-        echo "Starting $CONTAINER_NAME: $HOST_PORT -> $PORT"
-
-        if [ "$PRIV" = true ]; then
-            docker run -d --privileged \
-                -p "$HOST_PORT:$PORT" \
-                --rm --name="$CONTAINER_NAME" "$NAME" || exit 1
-        else
-            docker run -d \
-                -p "$HOST_PORT:$PORT" \
-                --rm --name="$CONTAINER_NAME" "$NAME" || exit 1
-        fi
+        PORT_ARGS+=(-p "${HOST_PORT}:${PORT}")
+        echo "Mapping port: ${HOST_PORT} -> ${PORT}"
     done
+
+    echo "Starting container: $NAME"
+
+    if [ "$PRIV" = true ]; then
+        docker run -d \
+            --privileged \
+            "${PORT_ARGS[@]}" \
+            --rm \
+            --name="$NAME" \
+            "$NAME" || exit 1
+    else
+        docker run -d \
+            "${PORT_ARGS[@]}" \
+            --rm \
+            --name="$NAME" \
+            "$NAME" || exit 1
+    fi
 else
     echo "NO RUN"
 fi
