@@ -1,0 +1,9 @@
+services:
+  rabbit-ctf:
+    build:
+      context: src
+      dockerfile: Dockerfile
+    container_name: rabbit-ctf
+    restart: unless-stopped
+    ports:
+      - "2222:22"
