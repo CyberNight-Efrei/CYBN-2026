@@ -1,0 +1,55 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Legacy"
+category: System
+description: |-
+  Imaginez une entreprise où tout est bien documenté et maintenu à jour.
+  
+  Eh bien ce n'est pas le cas de la Neuill corp.
+  
+  On m'a demandé de faire des modifications sur un vieux serveur, mais Michel n'est plus là, donc personne sait vraiment comment faire.
+  J'ai juste pu trouver des identifiants en cherchant un peu, mais je vois pas comment accéder au dossier de l'application.
+
+attribution: "NozZy"
+
+flags:
+    # A static case sensitive flag created with a dictionary
+    - {
+        type: "static",
+        content: "CYBN{AtT3nT10n_@_JuL13_l4_RH}",
+        data: "case_sensitive",
+    }
+
+tags:
+    - Medium
+# </============ REQUIRED ============>
+
+
+# <============ CHALLENGE DOCKER ============>
+# REMOVE IF NO DOCKER
+
+type: dynamic_docker
+
+extra:
+  dynamic_score: 1      # 1 = True / 0 = False
+  dynamic_initial: 500  # NE PAS TOUCHER
+  dynamic_decay: 30     # NE PAS TOUCHER
+  dynamic_minimum: 100  # NE PAS TOUCHER
+
+  docker_image: system_serveur-app   # RESPECT FORMAT (shortname please)
+
+  redirect_type: tcp   # Protocol. Default should be tcp
+  redirect_port: 21               # App port, do not mind overlaps
+
+  user: app            # Optional, informative purpose only
+  password: app_password    # Optional, informative purpose only
+
+# </============ CHALLENGE DOCKER ============>

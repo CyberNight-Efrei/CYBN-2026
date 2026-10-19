@@ -1,0 +1,57 @@
+FROM debian:latest
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV USER=app
+ENV APP_FTP_PASSWORD=app_password
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        openssh-server \
+        vsftpd \
+        tcpdump \
+        ca-certificates \
+        passwd \
+        util-linux && \
+    rm -rf /var/lib/apt/lists/*
+
+# Compte utilisé par FTP et SSH
+RUN useradd --create-home --shell /bin/bash $USER && \
+    passwd -l $USER && \
+    mkdir -p /run/sshd /var/run/vsftpd/empty
+
+# Application métier fictive
+RUN mkdir -p /opt/Application && \
+    printf 'Application de finances RH\nAttention à la prod !!!' \
+        > /opt/Application/README.txt && \
+    printf 'environment=production\n' \
+        > /opt/Application/config.ini && \
+    printf 'CYBN{AtT3nT10n_@_JuL13_l4_RH}\n' \
+        > /opt/Application/flag.txt
+
+# Configuration SSH : clés uniquement
+RUN printf '%s\n' \
+    'Port 22' \
+    'PermitRootLogin no' \
+    'PubkeyAuthentication yes' \
+    'PasswordAuthentication no' \
+    'KbdInteractiveAuthentication no' \
+    'AuthenticationMethods publickey' \
+    'AuthorizedKeysFile %h/.ssh/authorized_keys' \
+    'AllowUsers app' \
+    'StrictModes no' \
+    'LogLevel DEBUG3' \
+    >> /etc/ssh/sshd_config
+
+USER app
+
+RUN printf 'Serveur de prod.\n - Dossier du serveur : /opt/Application\n\nNE PAS ETEINDRE - Sinon Julie va encore rouspeter...\n\n Michel.\n\n\nVersion 1 - 04/07/94' > /home/app/note.txt
+
+USER root
+
+COPY vsftpd.conf /etc/vsftpd.conf
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+
+EXPOSE 21 22
+
+CMD ["/entrypoint.sh"]
