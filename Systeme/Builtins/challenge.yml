@@ -1,0 +1,64 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic / dynamic_docker
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Builtins"
+category: System
+description: |-
+
+  Les commandes externes sont indisponibles.
+  Seules les fonctionnalites de Bash vous permettront de retrouver le flag.
+  
+  Bon Courage!
+
+  Format : `CYBN{template}`
+attribution: "Kazulhu"
+
+flags:
+    # A static case sensitive flag
+    - CYBN{BASH_BUILTINS_POWER!!!}
+    
+tags:
+    - Medium
+# </============ REQUIRED ============>
+
+
+# <============ CHALLENGE DOCKER ============>
+# REMOVE IF NO DOCKER
+
+type: dynamic_docker
+
+extra:
+  dynamic_score: 1      # 1 = True / 0 = False
+  dynamic_initial: 500  # NE PAS TOUCHER
+  dynamic_decay: 30     # NE PAS TOUCHER
+  dynamic_minimum: 100  # NE PAS TOUCHER
+
+  docker_image: system_builtins   # RESPECT FORMAT (shortname please)
+
+  redirect_type: ssh   # Protocol. Default should be tcp
+  redirect_port: 22               # App port, do not mind overlaps
+
+  user: builtin            # Optional, informative purpose only
+  password: builtin    # Optional, informative purpose only
+
+# </============ CHALLENGE DOCKER ============>
+
+
+# <============ OPTIONAL ============>
+
+next: null
+
+version: "0.1"
