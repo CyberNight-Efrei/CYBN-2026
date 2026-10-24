@@ -1,3 +1,3 @@
 idf_component_register(SRCS "main.c"
-                    REQUIRES rolling_codes nvs_flash
+                    REQUIRES bt_server_init rolling_codes claque_ton_sub nvs_flash
                     INCLUDE_DIRS ".")

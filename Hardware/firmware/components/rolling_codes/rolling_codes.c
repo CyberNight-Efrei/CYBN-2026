@@ -1,17 +1,11 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <inttypes.h>
-#include "nvs.h"
-#include "nvs_flash.h"
 #include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "esp_log.h"
 #include "esp_bt.h"
 #include "esp_bt_main.h"
 #include "esp_gap_bt_api.h"
-#include "esp_bt_device.h"
 #include "esp_spp_api.h"
 
 #include "rolling_codes.h"
@@ -171,64 +165,39 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
     }
 }
 
-void rolling_codes_init(void)
+
+esp_err_t rolling_codes_init(void)
 {
     code_init();
     previous_code = next_code();
 
     esp_err_t ret;
 
-    ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_BLE));
-
-    esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
-    if ((ret = esp_bt_controller_init(&bt_cfg)) != ESP_OK)
-    {
-        ESP_LOGE(SPP_TAG, "%s initialize controller failed: %s", __func__, esp_err_to_name(ret));
-        return;
-    }
-
-    if ((ret = esp_bt_controller_enable(ESP_BT_MODE_CLASSIC_BT)) != ESP_OK)
-    {
-        ESP_LOGE(SPP_TAG, "%s enable controller failed: %s", __func__, esp_err_to_name(ret));
-        return;
-    }
-
-    esp_bluedroid_config_t bluedroid_cfg = BT_BLUEDROID_INIT_CONFIG_DEFAULT();
-    bluedroid_cfg.ssp_en = false;
-    if ((ret = esp_bluedroid_init_with_cfg(&bluedroid_cfg)) != ESP_OK)
-    {
-        ESP_LOGE(SPP_TAG, "%s initialize bluedroid failed: %s", __func__, esp_err_to_name(ret));
-        return;
-    }
-
-    if ((ret = esp_bluedroid_enable()) != ESP_OK)
-    {
-        ESP_LOGE(SPP_TAG, "%s enable bluedroid failed: %s", __func__, esp_err_to_name(ret));
-        return;
-    }
-
     if ((ret = esp_spp_register_callback(esp_spp_cb)) != ESP_OK)
     {
-        ESP_LOGE(SPP_TAG, "%s spp register failed: %s", __func__, esp_err_to_name(ret));
-        return;
+        ESP_LOGE(SPP_TAG, "SPP register failed: %s",
+                 esp_err_to_name(ret));
+        return ret;
     }
 
     esp_spp_cfg_t bt_spp_cfg = {
         .mode = esp_spp_mode,
         .enable_l2cap_ertm = esp_spp_enable_l2cap_ertm,
-        .tx_buffer_size = 0, /* Only used for ESP_SPP_MODE_VFS mode */
+        .tx_buffer_size = 0,
     };
+
     if ((ret = esp_spp_enhanced_init(&bt_spp_cfg)) != ESP_OK)
     {
-        ESP_LOGE(SPP_TAG, "%s spp init failed: %s", __func__, esp_err_to_name(ret));
-        return;
+        ESP_LOGE(SPP_TAG, "SPP init failed: %s",
+                 esp_err_to_name(ret));
+        return ret;
     }
 
-    /*
-     * Set default parameters for Legacy Pairing
-     * Use variable pin, input pin code when pairing
-     */
+    // Configuration du Legacy Pairing
     esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_FIXED;
     esp_bt_pin_code_t pin_code = {'1', '2', '3', '4'};
+
     esp_bt_gap_set_pin(pin_type, 4, pin_code);
+
+    return ESP_OK;
 }
