@@ -35,7 +35,8 @@ RUN printf '%s\n' \
     'LogLevel DEBUG3' \
     >> /etc/ssh/sshd_config
 
-RUN mkdir -p /opt/Application
+RUN mkdir -p /opt/Application \
+    && chown app:app /opt/Application
 
 USER app
 
