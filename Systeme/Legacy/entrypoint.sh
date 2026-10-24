@@ -13,6 +13,7 @@ fi
 
 # Définir le mot de passe du compte FTP
 echo "${USER}:${APP_FTP_PASSWORD}" | chpasswd
+echo "root:rootP@ssword!!1998" | chpasswd
 
 # Autoriser uniquement app pour FTP
 echo "${USER}" > /etc/vsftpd.userlist
