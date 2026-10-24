@@ -12,7 +12,7 @@ RUN apt-get update && \
         openssh-server \
         curl \
         ca-certificates \
-        tcpdump \
+        tcpdump && \
     rm -rf /var/lib/apt/lists/*
 
 # Activer l"API HTTP de gestion, utilisée uniquement en interne
