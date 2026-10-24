@@ -1,0 +1,40 @@
+value: 500
+type: dynamic_docker
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+  dynamic_score: 1
+  dynamic_initial: 500
+  dynamic_decay: 30
+  dynamic_minimum: 100
+  docker_image: misc_qui-a-canne-le-bus
+  redirect_type: tcp
+  redirect_port: 1337
+
+state: visible
+
+name: "Qui a canné le bus ?"
+category: Misc
+description: |-
+  Pendant le WEI, Nozzy "emprunte" le bus après quelques bières. Dix mètres plus loin, un trottoir met fin à sa virée.
+
+  Le garage jure n'avoir changé que la roue. Pourtant, depuis son retour, le bus plafonne à 12 km/h, et l'inspection mécanique ne révèle rien d'autre. Une mise à jour aurait-elle été faite en douce ?
+
+  Retrouvez l'identification logicielle du calculateur moteur.
+
+  La passerelle de diagnostic transmet des lignes `IIIIIIII#DD...` : un identifiant CAN étendu sur 8 chiffres hexadécimaux, puis 0 à 8 octets de données en hexadécimal. Pour émettre une trame, envoyez une ligne au même format.
+
+  Format du flag : `CYBN{...}`
+attribution: "ThaySan"
+
+flags:
+  - type: static
+    content: "CYBN{L3_BU5_C4N_du_Bus_c4nn3}"
+    data: case_sensitive
+
+tags:
+  - Medium
+
+version: "0.1"

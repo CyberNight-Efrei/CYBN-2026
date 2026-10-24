@@ -1,0 +1,40 @@
+services:
+  builtin:
+    build:
+      context: .
+      args:
+          #image: ${REGISTRY}/builtin:latest
+        image: builtin:latest
+    container_name: builtin-challenge
+    hostname: builtin-challenge
+
+    ports:
+      - "127.0.0.1:2222:22"
+
+    read_only: true
+    tmpfs:
+      - /run:rw,nosuid,nodev,noexec,mode=0755,size=16m
+
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - SYS_CHROOT
+      - CHOWN
+
+    security_opt:
+      - no-new-privileges:true
+
+    pids_limit: 64
+    mem_limit: 128m
+    cpus: 0.5
+
+    restart: unless-stopped
+
+    networks:
+      - challenge
+
+networks:
+  challenge:
+    driver: bridge
