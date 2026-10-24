@@ -204,6 +204,7 @@ info "${#files[@]} challenge(s) trouvé(s)."
 OK_COUNT=0
 FAIL_COUNT=0
 SKIP_COUNT=0
+IGNORED_COUNT=0
 FAILED_DIRS=()
 
 for file in "${files[@]}"; do
@@ -221,18 +222,38 @@ for file in "${files[@]}"; do
 
     info "Exécution : $display_cmd"
 
-    if "$CTF_BIN" challenge "$ACTION" "$dir"; then
+    log_file="$(mktemp)"
+    stop_after_failure=0
+
+    if "$CTF_BIN" challenge "$ACTION" "$dir" 2>&1 | tee "$log_file"; then
         success "$dir"
         ((OK_COUNT += 1))
-    else
-        error "Échec : $dir"
-        ((FAIL_COUNT += 1))
-        FAILED_DIRS+=("$dir")
 
-        if [[ "$CONTINUE_ON_ERROR" -eq 0 ]]; then
-            warn "Arrêt demandé après la première erreur."
-            break
+    else
+        # Ignorer uniquement le doublon lors d'une installation.
+        if [[ "$ACTION" == "install" ]] &&
+           grep -Fq "Found already existing challenge with the same name" "$log_file" &&
+           grep -Fq "Perhaps you meant sync instead of install?" "$log_file"; then
+
+            warn "DOUBLON IGNORÉ : challenge déjà présent sur CTFd : $dir"
+            ((IGNORED_COUNT += 1))
+
+        else
+            error "Échec : $dir"
+            ((FAIL_COUNT += 1))
+            FAILED_DIRS+=("$dir")
+
+            if [[ "$CONTINUE_ON_ERROR" -eq 0 ]]; then
+                warn "Arrêt demandé après la première véritable erreur."
+                stop_after_failure=1
+            fi
         fi
+    fi
+
+    rm -f -- "$log_file"
+
+    if [[ "$stop_after_failure" -eq 1 ]]; then
+        break
     fi
 done
 
@@ -241,11 +262,12 @@ done
 # ============================================================
 
 printf '\n%s========== BILAN ==========%s\n' "$BLUE" "$NC"
-printf 'Action       : %s\n' "$ACTION"
-printf 'Trouvés      : %d\n' "${#files[@]}"
-printf 'Réussites    : %d\n' "$OK_COUNT"
-printf 'Échecs       : %d\n' "$FAIL_COUNT"
-printf 'Non exécutés : %d\n' "$SKIP_COUNT"
+printf 'Action            : %s\n' "$ACTION"
+printf 'Trouvés           : %d\n' "${#files[@]}"
+printf 'Réussites         : %d\n' "$OK_COUNT"
+printf 'Échecs            : %d\n' "$FAIL_COUNT"
+printf 'Doublons ignorés  : %d\n' "$IGNORED_COUNT"
+printf 'Non exécutés      : %d\n' "$SKIP_COUNT"
 
 if [[ ${#FAILED_DIRS[@]} -gt 0 ]]; then
     printf '\n%sChallenges en échec :%s\n' "$RED" "$NC"
