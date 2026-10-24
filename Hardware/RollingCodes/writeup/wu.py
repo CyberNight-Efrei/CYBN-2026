@@ -7,6 +7,8 @@ RANDOM_MAX = 0x7FFFFFFF
 
 found = False
 
+MAC = 'cc:db:a7:2d:e0:6a'
+
 def code(x):
     if x == 0:
         x = 123459876
@@ -21,7 +23,7 @@ def code(x):
 def try_key(k):
     global found
     s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-    s.connect(('cc:db:a7:2d:e0:6a', 1))
+    s.connect((MAC, 1))
     x = s.recv(4)
     x = x[::-1] # Little endian: we reverse the bytes
     print("recieved ", x.hex())
@@ -42,7 +44,7 @@ def try_key(k):
 
 def get_code():
     s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-    s.connect(('cc:db:a7:2d:e0:6a', 1))
+    s.connect((MAC, 1))
     x = s.recv(4)
     s.close()
     return int.from_bytes(x, byteorder='little')

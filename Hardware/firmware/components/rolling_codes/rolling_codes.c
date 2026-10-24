@@ -195,7 +195,7 @@ esp_err_t rolling_codes_init(void)
 
     // Configuration du Legacy Pairing
     esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_FIXED;
-    esp_bt_pin_code_t pin_code = {'1', '2', '3', '4'};
+    esp_bt_pin_code_t pin_code = {'5', '9', '3', '5'};
 
     esp_bt_gap_set_pin(pin_type, 4, pin_code);
 

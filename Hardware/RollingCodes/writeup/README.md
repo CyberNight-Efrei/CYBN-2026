@@ -1,5 +1,6 @@
 # Rolling Codes Writeup
 
+On remarque que les codes sont générés avec ce PRNG :
 https://github.com/avrdudes/avr-libc/blob/main/libc/stdlib/random.c
 
 Le programme en C prouve que le bruteforce peut être réalisé très rapidement.
@@ -14,6 +15,6 @@ scan on
 scan off
 list
 pair CC:DB:A7:2D:E0:6A
-> pin 1234
+> pin 5935
 python wu.py
 ```

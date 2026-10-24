@@ -1,0 +1,42 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: hidden
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "CHALLENGE NAME"
+category: Hardware
+description: |-
+  # Claque ton sub !
+  
+  Naaan gros Yuki gros...
+
+  Viens t'abonner à mon super service Bluetooth LE !
+  
+
+  Format : `CYBN{CLAQUE_TON_SUB}`
+
+attribution: "0x7fff00"
+
+flags:
+  # A static case sensitive flag
+  - CYBN{VALORANT_EST_UN_JEU_NUL_CS_AUSSI}
+
+tags:
+  - Medium
+
+next: null
+
+# Specifies what version of the challenge specification was used.
+# Subject to change until ctfcli v1.0.0
+version: "0.1"
