@@ -177,10 +177,16 @@ info "Mode         : $([[ "$DRY_RUN" -eq 1 ]] && echo "simulation" || echo "exé
 
 info "Recherche des fichiers $FILENAME..."
 
+VENV_DIR_ABS="$(cd -- "$VENV_DIR" && pwd -P)"
+
 mapfile -d '' -t files < <(
     find "$ROOT" \
-        -type d \( -name .git -o -name venv -o -name .venv \) -prune -o \
-        -type f -name "$FILENAME" -print0 |
+        \( -type d \( \
+            -name '.*' \
+            -o -path "$VENV_DIR_ABS" \
+            -o -path "$ROOT/0-CHALL-TEMPLATE" \
+        \) -prune \) -o \
+        \( -type f -name "$FILENAME" -print0 \) |
         sort -z
 )
 
@@ -202,10 +208,6 @@ FAILED_DIRS=()
 
 for file in "${files[@]}"; do
     dir="$(dirname -- "$file")"
-
-    if [[ "$dir" = "./0-CHALL-TEMPLATE" ]]; then
-      continue
-    fi
 
     printf '\n%s========== %s ==========%s\n' "$BLUE" "$dir" "$NC"
 
