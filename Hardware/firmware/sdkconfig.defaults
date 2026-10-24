@@ -1,8 +1,27 @@
 # This file was generated using idf.py save-defconfig or menuconfig [D] key. It can be edited manually.
 # Espressif IoT Development Framework (ESP-IDF) 6.0.1 Project Minimal Configuration
 #
+
+#
+# Component config
+#
+
+#
+# Bluetooth
+#
 CONFIG_BT_ENABLED=y
+
+#
+# Bluedroid Options
+#
 CONFIG_BT_CLASSIC_ENABLED=y
 CONFIG_BT_SPP_ENABLED=y
-CONFIG_BT_BLE_ENABLED=n
-CONFIG_BTDM_CTRL_MODE_BR_EDR_ONLY=y
+# end of Bluedroid Options
+
+#
+# Controller Options
+#
+CONFIG_BTDM_CTRL_MODE_BTDM=y
+# end of Controller Options
+# end of Bluetooth
+# end of Component config
