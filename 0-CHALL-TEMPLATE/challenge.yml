@@ -10,7 +10,7 @@ extra:
     decay: 30
     minimum: 100
 
-state: visible
+state: hidden
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>

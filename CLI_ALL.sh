@@ -203,6 +203,10 @@ FAILED_DIRS=()
 for file in "${files[@]}"; do
     dir="$(dirname -- "$file")"
 
+    if [[ "$dir" = "./0-CHALL-TEMPLATE" ]]; then
+      continue
+    fi
+
     printf '\n%s========== %s ==========%s\n' "$BLUE" "$dir" "$NC"
 
     printf -v display_cmd '%q ' "$CTF_BIN" challenge "$ACTION" "$dir"
