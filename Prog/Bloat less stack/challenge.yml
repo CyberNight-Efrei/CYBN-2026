@@ -3,12 +3,6 @@
 
 # <============ NE PAS TOUCHER ============>
 value: 500
-type: dynamic_docker
-
-extra:
-    initial: 500
-    decay: 30
-    minimum: 100
 
 state: visible
 # </============ NE PAS TOUCHER ============>

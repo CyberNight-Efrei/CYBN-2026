@@ -15,7 +15,7 @@ extra:
 
 state: visible
 
-name: "Echange moi si tu peux"
+name: "Cybermon 2 - Echange moi si tu peux"
 category: Web
 description: |-
   Après le bannissement d'un collectionneur impliqué dans un trafic de cartes interdites, Cybermon Online a remplacé les échanges informels par un centre d'échange sécurisé. Les joueurs peuvent désormais publier un classeur, proposer des cartes et accompagner leurs demandes d'un message personnalisé.
@@ -32,5 +32,7 @@ flags:
 
 tags:
   - Medium
+
+next: "Cybermon 3 - Trompe-l'oeil"
 
 version: "0.1"

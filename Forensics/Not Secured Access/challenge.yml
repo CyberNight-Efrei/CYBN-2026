@@ -66,4 +66,4 @@ attempts: 5
 # Only provided files to challengers
 # NO directories, accept archives (.zip, .7z, .tgz)
 files:
-    - src/tropdechoses
+    - src/NSA.zip
