@@ -3,14 +3,42 @@
 
 # <============ NE PAS TOUCHER ============>
 value: 500
-type: dynamic / dynamic_docker
+type: dynamic / dynamic_docker  # Mettre "dynamic" si le challenge n'utilise pas Docker
 
 extra:
-    initial: 500
-    decay: 30
-    minimum: 100
+  initial: 500
+  decay: 30
+  minimum: 100
 
-state: visible
+  # <============ CHALLENGE DOCKER ============>
+  # Supprimer les champs de cette section si pas de Docker.
+  # Dans ce cas, remplacer aussi le type par "dynamic".
+
+  dynamic_score: 1      # 1 = True / 0 = False
+  dynamic_initial: 500  # NE PAS TOUCHER
+  dynamic_decay: 30     # NE PAS TOUCHER
+  dynamic_minimum: 100  # NE PAS TOUCHER
+  docker_image: category_challenge-directory-name   # RESPECT FORMAT (shortname please)
+
+  # Ports accessibles depuis l'extérieur.
+  # Ajouter une entrée par port à exposer.
+  ports:
+    - name: web
+      protocol: http         # ssh, tcp, http
+      internal_port: 8080    # Internal app port, do not mind overlaps
+
+    # Exemple pour exposer un second service :
+    # - name: ssh
+    #   protocol: ssh
+    #   internal_port: 22
+
+  # Optionnel
+  user: user
+  password: password
+
+  # </============ CHALLENGE DOCKER ============>
+
+state: hidden
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>
@@ -18,70 +46,52 @@ name: "CHALLENGE NAME"
 category: Crypto / Forensics / Hardware / Misc / OSINT / Prog / Pwn / Reverse / Stegano / System / Web
 description: |-
   # GROS TITRE
-
+  
   Du bon vieux Markdown comme on aime
-
+  
   ---
 
   Bon chance
 
   Format : `CYBN{template}`
+
 attribution: "AUTHOR"
 
 flags:
-    # A static case sensitive flag
-    - CYBN{REDACTED}
-    # A static case sensitive flag created with a dictionary
-    - {
-        type: "static",
-        content: "CYBN{REDACTED}",
-        data: "case_sensitive",
-    }
-    # A static case insensitive flag
-    - {
-        type: "static",
-        content: "CYBN{REDACTED}",
-        data: "case_insensitive",
-    }
-    # A regex case insensitive flag
-    - {
-        type: "regex",
-        content: "(.*)STUFF(.*)",
-        data: "case_insensitive",
-    }
+  # A static case sensitive flag
+  - CYBN{REDACTED}
+
+  # A static case sensitive flag created with a dictionary
+  - {
+    type: "static",
+    content: "CYBN{REDACTED}",
+    data: "case_sensitive",
+  }
+
+  # A static case insensitive flag
+  - {
+    type: "static",
+    content: "CYBN{REDACTED}",
+    data: "case_insensitive",
+  }
+
+  # A regex case insensitive flag
+  - {
+    type: "regex",
+    content: "(.*)STUFF(.*)",
+    data: "case_insensitive",
+  }
 
 tags:
-    - Intro / Easy / Medium / Hard
+  - Intro / Easy / Medium / Hard
+
 # </============ REQUIRED ============>
-
-
-# <============ CHALLENGE DOCKER ============>
-# REMOVE IF NO DOCKER
-
-type: dynamic_docker
-
-extra:
-  dynamic_score: 1      # 1 = True / 0 = False
-  dynamic_initial: 500  # NE PAS TOUCHER
-  dynamic_decay: 30     # NE PAS TOUCHER
-  dynamic_minimum: 100  # NE PAS TOUCHER
-
-  docker_image: category_challenge-name   # RESPECT FORMAT (shortname please)
-
-  redirect_type: ssh   # Protocol. Default should be tcp
-  redirect_port: 2222               # App port, do not mind overlaps
-
-  user: user            # Optional, informative purpose only
-  password: password    # Optional, informative purpose only
-
-# </============ CHALLENGE DOCKER ============>
-
 
 # <============ OPTIONAL ============>
 
 # connection_info is used to provide a link, hostname, or instructions on how to connect to a challenge
-# ========== Do NOT use if provided for docker above =============
-connection_info: nc hostname 12345
+# Do NOT use if provided for Docker above
+# connection_info: nc hostname 12345
 
 # Can be removed if unused
 attempts: 5
@@ -89,18 +99,18 @@ attempts: 5
 # Only provided files to challengers
 # NO directories, accept archives (.zip, .7z, .tgz)
 files:
-    - src/source.py
+  - src/source.py
 
 # Hints are used to give players a way to buy or have suggestions. They are not
 # required but can be nice.
 # Can be removed if unused
 # Accepts dictionaries or strings
 hints:
-    - title: Titled Hint
-      content: This hint has a title and costs points
-      cost: 10
+  - title: Titled Hint
+    content: This hint has a title and costs points
+    cost: 10
 
-# The next is used to display a next recommended challenge to a user when 
+# The next is used to display a next recommended challenge to a user when
 # the user correctly answers the current challenge.
 # Can be removed if unused
 # Accepts a challenge name as a string, a challenge ID as an integer, or null

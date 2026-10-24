@@ -3,55 +3,34 @@
 
 # <============ NE PAS TOUCHER ============>
 value: 500
-type: dynamic / dynamic_docker
-
-extra:
-    initial: 500
-    decay: 30
-    minimum: 100
 
 state: visible
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>
-name: "CHALLENGE NAME"
-category: Crypto / Forensics / Hardware / Misc / OSINT / Prog / Pwn / Reverse / Stegano / System / Web
+name: "Alicia au pays des miracles"
+category: Stegano
 description: |-
-  # GROS TITRE
+  Alicia s'est engouffrée dans un trou... Un trou tellement grand, qu'il ressemble à un tunnel.
+  
+  Ce tunnel vous mènera au pays des miracles.
+  
+  Dans ce pays, bien que familier au premier abord, des choses semblent cachées.
+  
+  Mais quoi donc ?
 
-  Du bon vieux Markdown comme on aime
-
-  ---
-
-  Bon chance
-
-  Format : `CYBN{template}`
-attribution: "AUTHOR"
+attribution: "NozZy"
 
 flags:
-    # A static case sensitive flag
-    - CYBN{REDACTED}
     # A static case sensitive flag created with a dictionary
     - {
         type: "static",
-        content: "CYBN{REDACTED}",
+        content: "CYBN{Th3_Wh1te_R4Bb17_i5_CréT1n}",
         data: "case_sensitive",
-    }
-    # A static case insensitive flag
-    - {
-        type: "static",
-        content: "CYBN{REDACTED}",
-        data: "case_insensitive",
-    }
-    # A regex case insensitive flag
-    - {
-        type: "regex",
-        content: "(.*)STUFF(.*)",
-        data: "case_insensitive",
     }
 
 tags:
-    - Intro / Easy / Medium / Hard
+    - Medium
 # </============ REQUIRED ============>
 
 
@@ -66,46 +45,18 @@ extra:
   dynamic_decay: 30     # NE PAS TOUCHER
   dynamic_minimum: 100  # NE PAS TOUCHER
 
-  docker_image: category_challenge-name   # RESPECT FORMAT (shortname please)
+  docker_image: systeme_alicia-au-pays-des-miracles   # RESPECT FORMAT (shortname please)
 
-  redirect_type: ssh   # Protocol. Default should be tcp
-  redirect_port: 2222               # App port, do not mind overlaps
+  ports:
+    - name: ssh
+      protocol: ssh         # ssh, tcp, http
+      internal_port: 22
 
-  user: user            # Optional, informative purpose only
-  password: password    # Optional, informative purpose only
+  user: alicia            # Optional, informative purpose only
+  password: miracle    # Optional, informative purpose only
 
 # </============ CHALLENGE DOCKER ============>
 
-
-# <============ OPTIONAL ============>
-
-# connection_info is used to provide a link, hostname, or instructions on how to connect to a challenge
-# ========== Do NOT use if provided for docker above =============
-connection_info: nc hostname 12345
-
-# Can be removed if unused
-attempts: 5
-
-# Only provided files to challengers
-# NO directories, accept archives (.zip, .7z, .tgz)
-files:
-    - src/source.py
-
-# Hints are used to give players a way to buy or have suggestions. They are not
-# required but can be nice.
-# Can be removed if unused
-# Accepts dictionaries or strings
-hints:
-    - title: Titled Hint
-      content: This hint has a title and costs points
-      cost: 10
-
-# The next is used to display a next recommended challenge to a user when 
-# the user correctly answers the current challenge.
-# Can be removed if unused
-# Accepts a challenge name as a string, a challenge ID as an integer, or null
-# if you want to remove or disable it.
-next: null
 
 # Specifies what version of the challenge specification was used.
 # Subject to change until ctfcli v1.0.0

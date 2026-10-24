@@ -10,13 +10,15 @@ extra:
   dynamic_decay: 30
   dynamic_minimum: 100
   docker_image: web_cybermon-ia
-  redirect_type: http
-  redirect_port: 8080
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 8080
 
 state: visible
 
-name: "Trompe-l'oeil"
-category: Web
+name: "Cybermon 3 - Trompe-l'oeil"
+category: Misc
 description: |-
   Cybermon Online vient d'ouvrir un atelier capable de transformer une simple illustration en carte jouable.
 

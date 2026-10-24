@@ -1,105 +1,286 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 
-# ----------------------
-# Couleurs
-# ----------------------
-RED="\033[0;31m"
-GREEN="\033[0;32m"
-BLUE="\033[0;34m"
-YELLOW="\033[1;33m"
-NC="\033[0m" # No Color
+# ============================================================
+# Configuration
+# ============================================================
 
-# ----------------------
-# Valeurs par défaut
-# ----------------------
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+
 ROOT="."
 FILENAME="challenge.yml"
 ACTION=""
-CONTINUE_ON_ERROR=1   # par défaut : continuer même si une erreur survient
-# ----------------------
 
-# ----------------------
-# Aide / usage
-# ----------------------
+# Environnement virtuel situé par défaut à côté du script.
+# Peut être remplacé avec : VENV_DIR=/chemin/venv ./script.sh ...
+VENV_DIR="${VENV_DIR:-${SCRIPT_DIR}/venv}"
+
+# 1 = continuer après une erreur ; 0 = arrêter à la première erreur.
+CONTINUE_ON_ERROR="${CONTINUE_ON_ERROR:-1}"
+
+DRY_RUN=0
+
+# Conserver le magasin de certificats utilisé pour CTFd.
+if [[ -z "${REQUESTS_CA_BUNDLE:-}" &&
+      -r /etc/ssl/certs/ca-certificates.crt ]]; then
+    export REQUESTS_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+fi
+
+# ============================================================
+# Couleurs
+# ============================================================
+
+if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
+    RED=$'\033[0;31m'
+    GREEN=$'\033[0;32m'
+    BLUE=$'\033[0;34m'
+    YELLOW=$'\033[1;33m'
+    CYAN=$'\033[0;36m'
+    NC=$'\033[0m'
+else
+    RED=""
+    GREEN=""
+    BLUE=""
+    YELLOW=""
+    CYAN=""
+    NC=""
+fi
+
+info()    { printf '%s[INFO]%s %s\n' "$CYAN" "$NC" "$*"; }
+success() { printf '%s[OK]%s %s\n' "$GREEN" "$NC" "$*"; }
+warn()    { printf '%s[ATTENTION]%s %s\n' "$YELLOW" "$NC" "$*"; }
+error()   { printf '%s[ERREUR]%s %s\n' "$RED" "$NC" "$*" >&2; }
+
+# ============================================================
+# Aide
+# ============================================================
+
 usage() {
-    echo -e "${YELLOW}Usage: $0 <action> [root]${NC}"
-    echo
-    echo "Action obligatoire :"
-    echo "  add       Ajouter le challenge"
-    echo "  install   Installer le challenge"
-    echo "  sync      Synchroniser le challenge"
-    echo "  mirror    Mirror le challenge"
-    echo
-    echo "root : répertoire racine pour la recherche (défaut: .)"
+    cat <<EOF
+Usage :
+  $0 <action> [root] [options]
+
+Actions :
+  add       Ajouter le challenge
+  install   Installer le challenge
+  sync      Synchroniser le challenge
+  mirror    Miroir du challenge
+
+Arguments :
+  root                 Répertoire racine (défaut : .)
+
+Options :
+  --dry-run            Afficher les commandes sans les exécuter
+  --stop-on-error      Arrêter à la première erreur
+  -h, --help           Afficher cette aide
+
+Variables d'environnement :
+  VENV_DIR             Chemin du venv (défaut : ${SCRIPT_DIR}/venv)
+  CONTINUE_ON_ERROR    1 pour continuer, 0 pour arrêter
+  REQUESTS_CA_BUNDLE   Magasin de certificats CA utilisé par requests
+
+Exemples :
+  $0 sync .
+  $0 install /opt/CYBN-2026
+  $0 mirror . --dry-run
+  $0 add . --stop-on-error
+EOF
 }
 
-# ----------------------
-# Parsing des arguments
-# ----------------------
+# ============================================================
+# Arguments
+# ============================================================
+
 if [[ $# -lt 1 ]]; then
-    echo -e "${RED}Erreur : il faut spécifier une action.${NC}"
     usage
-    exit 1
+    exit 2
 fi
 
 ACTION="$1"
 shift
 
 case "$ACTION" in
-    add|install|sync|mirror)
+    add|install|sync|mirror) ;;
+    -h|--help)
+        usage
+        exit 0
         ;;
     *)
-        echo -e "${RED}Action invalide : $ACTION${NC}"
+        error "Action inconnue : $ACTION"
         usage
-        exit 1
+        exit 2
         ;;
 esac
 
-# Si un root est passé en argument
-if [[ $# -ge 1 ]]; then
+# Le premier argument restant, s'il ne s'agit pas d'une option,
+# est le répertoire racine.
+if [[ $# -gt 0 && "$1" != --* && "$1" != "-h" ]]; then
     ROOT="$1"
+    shift
 fi
 
-# ----------------------
-# Recherche des fichiers
-# ----------------------
-mapfile -d '' -t files < <(find "$ROOT" -type f -name "$FILENAME" -print0)
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dry-run)
+            DRY_RUN=1
+            ;;
+        --stop-on-error)
+            CONTINUE_ON_ERROR=0
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            error "Argument inconnu : $1"
+            usage
+            exit 2
+            ;;
+    esac
+    shift
+done
 
-if [ "${#files[@]}" -eq 0 ]; then
-    echo -e "${RED}Aucun fichier '$FILENAME' trouvé sous '$ROOT'.${NC}"
+if [[ "$CONTINUE_ON_ERROR" != 0 &&
+      "$CONTINUE_ON_ERROR" != 1 ]]; then
+    error "CONTINUE_ON_ERROR doit valoir 0 ou 1."
+    exit 2
+fi
+
+# ============================================================
+# Vérifications préalables
+# ============================================================
+
+if [[ ! -d "$ROOT" ]]; then
+    error "Répertoire racine introuvable : $ROOT"
     exit 1
 fi
 
-if [[ -f "$ROOT/venv/bin/activate" ]]; then
+ROOT="$(cd -- "$ROOT" && pwd -P)"
 
-    echo -e "${YELLOW}Activation de l'environnement virtuel : $ROOT/venv/bin/activate${NC}"
-    source "$ROOT/venv/bin/activate"
-
-else
-
-    echo -e "${RED}Pas d'environnement virtuel trouvé. Abandon.${NC}"
+if [[ ! -x "$VENV_DIR/bin/ctf" ]]; then
+    error "ctfcli introuvable ou non exécutable : $VENV_DIR/bin/ctf"
+    error "Vérifie VENV_DIR et l'installation de ctfcli."
     exit 1
-
 fi
 
+CTF_BIN="$VENV_DIR/bin/ctf"
 
-# ----------------------
-# Exécution de l'action
-# ----------------------
+info "Action       : $ACTION"
+info "Racine       : $ROOT"
+info "Environnement: $VENV_DIR"
+info "TLS CA       : ${REQUESTS_CA_BUNDLE:-valeur par défaut de Python}"
+info "Mode         : $([[ "$DRY_RUN" -eq 1 ]] && echo "simulation" || echo "exécution")"
+
+# ============================================================
+# Recherche des challenges
+# ============================================================
+
+info "Recherche des fichiers $FILENAME..."
+
+VENV_DIR_ABS="$(cd -- "$VENV_DIR" && pwd -P)"
+
+mapfile -d '' -t files < <(
+    find "$ROOT" \
+        \( -type d \( \
+            -name '.*' \
+            -o -path "$VENV_DIR_ABS" \
+            -o -path "$ROOT/0-CHALL-TEMPLATE" \
+        \) -prune \) -o \
+        \( -type f -name "$FILENAME" -print0 \) |
+        sort -z
+)
+
+if [[ ${#files[@]} -eq 0 ]]; then
+    error "Aucun fichier '$FILENAME' trouvé sous '$ROOT'."
+    exit 1
+fi
+
+info "${#files[@]} challenge(s) trouvé(s)."
+
+# ============================================================
+# Exécution
+# ============================================================
+
+OK_COUNT=0
+FAIL_COUNT=0
+SKIP_COUNT=0
+IGNORED_COUNT=0
+FAILED_DIRS=()
+
 for file in "${files[@]}"; do
-    dir="$(dirname "$file")"
-    echo -e "\n${BLUE}---------- $dir ----------${NC}"
+    dir="$(dirname -- "$file")"
 
-    echo -e "${YELLOW}Exécution : ctf challenge $ACTION $dir${NC}"
-    if ctf challenge "$ACTION" "$dir"; then
-        echo -e "${GREEN}OK : $dir${NC}"
+    printf '\n%s========== %s ==========%s\n' "$BLUE" "$dir" "$NC"
+
+    printf -v display_cmd '%q ' "$CTF_BIN" challenge "$ACTION" "$dir"
+
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        info "Simulation : $display_cmd"
+        ((SKIP_COUNT += 1))
+        continue
+    fi
+
+    info "Exécution : $display_cmd"
+
+    log_file="$(mktemp)"
+    stop_after_failure=0
+
+    if "$CTF_BIN" challenge "$ACTION" "$dir" 2>&1 | tee "$log_file"; then
+        success "$dir"
+        ((OK_COUNT += 1))
+
     else
-        echo -e "${RED}ÉCHEC : $dir${NC}"
-        if [ "$CONTINUE_ON_ERROR" -eq 0 ]; then
-            exit 1
+        # Ignorer uniquement le doublon lors d'une installation.
+        if [[ "$ACTION" == "install" ]] &&
+           grep -Fq "Found already existing challenge with the same name" "$log_file" &&
+           grep -Fq "Perhaps you meant sync instead of install?" "$log_file"; then
+
+            warn "DOUBLON IGNORÉ : challenge déjà présent sur CTFd : $dir"
+            ((IGNORED_COUNT += 1))
+
+        else
+            error "Échec : $dir"
+            ((FAIL_COUNT += 1))
+            FAILED_DIRS+=("$dir")
+
+            if [[ "$CONTINUE_ON_ERROR" -eq 0 ]]; then
+                warn "Arrêt demandé après la première véritable erreur."
+                stop_after_failure=1
+            fi
         fi
+    fi
+
+    rm -f -- "$log_file"
+
+    if [[ "$stop_after_failure" -eq 1 ]]; then
+        break
     fi
 done
 
-echo -e "\n${BLUE}Traitement terminé pour ${#files[@]} dossier(s).${NC}"
+# ============================================================
+# Bilan
+# ============================================================
+
+printf '\n%s========== BILAN ==========%s\n' "$BLUE" "$NC"
+printf 'Action            : %s\n' "$ACTION"
+printf 'Trouvés           : %d\n' "${#files[@]}"
+printf 'Réussites         : %d\n' "$OK_COUNT"
+printf 'Échecs            : %d\n' "$FAIL_COUNT"
+printf 'Doublons ignorés  : %d\n' "$IGNORED_COUNT"
+printf 'Non exécutés      : %d\n' "$SKIP_COUNT"
+
+if [[ ${#FAILED_DIRS[@]} -gt 0 ]]; then
+    printf '\n%sChallenges en échec :%s\n' "$RED" "$NC"
+    for dir in "${FAILED_DIRS[@]}"; do
+        printf '  - %s\n' "$dir"
+    done
+fi
+
+if [[ "$DRY_RUN" -eq 1 ]]; then
+    success "Simulation terminée : aucune action ctfcli exécutée."
+elif [[ "$FAIL_COUNT" -gt 0 ]]; then
+    error "Traitement terminé avec des erreurs."
+    exit 1
+else
+    success "Traitement terminé sans erreur."
+fi

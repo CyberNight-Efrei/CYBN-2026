@@ -34,7 +34,7 @@ publish_flag() {
     -H 'content-type: application/json' \
     -X POST \
     http://127.0.0.1:15672/api/exchanges/%2F/amq.default/publish \
-    -d '{"properties":{"delivery_mode":2},"routing_key":"ctf_flag","payload":"CYBN{FLAG}","payload_encoding":"string"}' \
+    -d '{"properties":{"delivery_mode":2},"routing_key":"ctf_flag","payload":"CYBN{Th3_Wh1te_R4Bb17_i5_CréT1n}","payload_encoding":"string"}' \
     > /dev/null
 }
 

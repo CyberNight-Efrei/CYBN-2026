@@ -10,12 +10,14 @@ extra:
   dynamic_decay: 30
   dynamic_minimum: 100
   docker_image: web_cybermon-idor
-  redirect_type: http
-  redirect_port: 8080
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 8080
 
 state: visible
 
-name: "Le collectionneur banni"
+name: "Cybermon 1 - Le collectionneur banni"
 category: Web
 description: |-
   Un collectionneur affirmait posséder une carte issue du Projet Black Deck. Accusé de trafic de cartes interdites, son compte a été banni et sa collection rendue privée.
@@ -32,5 +34,7 @@ flags:
 
 tags:
   - Easy
+
+next: "Cybermon 2 - Echange moi si tu peux"
 
 version: "0.1"
