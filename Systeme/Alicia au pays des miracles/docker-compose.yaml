@@ -1,7 +1,7 @@
 services:
   rabbit-ctf:
     build:
-      context: src
+      context: .
       dockerfile: Dockerfile
     container_name: rabbit-ctf
     restart: unless-stopped

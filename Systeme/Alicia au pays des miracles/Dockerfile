@@ -11,7 +11,8 @@ RUN apt-get update && \
         rabbitmq-server \
         openssh-server \
         curl \
-        ca-certificates && \
+        ca-certificates \
+        tcpdump \
     rm -rf /var/lib/apt/lists/*
 
 # Activer l"API HTTP de gestion, utilisée uniquement en interne
