@@ -47,8 +47,10 @@ extra:
 
   docker_image: systeme_alicia-au-pays-des-miracles   # RESPECT FORMAT (shortname please)
 
-  redirect_type: ssh   # Protocol. Default should be tcp
-  redirect_port: 22               # App port, do not mind overlaps
+  ports:
+    - name: ssh
+      protocol: ssh         # ssh, tcp, http
+      internal_port: 22
 
   user: alicia            # Optional, informative purpose only
   password: miracle    # Optional, informative purpose only

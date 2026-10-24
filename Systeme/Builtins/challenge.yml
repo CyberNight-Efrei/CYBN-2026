@@ -3,12 +3,7 @@
 
 # <============ NE PAS TOUCHER ============>
 value: 500
-type: dynamic / dynamic_docker
-
-extra:
-    initial: 500
-    decay: 30
-    minimum: 100
+type: dynamic_docker
 
 state: visible
 # </============ NE PAS TOUCHER ============>
@@ -38,7 +33,6 @@ tags:
 # <============ CHALLENGE DOCKER ============>
 # REMOVE IF NO DOCKER
 
-type: dynamic_docker
 
 extra:
   dynamic_score: 1      # 1 = True / 0 = False
@@ -48,8 +42,10 @@ extra:
 
   docker_image: system_builtins   # RESPECT FORMAT (shortname please)
 
-  redirect_type: ssh   # Protocol. Default should be tcp
-  redirect_port: 22               # App port, do not mind overlaps
+  ports:
+    - name: ssh
+      protocol: ssh         # ssh, tcp, http
+      internal_port: 22
 
   user: builtin            # Optional, informative purpose only
   password: builtin    # Optional, informative purpose only
@@ -58,7 +54,5 @@ extra:
 
 
 # <============ OPTIONAL ============>
-
-next: null
 
 version: "0.1"

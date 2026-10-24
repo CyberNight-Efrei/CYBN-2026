@@ -10,8 +10,10 @@ extra:
   dynamic_decay: 30
   dynamic_minimum: 100
   docker_image: web_cybermon-idor
-  redirect_type: http
-  redirect_port: 8080
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 8080
 
 state: visible
 

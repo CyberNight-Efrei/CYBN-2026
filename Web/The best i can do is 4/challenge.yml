@@ -3,12 +3,6 @@
 
 # <============ NE PAS TOUCHER ============>
 value: 500
-type: dynamic_docker
-
-extra:
-    initial: 500
-    decay: 30
-    minimum: 100
 
 state: visible
 # </============ NE PAS TOUCHER ============>
@@ -49,8 +43,10 @@ extra:
 
   docker_image: web_the-best-i-can-do-is-4   # RESPECT FORMAT (shortname please)
 
-  redirect_type: http   # interface web
-  redirect_port: 8080   # App port, do not mind overlaps
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 8080
 
 # </============ CHALLENGE DOCKER ============>
 
