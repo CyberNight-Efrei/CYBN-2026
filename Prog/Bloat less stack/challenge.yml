@@ -47,8 +47,10 @@ extra:
 
   docker_image: prog_bloat-less-stack   # RESPECT FORMAT (shortname please)
 
-  redirect_type: http   # interface web
-  redirect_port: 8080   # App port, do not mind overlaps
+  ports:
+    - name: web
+      protocol: http         # ssh, tcp, http
+      internal_port: 8080
 
 # </============ CHALLENGE DOCKER ============>
 

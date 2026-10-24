@@ -30,7 +30,7 @@ flags:
     # A regex case insensitive flag
     - {
         type: "regex",
-        content: "(CYBN\{)?L'Empoisonneur est exécuté\}?",
+        content: "(CYBN\\{)?L'Empoisonneur est exécuté\\}?",
         data: "case_insensitive",
     }
 

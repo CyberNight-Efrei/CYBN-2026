@@ -63,8 +63,10 @@ extra:
 
   docker_image: pwn_bocchi-the-vibe-coder   # RESPECT FORMAT (shortname please)
 
-  redirect_type: tcp   # serveur HTTP maison derrière socat
-  redirect_port: 8080  # App port, do not mind overlaps
+  ports:
+    - name: tcp
+      protocol: tcp         # ssh, tcp, http
+      internal_port: 8080
 
 # </============ CHALLENGE DOCKER ============>
 
