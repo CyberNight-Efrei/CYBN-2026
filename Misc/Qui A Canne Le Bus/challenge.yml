@@ -10,8 +10,10 @@ extra:
   dynamic_decay: 30
   dynamic_minimum: 100
   docker_image: misc_qui-a-canne-le-bus
-  redirect_type: tcp
-  redirect_port: 1337
+  ports:
+    - name: tcp
+      protocol: tcp         # ssh, tcp, http
+      internal_port: 1337
 
 state: visible
 
