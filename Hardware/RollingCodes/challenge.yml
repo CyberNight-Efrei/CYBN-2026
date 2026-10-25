@@ -15,11 +15,9 @@ state: hidden
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>
-name: "CHALLENGE NAME"
+name: "Rolling Codes"
 category: Hardware
 description: |-
-  # Rolling Codes
-  
   La réserve à champagne de Meunier est protégée par un smartlock !
   En tant que génie de l'informatique, vous avez retrouvé une version du firmware du smartlock qui a leak.
   Le microcontrolleur a changé, mais l'application mobile est compatible entre toutes les versions du firmware, le comportement du smartlock doit donc être excatement le même.

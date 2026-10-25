@@ -8,6 +8,8 @@
 #include "rolling_codes.h"
 #include "claque_ton_sub.h"
 
+#include "i2c_challenge.h"
+
 void app_main() {
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
@@ -18,8 +20,7 @@ void app_main() {
     ESP_ERROR_CHECK(ret);
 
     ESP_ERROR_CHECK(bluetooth_init());
-    
     ESP_ERROR_CHECK(rolling_codes_init());
-
     ESP_ERROR_CHECK(ble_server_init());
+    ESP_ERROR_CHECK(i2c_challenge_init());
 }
