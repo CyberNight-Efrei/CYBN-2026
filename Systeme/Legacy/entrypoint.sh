@@ -25,5 +25,9 @@ chmod 600 /etc/vsftpd.userlist
 # Lancer SSH en arrière-plan
 /usr/sbin/sshd
 
+# Envoyer les logs FTP vers stdout, récupéré par Docker
+touch /var/log/vsftpd.log
+tail -n 0 -F /var/log/vsftpd.log &
+
 # Maintenir le serveur FTP au premier plan
 exec /usr/sbin/vsftpd /etc/vsftpd.conf

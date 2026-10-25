@@ -20,8 +20,8 @@ RUN useradd --create-home --shell /bin/bash $USER && \
     mkdir -p /run/sshd /var/run/vsftpd/empty
 
 # Rediriger les logs FTP vers stdout de Docker
-RUN rm -f /var/log/vsftpd.log \
-    && ln -s /dev/stdout /var/log/vsftpd.log
+RUN touch /var/log/vsftpd.log \
+    && chmod 600 /var/log/vsftpd.log
 
 # Configuration SSH : clés uniquement
 RUN printf '%s\n' \
