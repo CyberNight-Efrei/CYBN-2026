@@ -6,19 +6,19 @@ ENV PASSWORD=miracle
 
 USER root
 
+# Aucun client curl n'est installé : l'initialisation de la file utilise Pika/AMQP.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         rabbitmq-server \
         openssh-server \
-        curl \
-        ca-certificates \
+        python3-pika \
         tcpdump && \
     rm -rf /var/lib/apt/lists/*
 
-# Activer l"API HTTP de gestion, utilisée uniquement en interne
+# Conserver l'API Management pour l'accès par tunnel SSH depuis le client.
 RUN rabbitmq-plugins enable --offline rabbitmq_management
 
-# RabbitMQ : AMQP et API HTTP accessibles uniquement en loopback
+# RabbitMQ : AMQP et API HTTP de gestion accessibles uniquement en loopback.
 RUN printf "%s\n" \
     "listeners.tcp.default = 127.0.0.1:5672" \
     "management.tcp.ip = 127.0.0.1" \
@@ -26,12 +26,12 @@ RUN printf "%s\n" \
     "loopback_users.guest = true" \
     > /etc/rabbitmq/rabbitmq.conf
 
-# Compte SSH du challenge
-RUN useradd --create-home --shell /bin/bash $USER && \
-    passwd -l $USER && \
+# Compte SSH du challenge.
+RUN useradd --create-home --shell /bin/bash "$USER" && \
+    passwd -l "$USER" && \
     mkdir -p /run/sshd
 
-# SSH : accès au tunnel uniquement vers RabbitMQ
+# SSH : autoriser les tunnels locaux uniquement vers AMQP et l'API Management.
 RUN printf "%s\n" \
     "PermitRootLogin no" \
     "PasswordAuthentication yes" \
@@ -42,10 +42,11 @@ RUN printf "%s\n" \
     "X11Forwarding no" \
     >> /etc/ssh/sshd_config
 
-# Initialisation du challenge et lancement des services
+COPY keep_root_queue.py /usr/local/bin/keep_root_queue.py
+RUN chmod 755 /usr/local/bin/keep_root_queue.py
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 700 /entrypoint.sh
 
 EXPOSE 22
-
 CMD ["/entrypoint.sh"]
