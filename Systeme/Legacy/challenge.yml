@@ -44,7 +44,7 @@ extra:
   dynamic_decay: 30     # NE PAS TOUCHER
   dynamic_minimum: 100  # NE PAS TOUCHER
 
-  docker_image: system_serveur-app   # RESPECT FORMAT (shortname please)
+  docker_image: system_legacy   # RESPECT FORMAT (shortname please)
 
   ports:
     - name: FTP
