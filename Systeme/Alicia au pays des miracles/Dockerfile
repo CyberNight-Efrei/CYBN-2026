@@ -42,6 +42,9 @@ RUN printf "%s\n" \
     "X11Forwarding no" \
     >> /etc/ssh/sshd_config
 
+RUN printf "CYBN{Th3_Wh1te_R4Bb17_i5_CréT1n}" > /root/flag.txt && \
+    chmod 440 /root/flag.txt
+
 COPY queue.py /queue.py
 RUN chown root:rabbitmq /queue.py && chmod 440 /queue.py
 
