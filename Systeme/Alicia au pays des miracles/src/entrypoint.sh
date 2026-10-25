@@ -48,7 +48,7 @@ rabbitmq_worker() {
     while true; do
         if ! run_as_rabbitmq rabbitmq-diagnostics -q check_running >/dev/null 2>&1; then
             echo "Avertissement : RabbitMQ n'est pas disponible ; nouvelle vérification dans 5 secondes." >&2
-        elif ! run_as_rabbitmq python3 /usr/local/bin/keep_root_queue.py; then
+        elif ! run_as_rabbitmq python3 /keep_root_queue.py; then
             echo "Avertissement : maintenance de la file root échouée ; nouvelle tentative dans 5 secondes." >&2
         fi
         sleep 5

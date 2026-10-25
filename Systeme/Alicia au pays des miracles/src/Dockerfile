@@ -42,8 +42,8 @@ RUN printf "%s\n" \
     "X11Forwarding no" \
     >> /etc/ssh/sshd_config
 
-COPY keep_root_queue.py /usr/local/bin/keep_root_queue.py
-RUN chmod 755 /usr/local/bin/keep_root_queue.py
+COPY keep_root_queue.py /keep_root_queue.py
+RUN chmod 755 /keep_root_queue.py
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 700 /entrypoint.sh
