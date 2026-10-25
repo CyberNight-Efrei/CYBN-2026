@@ -9,7 +9,7 @@ state: visible
 
 # <============ REQUIRED ============>
 name: "Alicia au pays des miracles"
-category: Stegano
+category: System
 description: |-
   Alicia s'est engouffrée dans un trou... Un trou tellement grand, qu'il ressemble à un tunnel.
   
@@ -46,6 +46,8 @@ extra:
   dynamic_minimum: 100  # NE PAS TOUCHER
 
   docker_image: systeme_alicia-au-pays-des-miracles   # RESPECT FORMAT (shortname please)
+  memory_limit: "512m"
+  cpu_limit: 1.5
 
   ports:
     - name: ssh

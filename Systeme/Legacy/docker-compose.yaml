@@ -1,7 +1,7 @@
 services:
   serveur_app:
     build:
-      context: src/serveur_app
+      context: .
       dockerfile: Dockerfile
     container_name: system_serveur-app
     restart: unless-stopped
@@ -12,4 +12,3 @@ services:
     ports:
       - "2222:22"
       - "21:21"
-      - "2121:2121"
