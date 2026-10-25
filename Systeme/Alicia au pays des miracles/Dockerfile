@@ -43,7 +43,7 @@ RUN printf "%s\n" \
     >> /etc/ssh/sshd_config
 
 COPY queue.py /queue.py
-RUN chmod 500 /queue.py
+RUN chown root:rabbitmq /queue.py && chmod 440 /queue.py
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 500 /entrypoint.sh

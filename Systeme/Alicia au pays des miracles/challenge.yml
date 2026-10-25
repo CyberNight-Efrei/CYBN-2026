@@ -46,6 +46,8 @@ extra:
   dynamic_minimum: 100  # NE PAS TOUCHER
 
   docker_image: systeme_alicia-au-pays-des-miracles   # RESPECT FORMAT (shortname please)
+  memory_limit: "512m"
+  cpu_limit: 1.5
 
   ports:
     - name: ssh
