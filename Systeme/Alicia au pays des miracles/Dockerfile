@@ -38,7 +38,7 @@ RUN printf "%s\n" \
     "KbdInteractiveAuthentication no" \
     "AllowUsers ${USER}" \
     "AllowTcpForwarding local" \
-    "PermitOpen 127.0.0.1:5672" \
+    "PermitOpen 127.0.0.1:5672 127.0.0.1:15672" \
     "X11Forwarding no" \
     >> /etc/ssh/sshd_config
 

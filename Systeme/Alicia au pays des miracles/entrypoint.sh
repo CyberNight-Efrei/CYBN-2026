@@ -4,10 +4,8 @@ set -Eeuo pipefail
 : "${PASSWORD:?Erreur : PASSWORD doit être défini.}"
 : "${USER:?Erreur : USER doit être défini.}"
 
-# Définir le mot de passe du compte SSH du challenge.
+# Configurer les mots de passe SSH du compte du challenge et de root.
 printf '%s:%s\n' "$USER" "$PASSWORD" | chpasswd
-
-# Définir le mot de passe root utilisé comme indice dans le challenge.
 printf '%s\n' 'root:IsItARootPasswordISee???' | chpasswd
 
 # Exécuter les commandes RabbitMQ avec le compte système dédié.
@@ -15,44 +13,15 @@ run_as_rabbitmq() {
     runuser -u rabbitmq -- "$@"
 }
 
-# Démarrer RabbitMQ en gardant ses journaux visibles dans les logs Docker.
-run_as_rabbitmq env RABBITMQ_LOGS=- rabbitmq-server &
-
-# Attendre que l'application RabbitMQ soit réellement opérationnelle.
-rabbitmq_ready=0
-for attempt in $(seq 1 90); do
-    if run_as_rabbitmq rabbitmq-diagnostics -q check_running >/dev/null 2>&1; then
-        rabbitmq_ready=1
-        break
-    fi
-    sleep 1
-done
-
-if [[ "$rabbitmq_ready" -ne 1 ]]; then
-    echo "Erreur : RabbitMQ n'est pas opérationnel après 90 secondes." >&2
-    echo "Processus RabbitMQ :" >&2
-    ps -ef | grep -E '[b]eam|[r]abbitmq' >&2 || true
-    echo "Journaux RabbitMQ éventuels :" >&2
-    for logfile in /var/log/rabbitmq/*; do
-        if [[ -f "$logfile" ]]; then
-            echo "--- $logfile ---" >&2
-            tail -n 100 "$logfile" >&2 || true
-        fi
-    done
-    exit 1
-fi
-
-echo "RabbitMQ est opérationnel."
-
-# Le vhost par défaut est « / » ; le slash est encodé en %2F dans l'URL.
 QUEUE_URL='http://127.0.0.1:15672/api/queues/%2F/root'
 PUBLISH_URL='http://127.0.0.1:15672/api/exchanges/%2F/amq.default/publish'
 QUEUE_DEFINITION='{"durable":true,"auto_delete":false,"arguments":{}}'
 PUBLISH_BODY='{"properties":{"delivery_mode":2},"routing_key":"root","payload":"IsItARootPasswordISee???","payload_encoding":"string"}'
 
-# Créer ou recréer la file durable du challenge.
+# Créer (ou vérifier) la file durable. Cette fonction tourne en arrière-plan :
+# un problème avec RabbitMQ ne doit pas empêcher SSH de démarrer.
 ensure_queue() {
-    curl --retry 30 --retry-connrefused --retry-delay 1 \
+    curl --connect-timeout 2 --max-time 5 \
         --fail --silent --show-error \
         -u guest:guest \
         -H 'content-type: application/json' \
@@ -60,63 +29,101 @@ ensure_queue() {
         -d "$QUEUE_DEFINITION" >/dev/null
 }
 
-# Publier une payload persistante et vérifier que RabbitMQ l'a routée.
+# Publier un message persistant et vérifier que RabbitMQ l'a routé.
 publish_payload() {
     local response
-    response="$(curl --fail --silent --show-error \
+    response="$(curl --connect-timeout 2 --max-time 5 \
+        --fail --silent --show-error \
         -u guest:guest \
         -H 'content-type: application/json' \
         -X POST "$PUBLISH_URL" \
-        -d "$PUBLISH_BODY")"
+        -d "$PUBLISH_BODY")" || return 1
 
     if ! printf '%s' "$response" | grep -Eq '"routed"[[:space:]]*:[[:space:]]*true'; then
-        echo "Erreur : RabbitMQ n'a pas confirmé le routage de la payload : $response" >&2
+        echo "Avertissement : RabbitMQ n'a pas confirmé le routage de la payload : $response" >&2
         return 1
     fi
 }
 
-# Créer la file et ne publier au démarrage que si elle est vide.
-ensure_queue
-initial_queue_json="$(curl --retry 30 --retry-connrefused --retry-delay 1 \
-    --fail --silent --show-error -u guest:guest "$QUEUE_URL")"
-initial_messages="$(printf '%s' "$initial_queue_json" | sed -nE \
-    's/.*"messages"[[:space:]]*:[[:space:]]*([0-9]+).*/\1/p')"
+# Lire messages_ready depuis l'API Management. On évite de dépendre du format
+# de sortie de rabbitmqctl ; une erreur renvoie un code non nul au superviseur.
+get_ready_count() {
+    local response count
+    response="$(curl --connect-timeout 2 --max-time 5 \
+        --fail --silent --show-error \
+        -u guest:guest "$QUEUE_URL")" || return 1
 
-if [[ ! "$initial_messages" =~ ^[0-9]+$ ]]; then
-    echo "Erreur : impossible de déterminer le nombre de messages de la file root." >&2
-    exit 1
-fi
+    count="$(printf '%s\n' "$response" \
+        | sed -nE 's/.*"messages_ready"[[:space:]]*:[[:space:]]*([0-9]+).*/\1/p')"
 
-if [[ "$initial_messages" == "0" ]]; then
-    publish_payload
-    echo "File durable 'root' créée ; payload publiée."
-else
-    echo "File durable 'root' déjà remplie (${initial_messages} message(s)) ; aucun doublon ajouté."
-fi
+    [[ "$count" =~ ^[0-9]+$ ]] || return 1
+    printf '%s\n' "$count"
+}
 
-# Maintenir au moins un message dans la file. Le champ 'messages' compte
-# les messages prêts et non acquittés. Si la file est supprimée, elle est recréée.
-(
-    while sleep 5; do
-        if ! ensure_queue; then
-            echo "Avertissement : impossible de vérifier/créer la file root." >&2
+# RabbitMQ et la maintenance de la file sont lancés en tâche de fond.
+# Même si RabbitMQ ne démarre pas ou si l'API échoue, le service SSH continue.
+rabbitmq_worker() {
+    echo "Démarrage de RabbitMQ en arrière-plan..."
+    run_as_rabbitmq env RABBITMQ_LOGS=- rabbitmq-server &
+
+    local rabbitmq_ready=0
+    local attempt
+    for attempt in $(seq 1 90); do
+        if run_as_rabbitmq rabbitmq-diagnostics -q check_running >/dev/null 2>&1; then
+            rabbitmq_ready=1
+            break
+        fi
+        sleep 1
+    done
+
+    if [[ "$rabbitmq_ready" -ne 1 ]]; then
+        echo "Avertissement : RabbitMQ n'est pas opérationnel après 90 secondes ; SSH reste disponible." >&2
+        ps -ef | grep -E '[b]eam|[r]abbitmq' >&2 || true
+        for logfile in /var/log/rabbitmq/*; do
+            if [[ -f "$logfile" ]]; then
+                echo "--- $logfile ---" >&2
+                tail -n 100 "$logfile" >&2 || true
+            fi
+        done
+    else
+        echo "RabbitMQ est opérationnel."
+    fi
+
+    # Réessayer indéfiniment les opérations de file. Aucune erreur ici ne doit
+    # faire sortir l'entrypoint ni arrêter sshd.
+    while true; do
+        if ! run_as_rabbitmq rabbitmq-diagnostics -q check_running >/dev/null 2>&1; then
+            echo "Avertissement : RabbitMQ n'est pas disponible ; nouvelle vérification dans 5 secondes." >&2
+            sleep 5
             continue
         fi
 
-        queue_json="$(curl --fail --silent --show-error \
-            -u guest:guest "$QUEUE_URL" 2>/dev/null || true)"
-        messages="$(printf '%s' "$queue_json" | sed -nE \
-            's/.*"messages"[[:space:]]*:[[:space:]]*([0-9]+).*/\1/p')"
-
-        if [[ "$messages" =~ ^[0-9]+$ ]]; then
-            if [[ "$messages" == "0" ]]; then
-                publish_payload || true
-            fi
-        else
-            echo "Avertissement : impossible de lire le nombre de messages de la file root." >&2
+        if ! ensure_queue; then
+            echo "Avertissement : impossible de vérifier/créer la file root via l'API Management." >&2
+            sleep 5
+            continue
         fi
-    done
-) &
 
-# SSH reste au premier plan du conteneur.
+        local messages
+        if ! messages="$(get_ready_count)"; then
+            echo "Avertissement : impossible de déterminer le nombre de messages prêts dans la file root ; nouvelle tentative dans 5 secondes." >&2
+            sleep 5
+            continue
+        fi
+
+        if [[ "$messages" == "0" ]]; then
+            if publish_payload; then
+                echo "Payload republiée dans la file root."
+            else
+                echo "Avertissement : échec de republication de la payload root." >&2
+            fi
+        fi
+
+        sleep 5
+    done
+}
+
+rabbitmq_worker &
+
+echo "Démarrage du service SSH..."
 exec /usr/sbin/sshd -D -e

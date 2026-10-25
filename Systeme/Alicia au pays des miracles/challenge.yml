@@ -9,7 +9,7 @@ state: visible
 
 # <============ REQUIRED ============>
 name: "Alicia au pays des miracles"
-category: Systeme
+category: System
 description: |-
   Alicia s'est engouffrée dans un trou... Un trou tellement grand, qu'il ressemble à un tunnel.
   
