@@ -74,6 +74,8 @@ RUN printf '%s\n' \
         > /etc/ssh/sshd_config.d/ctf.conf \
  && rm -f /etc/update-motd.d/* \
  && : > /etc/motd \
+ && mkdir -p /run/sshd \
+ && ssh-keygen -A
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D", "-e"]
