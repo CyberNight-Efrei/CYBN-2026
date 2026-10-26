@@ -61,9 +61,19 @@ RUN export MANPAGER=cat \
 RUN useradd -m -s /bin/bash cybn \
  && echo 'cybn:cybn' | chpasswd
 
-COPY rootfs/sshd_ctf.conf /etc/ssh/sshd_config.d/ctf.conf
-RUN rm -f /etc/update-motd.d/* \
- && : > /etc/motd
+RUN printf '%s\n' \
+        'PasswordAuthentication yes' \
+        'KbdInteractiveAuthentication no' \
+        'PermitRootLogin no' \
+        'AllowUsers cybn' \
+        'PrintMotd no' \
+        'X11Forwarding no' \
+        'AllowTcpForwarding no' \
+        'AllowAgentForwarding no' \
+        'PermitTunnel no' \
+        > /etc/ssh/sshd_config.d/ctf.conf \
+ && rm -f /etc/update-motd.d/* \
+ && : > /etc/motd \
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D", "-e"]
