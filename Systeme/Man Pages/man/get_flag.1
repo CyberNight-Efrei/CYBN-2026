@@ -1,0 +1,124 @@
+.\" -*- coding: UTF-8 -*-
+.TH GET_FLAG 1 2026-10-26 "libgetflag 1.0" "Manuel de libgetflag"
+.nh
+.SH NOM
+get_flag \- ceci n'est pas une commande
+.SH DESCRIPTION
+Vous avez tapé
+.BR "man get_flag" ,
+et c'est un bon réflexe.
+Mais
+.B get_flag
+n'est pas un programme que l'on lance depuis le shell :
+c'est une fonction de la bibliothèque C
+.BR libgetflag .
+Vous n'êtes donc pas au bon endroit\ ;
+cette page vous explique comment trouver le bon.
+.SH LES SECTIONS DU MANUEL
+Le manuel est découpé en sections numérotées.
+Chaque section regroupe un type de documentation :
+.TP
+.B 1
+Commandes utilisateur (programmes lancés depuis le shell), par ex.\&
+.BR ls (1).
+.TP
+.B 2
+Appels système (fonctions fournies par le noyau), par ex.\&
+.BR open (2).
+.TP
+.B 3
+Fonctions de bibliothèque (libc et autres bibliothèques), par ex.\&
+.BR printf (3).
+.TP
+.B 4
+Fichiers spéciaux, le plus souvent dans
+.IR /dev ,
+par ex.\&
+.BR null (4).
+.TP
+.B 5
+Formats de fichiers et fichiers de configuration, par ex.\&
+.BR passwd (5).
+.TP
+.B 6
+Jeux.
+.TP
+.B 7
+Divers\ : conventions, protocoles, vue d'ensemble d'un sujet, par ex.\&
+.BR man (7).
+.TP
+.B 8
+Commandes d'administration système (souvent réservées à root).
+.PP
+Un même nom peut exister dans plusieurs sections.
+Par exemple,
+.BR printf (1)
+documente la commande du shell et
+.BR printf (3)
+la fonction C.
+Sans précision,
+.B man
+affiche la
+.I première
+page trouvée, en suivant un ordre de sections défini dans
+.IR /etc/manpath.config .
+C'est pour cela que vous lisez cette page et pas une autre.
+.SH CHOISIR UNE SECTION
+On indique la section avant le nom de la page :
+.PP
+.in +4n
+.EX
+$ man 3 printf
+.EE
+.in
+.PP
+Dans la documentation, la notation
+.BR printf (3)
+signifie «\ la page printf de la section 3\ ».
+La section
+.B VOIR AUSSI
+en bas de chaque page utilise cette notation\ :
+c'est souvent là que se trouve la suite de votre lecture.
+.SH OÙ SONT RANGÉES LES PAGES
+Une page de manuel est un simple fichier texte, rangé dans un
+répertoire par section\ :
+.TP
+.I /usr/share/man/manN/
+pages installées par les paquets de la distribution
+.RI ( N
+est le numéro de section)\ ;
+.TP
+.I /usr/local/share/man/manN/
+pages installées localement, par l'administrateur.
+.PP
+Les fichiers portent le nom
+.IR nom . section .gz
+(par exemple
+.IR ls.1.gz )\ :
+ils sont compressés avec
+.BR gzip (1).
+On peut donc les lire directement, sans passer par
+.BR man ,
+avec
+.BR zcat (1)
+ou
+.BR zless (1).
+.PP
+Attention\ : ce que vous voyez à l'écran n'est pas le contenu exact du
+fichier.
+Le fichier est écrit dans le langage de mise en forme
+.B roff
+(voir
+.BR man (7)),
+et
+.B man
+n'en affiche que le
+.IR rendu .
+Le fichier brut, lui, contient tout ce que l'auteur y a écrit.
+.SH VOIR AUSSI
+.BR get_flag (3),
+.BR get_flag (7),
+.BR man (1),
+.BR manpath (1),
+.BR zcat (1),
+.BR man (7)

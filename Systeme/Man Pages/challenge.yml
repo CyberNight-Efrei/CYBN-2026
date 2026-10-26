@@ -1,0 +1,69 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+# Choisir UN seul type : dynamic, dynamic_docker ou queue
+type: dynamic_docker
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+  # <============ CHALLENGE DOCKER ============>
+  # Pour utiliser Docker Challenge :
+  # 1. Choisir type: dynamic_docker
+  # 2. Supprimer les champs Queue ci-dessous
+
+  dynamic_score: 1      # 1 = True / 0 = False
+  docker_image: system_rtfm
+
+  # Ports accessibles depuis l'extérieur.
+  # Ajouter une entree par port à exposer.
+  ports:
+    - name: ssh
+      protocol: ssh
+      internal_port: 2222
+
+    # Exemple de second service :
+    # - name: ssh
+    #   protocol: ssh
+    #   internal_port: 22
+
+  # Optionnel : informations affichées pour les connexions SSH.
+  user: cybn
+  password: cybn
+
+  # </============ CHALLENGE DOCKER ============>
+  
+# <============ REQUIRED ============>
+name: "RTFM"
+category: System
+description: |-
+  # RTFM
+
+  Vous connaissez les man pages ? On va faire un petit test alors.
+
+  J'ai créé une lib qui s'appelle `get_flag`, à vous de trouver comment l'utiliser.
+
+  ---
+
+  Bon courage
+
+  Format : `CYBN{REDACTED}`
+attribution: "Kazulhu"
+
+flags:
+  # A static case sensitive flag
+  - CYBN{m4n_p4g3s_4r3_y0ur_b3st_fr13nds}
+
+
+tags:
+    - Easy
+# </============ REQUIRED ============>
+
+next: null
+
+version: "0.1"

@@ -1,0 +1,98 @@
+.\" -*- coding: UTF-8 -*-
+.TH GET_FLAG 3 2026-10-26 "libgetflag 1.0" "Manuel de libgetflag"
+.nh
+.SH NOM
+get_flag \- récupérer le flag du challenge
+.SH BIBLIOTHÈQUE
+Bibliothèque getflag
+.RI ( libgetflag ,\~ \-lgetflag )
+.SH SYNOPSIS
+.nf
+.B #include <get_flag.h>
+.PP
+.BI "int get_flag(const char *" password ", char *" buf ", size_t " len );
+.fi
+.SH DESCRIPTION
+La fonction
+.BR get_flag ()
+vérifie le mot de passe
+.IR password .
+S'il est correct, elle déchiffre le flag et l'écrit.
+.SH VALEUR RENVOYÉE
+En cas de succès,
+.BR get_flag ()
+renvoie 0.
+En cas d'erreur, elle renvoie \-1.
+.SH ERREURS
+.TP
+.B EINVAL
+.I password
+ou
+.I buf
+vaut NULL.
+.TP
+.B EACCES
+Le mot de passe est incorrect.
+.TP
+.SH NOTES
+Le mot de passe n'est pas documenté dans cette page.
+Consultez
+.BR get_flag (7).
+.SH EXEMPLES
+Le programme ci-dessous appelle
+.BR get_flag ()
+et affiche le flag.
+Remplacez
+.B CHANGEME
+par le mot de passe.
+.PP
+.in +4n
+.EX
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <get_flag.h>
+
+int
+main(void)
+{
+    char flag[128];
+
+    if (get_flag("CHANGEME", flag, sizeof(flag)) == \-1) {
+        fprintf(stderr, "get_flag: %s\en", strerror(errno));
+        return EXIT_FAILURE;
+    }
+
+    printf("%s\en", flag);
+    return EXIT_SUCCESS;
+}
+.EE
+.in
+.PP
+Enregistrez-le dans
+.IR solve.c ,
+puis compilez-le en liant la bibliothèque avec
+.BR \-lgetflag ,
+et lancez-le\ :
+.PP
+.in +4n
+.EX
+$ gcc \-o solve solve.c \-lgetflag
+$ ./solve
+get_flag: Permission denied
+.EE
+.in
+.PP
+Le message
+.I Permission denied
+correspond à
+.BR EACCES \ :
+le mot de passe n'est pas le bon.
+.SH VOIR AUSSI
+.BR get_flag (1),
+.BR get_flag (7),
+.BR getflag.conf (5),
+.BR gcc (1),
+.BR errno (3)
