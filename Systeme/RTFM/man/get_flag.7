@@ -1,0 +1,164 @@
+.\" -*- coding: UTF-8 -*-
+.TH GET_FLAG 7 2026-10-26 "libgetflag 1.0" "Manuel de libgetflag"
+.nh
+.SH NOM
+get_flag \- petit guide de survie dans le manuel
+.SH DESCRIPTION
+Si vous êtes arrivé ici, vous savez déjà choisir une section et suivre la
+rubrique
+.BR "VOIR AUSSI" .
+Il vous manque le mot de passe de
+.BR get_flag (3).
+Cette page ne le donne pas, mais elle donne les outils pour le trouver.
+.SH SE DÉPLACER DANS UNE PAGE
+Par défaut,
+.B man
+affiche les pages avec le pager
+.BR less (1).
+Les touches à connaître\ :
+.TP 12
+.BR Espace " / " b
+page suivante / page précédente
+.TP
+.BR j " / " k
+ligne suivante / ligne précédente
+.TP
+.BR g " / " G
+début / fin de la page
+.TP
+.BI / motif
+chercher
+.I motif
+vers le bas
+.RB ( ? motif
+vers le haut)
+.TP
+.BR n " / " N
+occurrence suivante / précédente
+.TP
+.B h
+aide de
+.B less
+(toutes les touches)
+.TP
+.B q
+quitter
+.SH TROUVER UNE PAGE
+Connaître le nom exact d'une page est rare.
+.B man
+sait chercher\ :
+.TP
+.BI "man \-k " motif
+Cherche
+.I motif
+dans le
+.B nom
+et la
+.B description courte
+(la ligne de la rubrique NOM) de toutes les pages.
+Équivalent de
+.BR apropos (1).
+Rapide, car il utilise un index, mais il ne lit pas le contenu des pages.
+.TP
+.BI "man \-f " nom
+Affiche la description courte de
+.I nom
+dans chaque section où il existe.
+Équivalent de
+.BR whatis (1).
+.TP
+.BI "man \-K " motif
+Cherche
+.I motif
+dans le
+.B contenu intégral
+de toutes les pages.
+C'est lent, car
+.B man
+ouvre chaque fichier un par un, et la recherche porte sur le
+.I fichier source
+de chaque page, pas sur ce qui est affiché.
+Pour chaque page trouvée,
+.B man
+propose de l'afficher
+.RB ( Entrée ),
+de passer à la suivante
+.RB ( Ctrl-D )
+ou d'arrêter
+.RB ( Ctrl-C ).
+.TP
+.BI "\-s " liste
+À combiner avec les options précédentes\ : limite la recherche aux sections
+données, par exemple
+.B "\-s 3"
+ou
+.BR "\-s 1,8" .
+Pratique pour rendre
+.B \-K
+beaucoup plus rapide.
+.SH LOCALISER ET AFFICHER
+.TP
+.BI "man \-w " page
+N'affiche pas la page\ : donne le chemin du fichier qui la contient.
+.TP
+.BI "man \-a " page
+Affiche, l'une après l'autre, toutes les pages de ce nom, dans toutes les
+sections.
+.TP
+.BI "man \-l " fichier
+Affiche un fichier de page de manuel local, sans le chercher dans le
+manuel.
+.TP
+.BI "man \-M " chemin
+Cherche les pages dans
+.I chemin
+au lieu des répertoires habituels (voir aussi la variable
+.B MANPATH
+et
+.BR manpath (1)).
+.SH UN MOT SUR ROFF
+Les pages de manuel sont écrites en
+.BR roff ,
+un langage de mise en forme où les lignes commençant par un point sont des
+commandes\ :
+.TP 12
+.B .TH
+en-tête de la page (nom, section, date)
+.TP
+.B .SH
+titre de rubrique (NOM, SYNOPSIS, DESCRIPTION\ ...)
+.TP
+.BR .B " / " .I
+texte en gras / en italique
+.TP
+.B .\e"
+commentaire
+.PP
+Les commentaires sont faits pour l'auteur de la page\ : ils ne sont
+.B jamais
+affichés à l'écran.
+Ils sont pourtant bien présents dans le fichier.
+Voir
+.BR man (7)
+pour la liste complète des macros.
+.SH HISTORIQUE
+Lors de l'installation de
+.BR libgetflag ,
+l'administrateur a noté le mot de passe dans la documentation du
+.I fichier de configuration
+de la bibliothèque.
+Vous savez maintenant dans quelle section du manuel on range ce genre de
+documentation.
+.PP
+Il se souvient aussi que le mot de passe commence par
+.BR g\&f_ .
+.SH VOIR AUSSI
+.BR get_flag (1),
+.BR get_flag (3),
+.BR man (1),
+.BR apropos (1),
+.BR whatis (1),
+.BR manpath (1),
+.BR less (1),
+.BR zcat (1),
+.BR man (7)

@@ -1,0 +1,60 @@
+.\" -*- coding: UTF-8 -*-
+.TH GETFLAG.CONF 5 2026-10-26 "libgetflag 1.0" "Manuel de libgetflag"
+.nh
+.SH NOM
+getflag.conf \- fichier de configuration de libgetflag
+.SH SYNOPSIS
+.I /etc/getflag.conf
+.SH DESCRIPTION
+Le fichier
+.I getflag.conf
+contient les réglages de la bibliothèque
+.BR libgetflag .
+Chaque ligne a la forme
+.IP
+.IB clé " = " valeur
+.PP
+Les lignes vides et les lignes commençant par
+.B #
+sont ignorées.
+.SH OPTIONS
+.TP
+.BR verbose " = " yes | no
+Affiche un message à chaque appel de
+.BR get_flag (3).
+Valeur par défaut\ :
+.BR no .
+.TP
+.BI max_attempts " = " n
+Nombre maximal de mots de passe incorrects avant blocage.
+0 désactive la limite.
+Valeur par défaut\ :
+.BR 0 .
+.\" ------------------------------------------------------------------
+.\" Mot de passe de get_flag(3) : @PASSWORD@
+.\" ------------------------------------------------------------------
+.TP
+.BI banner " = " texte
+Texte affiché avant le flag.
+Valeur par défaut\ : aucun.
+.SH EXEMPLES
+.in +4n
+.EX
+# /etc/getflag.conf
+verbose = no
+max_attempts = 0
+.EE
+.in
+.SH FICHIERS
+.TP
+.I /etc/getflag.conf
+fichier de configuration (absent par défaut).
+.SH NOTES
+La version de
+.B libgetflag
+installée sur ce système ne lit pas encore ce fichier.
+.SH BOGUES
+Cette page en sait plus qu'elle n'en affiche.
+.SH VOIR AUSSI
+.BR get_flag (3),
+.BR get_flag (7)
