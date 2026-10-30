@@ -14,7 +14,7 @@
 
 #define TAG "CLAQUE_TON_SUB"
 
-#define BLE_DEVICE_NAME  "CYBERNIGHT-CLAQUE-TON-SUB"
+#define BLE_DEVICE_NAME  "CYBERNIGHT-BLUETOOTH-CHALLENGES"
 #define BLE_APP_ID       0
 
 static const uint8_t service_uuid[16] = {

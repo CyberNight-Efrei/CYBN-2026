@@ -16,7 +16,7 @@
 #define SPP_TAG "ROLLING_CODES"
 #define SPP_SERVER_NAME "ROLLING_CODES_SERVER"
 
-static const char local_device_name[] = "CYBERNIGHT-SMARTLOCK";
+static const char local_device_name[] = "CYBERNIGHT-BLUETOOTH-CHALLENGES";
 static const esp_spp_mode_t esp_spp_mode = ESP_SPP_MODE_CB;
 static const bool esp_spp_enable_l2cap_ertm = true;
 
