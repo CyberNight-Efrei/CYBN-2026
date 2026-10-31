@@ -19,9 +19,6 @@ app = Flask(__name__)
 # CONFIGURATION
 # ==========================================
 
-# Clé temporaire pour signer les cookies de session.
-# Une future version pourra la fournir via
-# une variable d'environnement.
 app.secret_key = os.environ.get(
     "FLASK_SECRET_KEY",
     secrets.token_hex(32)
@@ -32,11 +29,13 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="Lax"
 )
 
-# Le conteneur dispose d'un /tmp inscriptible.
-# Notre base SQLite sera placée ici.
 DB_PATH = "/tmp/cybernight.db"
 
 INITIAL_BALANCE = 100
+FLAG = os.environ.get("CHALLENGE_FLAG")
+
+if not FLAG or not FLAG.startswith("CYBN{") or not FLAG.endswith("}"):
+    raise RuntimeError("CHALLENGE_FLAG doit être défini au format CYBN{...}")
 
 PRICES = {
     "standard": 50,
@@ -61,6 +60,43 @@ def get_db():
 
     return conn
 
+
+# ==========================================
+# RÉCOMPENSE VIP
+# ==========================================
+
+@app.route("/api/reward", methods=["GET"])
+def get_reward():
+
+    user_id = get_user_id()
+
+    with closing(get_db()) as conn:
+
+        # Vérifier que le joueur possède
+        # réellement un billet VIP actif.
+        vip_ticket = conn.execute("""
+            SELECT id
+            FROM tickets
+            WHERE user_id = ?
+              AND type = 'vip'
+              AND status = 'active'
+            LIMIT 1
+        """, (user_id,)).fetchone()
+
+        if vip_ticket is None:
+            return jsonify({
+                "success": False,
+                "message": "Accès réservé aux détenteurs d'un billet VIP."
+            }), 403
+
+        # Le flag est transmis uniquement
+        # à un joueur possédant un billet VIP.
+        return jsonify({
+            "success": True,
+            "message": "Bienvenue dans l'espace VIP !",
+            "flag": FLAG,
+            "ticket_id": vip_ticket["id"]
+        }), 200
 
 # ==========================================
 # INITIALISATION DE LA BASE
@@ -103,14 +139,12 @@ def init_db():
 
 def get_user_id():
 
-    # Une session contient un identifiant aléatoire.
     user_id = session.get("user_id")
 
     if user_id is None:
         user_id = str(uuid4())
         session["user_id"] = user_id
 
-    # Créer le portefeuille s'il n'existe pas.
     with closing(get_db()) as conn:
 
         conn.execute("""
@@ -196,7 +230,7 @@ def buy_ticket():
     with closing(get_db()) as conn:
 
         try:
-            # Réserver la transaction d'écriture.
+            # Transaction sécurisée pour les achats
             conn.execute("BEGIN IMMEDIATE")
 
             user = conn.execute("""
@@ -222,7 +256,6 @@ def buy_ticket():
                     "missing": missing
                 }), 400
 
-            # Débiter le portefeuille.
             new_balance = balance - price
 
             conn.execute("""
@@ -231,7 +264,6 @@ def buy_ticket():
                 WHERE id = ?
             """, (new_balance, user_id))
 
-            # Enregistrer le billet.
             cursor = conn.execute("""
                 INSERT INTO tickets (
                     user_id, type, price, status
@@ -267,7 +299,7 @@ def buy_ticket():
 
 # ==========================================
 # REMBOURSEMENT DES BILLETS
-# Version sécurisée pour les premiers tests.
+# VULNÉRABILITÉ VOLONTAIRE : TOCTOU
 # ==========================================
 
 @app.route("/api/refund", methods=["POST"])
@@ -286,42 +318,51 @@ def refund_ticket():
 
     with closing(get_db()) as conn:
 
+        # ==================================
+        # TIME OF CHECK
+        # ==================================
+        # Le statut du billet est vérifié
+        # AVANT la transaction d'écriture.
+
+        ticket = conn.execute("""
+            SELECT id, type, price, status
+            FROM tickets
+            WHERE id = ?
+            AND user_id = ?
+        """, (ticket_id, user_id)).fetchone()
+
+        if ticket is None:
+            return jsonify({
+                "success": False,
+                "message": "Billet introuvable."
+            }), 404
+
+        if ticket["type"] != "standard":
+            return jsonify({
+                "success": False,
+                "message": "Ce billet n'est pas remboursable."
+            }), 400
+
+        if ticket["status"] == "refunded":
+            return jsonify({
+                "success": False,
+                "message": "Ce billet a déjà été remboursé."
+            }), 409
+
+        # ==================================
+        # TIME OF USE
+        # ==================================
+        # VULNÉRABILITÉ :
+        # Le statut n'est pas revérifié ici.
+        #
+        # Plusieurs requêtes concurrentes
+        # peuvent avoir lu "active" avant
+        # qu'une requête ne modifie le statut.
+
         try:
             conn.execute("BEGIN IMMEDIATE")
 
-            # Vérifier que le billet appartient au joueur.
-            ticket = conn.execute("""
-                SELECT id, type, price, status
-                FROM tickets
-                WHERE id = ?
-                AND user_id = ?
-            """, (ticket_id, user_id)).fetchone()
-
-            if ticket is None:
-                conn.rollback()
-
-                return jsonify({
-                    "success": False,
-                    "message": "Billet introuvable."
-                }), 404
-
-            if ticket["type"] != "standard":
-                conn.rollback()
-
-                return jsonify({
-                    "success": False,
-                    "message": "Ce billet n'est pas remboursable."
-                }), 400
-
-            if ticket["status"] == "refunded":
-                conn.rollback()
-
-                return jsonify({
-                    "success": False,
-                    "message": "Ce billet a déjà été remboursé."
-                }), 409
-
-            # Ajouter les crédits au portefeuille.
+            # Créditer le portefeuille.
             conn.execute("""
                 UPDATE users
                 SET balance = balance + ?
@@ -370,7 +411,7 @@ def refund_ticket():
 
 
 # ==========================================
-# DÉMARRAGE
+# DÉMARRAGE DU SERVEUR
 # ==========================================
 
 init_db()

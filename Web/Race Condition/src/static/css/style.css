@@ -386,3 +386,46 @@ a {
     font-size: 13px;
     font-weight: 700;
 }
+
+
+/* ==========================
+   RÉCOMPENSE VIP
+   ========================== */
+
+.vip-reward {
+    margin-top: 28px;
+    padding: 30px;
+    border: 1px solid var(--blue);
+    border-radius: 18px;
+    background: var(--prune);
+    text-align: center;
+}
+
+.vip-reward[hidden] {
+    display: none;
+}
+
+.vip-reward h2 {
+    font-size: 32px;
+    color: var(--rose);
+}
+
+.vip-reward p {
+    color: var(--rose);
+    line-height: 1.6;
+}
+
+.flag-display {
+    padding: 20px;
+    margin: 22px 0;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow-wrap: anywhere;
+}
+
+.flag-display code {
+    font-size: 17px;
+    color: var(--rose);
+    user-select: all;
+}

@@ -1,9 +1,10 @@
-
 services:
   web_race-condition:
     build: .
     image: web_race-condition
     container_name: web_race-condition
+    env_file:
+      - .env
     ports:
       - "127.0.0.1:8080:8080"
     read_only: true
