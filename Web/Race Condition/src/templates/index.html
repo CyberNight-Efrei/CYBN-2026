@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CyberNight Festival | Billetterie</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <!-- Notifications -->
+    <div id="toast-container" aria-live="polite"></div>
+
+    <header class="navbar">
+        <div class="logo">
+            CYBER<span>NIGHT.</span>
+        </div>
+
+        <div class="wallet">
+            ◈ <span id="balance">100</span> crédits
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="hero">
+            <div class="eyebrow">The ultimate night</div>
+
+            <h1>CYBERNIGHT FESTIVAL</h1>
+
+            <p>
+                Une nuit. Une scène. Des souvenirs inoubliables.
+                <br>
+                Réserve ta place avant qu'il ne soit trop tard.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="section-title">Choisis ton expérience</h2>
+
+            <div class="tickets">
+
+                <article class="ticket">
+                    <div class="ticket-label">Accès classique</div>
+
+                    <h3>STANDARD</h3>
+
+                    <p>
+                        Accès à la scène principale,
+                        aux concerts et aux animations.
+                    </p>
+
+                    <div class="price">
+                        50 <small>crédits</small>
+                    </div>
+
+                    <button class="btn" onclick="buyTicket('standard')">
+                        Acheter ce billet
+                    </button>
+                </article>
+
+                <article class="ticket vip">
+                    <div class="ticket-label">Expérience exclusive</div>
+
+                    <h3>VIP ACCESS ✦</h3>
+
+                    <p>
+                        Accès prioritaire, espace VIP,
+                        rencontre avec les artistes
+                        et surprises exclusives.
+                    </p>
+
+                    <div class="price">
+                        150 <small>crédits</small>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="buyTicket('vip')">
+                        Réserver mon VIP
+                    </button>
+                </article>
+
+            </div>
+        </section>
+
+        <section class="panel" style="margin-top:35px;">
+            <h2>Mes billets</h2>
+
+            <div id="tickets-list">
+                Chargement...
+            </div>
+        </section>
+
+        <section class="extras">
+
+            <article class="panel">
+                <div class="ticket-label">Bonus</div>
+
+                <h2>Besoin de crédits ?</h2>
+
+                <p>
+                    Participe à notre mini-jeu et tente
+                    de gagner 10 crédits supplémentaires.
+                </p>
+
+                <button class="btn" disabled>
+                    Jouer et gagner +10
+                </button>
+            </article>
+
+            <article class="panel">
+                <div class="ticket-label">Offres exclusives</div>
+
+                <h2>Tu as un code promo ?</h2>
+
+                <p>
+                    Entre ton code pour profiter
+                    de nos offres spéciales.
+                </p>
+
+                <input
+                    class="promo-input"
+                    type="text"
+                    placeholder="Entrez votre code promo"
+                    aria-label="Code promotionnel"
+                    disabled
+                >
+
+                <button class="btn btn-secondary" disabled>
+                    Appliquer le code
+                </button>
+            </article>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        © 2026 CyberNight Festival — All rights reserved.
+    </footer>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
