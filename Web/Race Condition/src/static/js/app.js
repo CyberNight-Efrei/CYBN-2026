@@ -299,6 +299,103 @@ function showMessage(message, success) {
 
 
 // ==========================================
+// MINI-JEU : MÉLANGE DES GOBELETS
+// ==========================================
+
+let minigameFinished = false;
+let minigameBusy = false;
+
+function setCupsDisabled(disabled) {
+    document.querySelectorAll(".cup").forEach(button => {
+        button.disabled = disabled;
+    });
+}
+
+function shuffleCups() {
+    const cups = document.getElementById("minigame-cups");
+    const result = document.getElementById("minigame-result");
+
+    if (!cups) return;
+
+    result.textContent = "🔀 Les gobelets se mélangent...";
+
+    setCupsDisabled(true);
+
+    // Redémarrer proprement l'animation
+    cups.classList.remove("shuffling");
+    void cups.offsetWidth;
+    cups.classList.add("shuffling");
+
+    setTimeout(() => {
+        cups.classList.remove("shuffling");
+
+        if (!minigameFinished) {
+            result.textContent = "Nouvelle manche ! Choisis un gobelet.";
+            setCupsDisabled(false);
+        }
+
+        minigameBusy = false;
+    }, 950);
+}
+
+
+async function playMinigame(choice) {
+    if (minigameFinished || minigameBusy) return;
+
+    minigameBusy = true;
+    setCupsDisabled(true);
+
+    const resultElement =
+        document.getElementById("minigame-result");
+
+    try {
+        const response = await fetch("/api/minigame", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ choice })
+        });
+
+        const result = await response.json();
+
+        if (response.status === 409) {
+            minigameFinished = true;
+            resultElement.textContent = "🎟️ Bonus déjà obtenu !";
+            showMessage(result.message, false);
+            return;
+        }
+
+        if (result.success) {
+            minigameFinished = true;
+
+            resultElement.textContent =
+                "🎉 Bravo ! Tu as gagné 10 crédits !";
+
+            showMessage(result.message, true);
+            await loadWallet();
+            return;
+        }
+
+        // Mauvaise réponse : nouvelle manche
+        resultElement.textContent =
+            "❌ Mauvais gobelet ! On remélange...";
+
+        setTimeout(shuffleCups, 650);
+
+    } catch (error) {
+        resultElement.textContent =
+            "Erreur lors du mini-jeu. Réessaie.";
+
+        showMessage("Erreur lors du mini-jeu.", false);
+
+        minigameBusy = false;
+        setCupsDisabled(false);
+    }
+}
+
+
+// ==========================================
 // INITIALISATION DE L'APPLICATION
 // ==========================================
 
@@ -316,3 +413,69 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 });
+
+
+// ==========================================
+// CODE PROMOTIONNEL
+// ==========================================
+
+document.getElementById("promo-form")?.addEventListener(
+    "submit",
+    async (event) => {
+        event.preventDefault();
+
+        const input = document.getElementById("promo-code");
+        const resultElement = document.getElementById("promo-result");
+        const button = event.currentTarget.querySelector(
+            "button[type='submit']"
+        );
+
+        const code = input.value.trim();
+
+        if (!code) {
+            showMessage("Entre un code promotionnel.", false);
+            return;
+        }
+
+        button.disabled = true;
+
+        try {
+            const response = await fetch("/api/promo", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ code })
+            });
+
+            const result = await response.json();
+
+            resultElement.textContent = result.message;
+            showMessage(result.message, result.success);
+
+            if (result.success) {
+                input.value = "";
+                input.disabled = true;
+                button.textContent = "Code utilisé";
+
+                await loadWallet();
+            }
+
+            if (response.status === 409) {
+                input.disabled = true;
+                button.textContent = "Déjà utilisé";
+            }
+
+        } catch (error) {
+            showMessage(
+                "Erreur lors de l'application du code.",
+                false
+            );
+        } finally {
+            if (!input.disabled) {
+                button.disabled = false;
+            }
+        }
+    }
+);
+

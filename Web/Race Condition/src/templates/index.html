@@ -114,43 +114,63 @@
 
         <section class="extras">
 
-            <article class="panel">
-                <div class="ticket-label">Bonus</div>
 
-                <h2>Besoin de crédits ?</h2>
+<article class="panel">
+    <div class="ticket-label">Mini-jeu</div>
+    <h2>Trouve le ticket gagnant !</h2>
 
-                <p>
-                    Participe à notre mini-jeu et tente
-                    de gagner 10 crédits supplémentaires.
-                </p>
+    <p>
+        Un ticket est caché sous l'un de ces trois gobelets.
+        Trouve-le pour gagner 10 crédits !
+    </p>
 
-                <button class="btn" disabled>
-                    Jouer et gagner +10
-                </button>
-            </article>
 
-            <article class="panel">
-                <div class="ticket-label">Offres exclusives</div>
+<div class="minigame-board">
+    <div class="minigame-cups" id="minigame-cups">
+        <button class="cup" type="button" data-choice="0" onclick="playMinigame(0)">🥤</button>
+        <button class="cup" type="button" data-choice="1" onclick="playMinigame(1)">🥤</button>
+        <button class="cup" type="button" data-choice="2" onclick="playMinigame(2)">🥤</button>
+    </div>
+</div>
 
-                <h2>Tu as un code promo ?</h2>
+<p id="minigame-result" aria-live="polite">
+    Choisis un gobelet pour commencer !
+</p>
 
-                <p>
-                    Entre ton code pour profiter
-                    de nos offres spéciales.
-                </p>
 
-                <input
-                    class="promo-input"
-                    type="text"
-                    placeholder="Entrez votre code promo"
-                    aria-label="Code promotionnel"
-                    disabled
-                >
+    <p id="minigame-result" aria-live="polite"></p>
+</article>
 
-                <button class="btn btn-secondary" disabled>
-                    Appliquer le code
-                </button>
-            </article>
+
+            
+<article class="panel">
+    <div class="ticket-label">Offres exclusives</div>
+
+    <h2>Tu as un code promo ?</h2>
+
+    <p>
+        Entre ton code pour profiter de nos offres spéciales.
+    </p>
+
+    <form id="promo-form">
+        <input
+            class="promo-input"
+            id="promo-code"
+            type="text"
+            placeholder="Entrez votre code promo"
+            autocomplete="off"
+            maxlength="30"
+            required
+        >
+
+        <button class="btn btn-secondary" type="submit">
+            Appliquer le code
+        </button>
+    </form>
+
+    <p id="promo-result" aria-live="polite"></p>
+</article>
+
 
         </section>
 

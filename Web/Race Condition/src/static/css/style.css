@@ -429,3 +429,104 @@ a {
     color: var(--rose);
     user-select: all;
 }
+
+
+
+/* ==========================
+   MINI-JEU
+   ========================== */
+
+.minigame-cups {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 25px 0;
+}
+
+.cup {
+    background: var(--prune);
+    border: 1px solid var(--blue);
+    border-radius: 12px;
+    font-size: 36px;
+    width: 85px;
+    height: 95px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.cup:hover:not(:disabled) {
+    transform: translateY(-7px);
+    background: #602047;
+}
+
+.cup:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+#minigame-result {
+    text-align: center;
+    font-size: 13px;
+}
+
+
+/* ==========================
+   ANIMATION DU MINI-JEU
+   ========================== */
+
+.minigame-board {
+    overflow: hidden;
+    padding: 15px 0;
+}
+
+.minigame-cups {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.minigame-cups .cup {
+    flex: 0 0 85px;
+    transition: transform 0.2s;
+}
+
+.minigame-cups.shuffling .cup:nth-child(1) {
+    animation: shuffle-left 0.9s ease-in-out;
+}
+
+.minigame-cups.shuffling .cup:nth-child(2) {
+    animation: shuffle-middle 0.9s ease-in-out;
+}
+
+.minigame-cups.shuffling .cup:nth-child(3) {
+    animation: shuffle-right 0.9s ease-in-out;
+}
+
+@keyframes shuffle-left {
+    0%, 100% { transform: translateX(0); }
+    35% { transform: translateX(100px); }
+    70% { transform: translateX(40px); }
+}
+
+@keyframes shuffle-middle {
+    0%, 100% { transform: translateX(0); }
+    35% { transform: translateX(-95px); }
+    70% { transform: translateX(90px); }
+}
+
+@keyframes shuffle-right {
+    0%, 100% { transform: translateX(0); }
+    35% { transform: translateX(-80px); }
+    70% { transform: translateX(-35px); }
+}
+
+.minigame-cups.shuffling .cup {
+    pointer-events: none;
+}
+
+#minigame-result {
+    min-height: 24px;
+    text-align: center;
+    color: var(--rose);
+    font-size: 14px;
+}
