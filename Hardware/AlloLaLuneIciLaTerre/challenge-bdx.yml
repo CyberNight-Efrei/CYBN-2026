@@ -21,7 +21,7 @@ extra:
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>
-name: "Allô la Lune, ici la Terre"
+name: "🍷 Allô la Lune, ici la Terre"
 category: Hardware
 description: |-
   Il semblerait que vous ayez perdu tout contact avec votre microcontrôleur... Il répondait pourtant bien en I2C depuis les pins 26 (SDA) et 27 (SCL) à l'instant !  
