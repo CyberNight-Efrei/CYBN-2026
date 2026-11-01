@@ -3,12 +3,20 @@
 
 # <============ NE PAS TOUCHER ============>
 value: 500
-type: dynamic
+type: queue
 
 extra:
   initial: 500
   decay: 30
   minimum: 100
+  function: logarithmic        # static, linear ou logarithmic
+  queue_mode: manual           # manual ou automatic
+  batch_size: 1                # Participants sélectionnés par tour
+  interval_seconds: 900        # Intervalle entre les tours, en secondes
+  show_position: true          # Afficher la position dans la file
+  show_eta: true               # Afficher une estimation d'attente
+  selected_message: "C'est à ton tour ! Tu peux maintenant venir en **salle XXX**."
+
 
 state: hidden
 # </============ NE PAS TOUCHER ============>
@@ -17,7 +25,7 @@ state: hidden
 name: "Allô la Lune, ici la Terre"
 category: Hardware
 description: |-
-  Il semblerait que vous ayez perdu tout contact avec votre microcontrolleur... Il répondait pourtant bien en I2C depuis les pins 26 (SDA) et 27 (SCL) à l'instant !  
+  Il semblerait que vous ayez perdu tout contact avec votre microcontrôleur... Il répondait pourtant bien en I2C depuis les pins 26 (SDA) et 27 (SCL) à l'instant !  
 
   Format : `CYBN{YmFzZTY0IHN0cmluZw==}`
 
@@ -29,8 +37,7 @@ flags:
 
 tags:
   - Medium
-
-next: null
+  - Bordeaux 🍷
 
 # Specifies what version of the challenge specification was used.
 # Subject to change until ctfcli v1.0.0

@@ -8,7 +8,7 @@ set -Eeuo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 
 ROOT="."
-FILENAME="challenge.yml"
+FILENAME="challenge*.yml"
 ACTION=""
 
 # Environnement virtuel situé par défaut à côté du script.

@@ -9,6 +9,13 @@ extra:
   initial: 500
   decay: 30
   minimum: 100
+  function: logarithmic        # static, linear ou logarithmic
+  queue_mode: manual           # manual ou automatic
+  batch_size: 1                # Participants sélectionnés par tour
+  interval_seconds: 900        # Intervalle entre les tours, en secondes
+  show_position: true          # Afficher la position dans la file
+  show_eta: true               # Afficher une estimation d'attente
+  selected_message: "C'est à ton tour ! Tu peux maintenant venir en **salle XXX**."
 
 state: hidden
 # </============ NE PAS TOUCHER ============>
@@ -33,6 +40,7 @@ flags:
 
 tags:
   - Medium
+  - Bordeaux 🍷
 
 next: null
 

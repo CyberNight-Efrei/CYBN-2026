@@ -49,7 +49,7 @@ extra:
   interval_seconds: 900        # Intervalle entre les tours, en secondes
   show_position: true          # Afficher la position dans la file
   show_eta: true               # Afficher une estimation d'attente
-  selected_message: "Vous avez ete sélectionné ! Vous pouvez maintenant venir en salle XXX."
+  selected_message: "C'est à ton tour ! Tu peux maintenant venir en **salle XXX**."
 
   # </============ CHALLENGE QUEUE ============>
 
