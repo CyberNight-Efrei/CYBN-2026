@@ -18,7 +18,6 @@ extra:
   selected_message: "C'est à ton tour ! Tu peux maintenant venir en **salle XXX**."
 
 
-state: hidden
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>

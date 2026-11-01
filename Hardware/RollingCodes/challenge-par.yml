@@ -3,7 +3,7 @@
 
 # <============ NE PAS TOUCHER ============>
 value: 500
-type: dynamic
+type: queue
 
 extra:
   initial: 500
@@ -17,8 +17,6 @@ extra:
   show_eta: true               # Afficher une estimation d'attente
   selected_message: "C'est à ton tour ! Tu peux maintenant venir en **salle XXX**."
 
-
-state: hidden
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>
