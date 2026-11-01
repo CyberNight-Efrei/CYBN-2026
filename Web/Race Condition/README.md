@@ -2,7 +2,7 @@
 <div align="center">
 
 # 🎫 RACE CONDITION
-### CyberNight 2026 — Web Challenge
+### CyberNight 2026 - Web Challenge
 
 **Une billetterie de concert, des crédits insuffisants... et un remboursement qui peut tout changer.**
 
