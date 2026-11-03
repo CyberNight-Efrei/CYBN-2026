@@ -33,6 +33,6 @@ flags:
 tags:
     - Easy
 
-connection_info: http://CHANGEME:3000
+connection_info: https://citadelle.cybn.fr/
 
 next: "Citadelle never dies - Le trésorier"
