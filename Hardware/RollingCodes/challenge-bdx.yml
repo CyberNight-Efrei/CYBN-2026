@@ -43,7 +43,7 @@ flags:
 
 tags:
   - Hard
-  - Bordeaux 🍷
+  - Bordeaux
 
 files:
   - src/old_firmware.ino
