@@ -40,7 +40,7 @@ extra:
   dynamic_decay: 30     # NE PAS TOUCHER
   dynamic_minimum: 100  # NE PAS TOUCHER
 
-  docker_image: system_builtins   # RESPECT FORMAT (shortname please)
+  docker_image: systeme_builtins   # RESPECT FORMAT (shortname please)
 
   ports:
     - name: ssh
