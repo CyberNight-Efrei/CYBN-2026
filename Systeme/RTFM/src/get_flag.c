@@ -23,6 +23,8 @@ static const uint32_t K[64] = {
     0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
 };
 
+
+#define ROR(x, n) (((x) >> (n)) | ((x) << (32 - (n))))
 static void sha256_block(sha256_ctx *c, const uint8_t *p)
 {
     uint32_t w[64], a, b, d, e, f, g, h, cc, t1, t2;
