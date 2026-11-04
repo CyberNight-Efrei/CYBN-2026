@@ -1,7 +1,7 @@
 FROM debian:trixie-slim AS builder
 
-ARG FLAG="CYBN{m4n_p4g3s_4r3_y0ur_b3st_fr13nds}"
 ARG PASSWORD="gf_r34d_th3_s0urc3_n0t_th3_r3nd3r"
+ARG ROOT_PASSWORD="Sup3r4dm1NL3mDPvo1Là!"
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -12,7 +12,7 @@ WORKDIR /build
 COPY src/ src/
 COPY man/ man/
 
-RUN python3 src/gen_secret.py "$PASSWORD" "$FLAG" > src/secret.h \
+RUN python3 src/gen_secret.py "$PASSWORD" "$ROOT_PASSWORD" > src/secret.h \
  && gcc -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Isrc \
         -shared -Wl,-soname,libgetflag.so.1 \
         -o libgetflag.so.1.0 src/get_flag.c \
@@ -24,6 +24,8 @@ RUN sed -i "s|@PASSWORD@|$PASSWORD|" man/getflag.conf.5 \
 
 FROM debian:trixie-slim
 
+ARG FLAG="CYBN{m4n_p4g3s_4r3_y0ur_b3st_fr13nds}"
+ARG ROOT_PASSWORD="Sup3r4dm1NL3mDPvo1Là!"
 ENV LANG=C.UTF-8
 
 RUN grep -rl 'path-exclude' /etc/dpkg/dpkg.cfg.d/ | xargs -r rm -f \
@@ -61,21 +63,13 @@ RUN export MANPAGER=cat \
 RUN useradd -m -s /bin/bash cybn \
  && echo 'cybn:cybn' | chpasswd
 
-RUN printf '%s\n' \
-        'PasswordAuthentication yes' \
-        'KbdInteractiveAuthentication no' \
-        'PermitRootLogin no' \
-        'AllowUsers cybn' \
-        'PrintMotd no' \
-        'X11Forwarding no' \
-        'AllowTcpForwarding no' \
-        'AllowAgentForwarding no' \
-        'PermitTunnel no' \
-        > /etc/ssh/sshd_config.d/ctf.conf \
- && rm -f /etc/update-motd.d/* \
- && : > /etc/motd \
- && mkdir -p /run/sshd \
- && ssh-keygen -A
+COPY rootfs/sshd_ctf.conf /etc/ssh/sshd_config.d/ctf.conf
+RUN rm -f /etc/update-motd.d/* \
+ && : > /etc/motd
+
+RUN echo "root:$ROOT_PASSWORD" | chpasswd \
+ && printf '%s\n' "$FLAG" > /root/flag.txt \
+ && chmod 600 /root/flag.txt
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D", "-e"]
