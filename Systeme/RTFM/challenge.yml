@@ -25,7 +25,7 @@ extra:
   ports:
     - name: ssh
       protocol: ssh
-      internal_port: 2222
+      internal_port: 22
 
     # Exemple de second service :
     # - name: ssh
