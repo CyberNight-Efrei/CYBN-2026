@@ -47,8 +47,8 @@ extra:
       protocol: ssh         # ssh, tcp, http
       internal_port: 22
 
-  user: builtin            # Optional, informative purpose only
-  password: builtin    # Optional, informative purpose only
+  user: cybn            # Optional, informative purpose only
+  password: cybn    # Optional, informative purpose only
 
 # </============ CHALLENGE DOCKER ============>
 
