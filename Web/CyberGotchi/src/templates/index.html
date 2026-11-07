@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#480E33">
+  <title>CyberGotchi - BLOOP</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/script.js" defer></script>
+</head>
+<body>
+  <main class="panel">
+    <header class="header">
+      <p class="eyebrow">CYBERGOTCHI</p>
+      <h1>Prends soin de <span>BLOOP</span></h1>
+      <p class="subtitle">
+        Fais évoluer ton compagnon jusqu'au niveau 100.
+      </p>
+    </header>
+
+    <section class="pet-area" aria-label="Ton compagnon BLOOP">
+      <div id="bubble" class="bubble">Salut, moi c'est BLOOP !</div>
+
+      <div class="pet-stage">
+        <div class="pet-shadow"></div>
+        <div id="creature" class="creature" role="img"
+             aria-label="BLOOP, une petite créature bleu-gris">
+          <div class="shine"></div>
+          <div class="cheeks">
+            <i></i>
+            <i></i>
+          </div>
+          <div class="eyes">
+            <i></i>
+            <i></i>
+          </div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+
+      <div class="pet-status">
+        <span class="status-dot"></span>
+        <span id="mood">BLOOP est heureux</span>
+      </div>
+    </section>
+
+    <section class="progress-section" aria-label="Progression">
+      <div class="stats">
+        <strong id="stage">Niveau 1</strong>
+        <span id="progress">0 / 100 XP</span>
+      </div>
+
+      <div class="bar" role="progressbar" aria-label="XP"
+           aria-valuemin="0" aria-valuemax="100"
+           aria-valuenow="0">
+        <div id="fill"></div>
+      </div>
+
+      <p class="goal">Objectif : niveau 100</p>
+    </section>
+
+    <section class="interaction" aria-label="Actions">
+      <div class="cooldown-box">
+        <span class="clock-icon">◷</span>
+        <span id="cooldown">Chargement...</span>
+      </div>
+
+      <div class="actions">
+        <button type="button" data-action="feed">
+          <span class="action-icon">🍎</span>
+          <span>Nourrir</span>
+        </button>
+
+        <button type="button" data-action="play">
+          <span class="action-icon">🎮</span>
+          <span>Jouer</span>
+        </button>
+
+        <button type="button" data-action="train">
+          <span class="action-icon">⚡</span>
+          <span>Entraîner</span>
+        </button>
+      </div>
+
+      <button type="button" id="reward" class="reward">
+        <span>✦</span>
+        Récupérer la récompense
+      </button>
+
+      <p id="message" class="message" aria-live="polite"></p>
+    </section>
+
+    <footer>
+      <span>CYBERNIGHT 2026</span>
+      <span>BLOOP v1.0</span>
+    </footer>
+  </main>
+</body>
+</html>
