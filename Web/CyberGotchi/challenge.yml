@@ -23,7 +23,7 @@ extra:
       internal_port: 5000
   # </============ CHALLENGE DOCKER ============>
 
-state: hidden
+state: visible
 
 # <============ REQUIRED ============>
 name: "CyberGotchi - Évolution impossible"
