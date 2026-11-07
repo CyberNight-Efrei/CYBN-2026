@@ -3,21 +3,35 @@
 value: 500
 # </============ NE PAS TOUCHER ============>
 
-# Type de challenge
+# Choisir UN seul type : dynamic, dynamic_docker ou queue
 type: dynamic_docker
 
-# Configuration du score dynamique
+# <============ NE PAS TOUCHER ============>
 extra:
   initial: 500
-  decay: 100
-  minimum: 50
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
 
-# Informations du challenge
+  # <============ CHALLENGE DOCKER ============>
+  dynamic_score: 1
+  docker_image: web_cybergotchi
+
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 5000
+  # </============ CHALLENGE DOCKER ============>
+
+state: hidden
+
+# <============ REQUIRED ============>
 name: "CyberGotchi - Évolution impossible"
-category: "Web"
-difficulty: "Easy"
+category: Web
 
-description: |
+description: |-
+  # CyberGotchi - Évolution impossible
+
   Voici BLOOP, ton nouveau compagnon virtuel !
 
   Nourris-le, entraîne-le et joue avec lui pour le faire
@@ -30,15 +44,23 @@ description: |
   du code source. Peut-être qu'une évolution plus rapide
   est possible ?
 
-# Flag
+  ---
+
+  Format : `CYBN{...}`
+
+attribution: "estellealz"
+
 flags:
-  - "CYBN{BL00P_L3V3L_100_UNL0CK3D}"
+  - CYBN{BL00P_L3V3L_100_UNL0CK3D}
 
-# Fichiers fournis aux joueurs
+tags:
+  - Easy
+
+# </============ REQUIRED ============>
+
+# <============ OPTIONAL ============>
+
 files:
-  - "player_files"
+  - player_files
 
-# Déploiement Docker
-docker_image: "web_cybergotchi"
-ports:
-  - "5000"
+version: "3.0"
