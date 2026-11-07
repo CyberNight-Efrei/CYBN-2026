@@ -9,13 +9,20 @@ type: dynamic_docker
 # Configuration du score dynamique
 extra:
   initial: 500
-  decay: 100
-  minimum: 50
+  decay: 50
+  minimum: 100
+  dynamic_score: 1
+  docker_image: "web_cybergotchi"
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 5000
 
 # Informations du challenge
 name: "CyberGotchi - Évolution impossible"
 category: "Web"
-difficulty: "Easy"
+tags:
+  - Easy
 
 description: |
   Voici BLOOP, ton nouveau compagnon virtuel !
@@ -36,9 +43,5 @@ flags:
 
 # Fichiers fournis aux joueurs
 files:
-  - "player_files"
-
-# Déploiement Docker
-docker_image: "web_cybergotchi"
-ports:
-  - "5000"
+  - "player_files/app.py"
+  - "player_files/models.py"

@@ -9,13 +9,20 @@ type: dynamic_docker
 # Configuration du score dynamique
 extra:
   initial: 500
-  decay: 100
-  minimum: 50
+  decay: 50
+  minimum: 100
+  dynamic_score: 1
+  docker_image: "web_ezea"
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 5000
 
 # Informations du challenge
 name: "ezea - profil introuvable"
 category: "Web"
-difficulty: "Medium"
+tags:
+  - Medium
 
 attribution: "Mathu_lmn"
 
@@ -34,13 +41,5 @@ description: |
 # Flag
 flags:
   - "CYBN{l34ky_gr4phql_r3s0lv3r}"
-
-# Déploiement Docker
-docker_image: "web_ezea"
-ports:
-  - "5000"
-
-tags:
-  - Medium
 
 version: "3.0"

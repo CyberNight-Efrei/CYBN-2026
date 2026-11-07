@@ -22,7 +22,7 @@ extra:
       internal_port: 8080
   # </============ CHALLENGE DOCKER ============>
 
-state: hidden
+state: visible
 
 # <============ REQUIRED ============>
 name: "Race Condition"
