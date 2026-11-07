@@ -21,9 +21,10 @@
 3. [Analyse de CyberGotchi](#-analyse-de-cybergotchi)
 4. [Exploitation du Mass Assignment](#-exploitation-du-mass-assignment)
 5. [Récupération du flag](#-récupération-du-flag)
-6. [Script de résolution](#-script-de-résolution)
-7. [Correction de la vulnérabilité](#-correction-de-la-vulnérabilité)
-8. [Conclusion](#-conclusion)
+6. [Exploitation alternative : contourner le cooldown](#-exploitation-alternative--contourner-le-cooldown)
+7. [Scripts de résolution](#-scripts-de-résolution)
+8. [Correction de la vulnérabilité](#-correction-de-la-vulnérabilité)
+9. [Conclusion](#-conclusion)
 
 ---
 
@@ -249,17 +250,79 @@ Ce flag a été récupéré lors du test local PowerShell.
 
 ---
 
-## 💻 Script de résolution
+## 🔓 Exploitation alternative : contourner le cooldown
+
+### 1. Pourquoi `last_action` semble protégé
+
+La liste `protected` bloque une modification directe de `last_action` :
+
+```json
+{"action": "feed", "last_action": 0}
+```
+
+Dans ce cas, l'attribut est ignoré. Modifier uniquement `script.js` ne fonctionne pas non plus : **le contrôle des 300 secondes est effectué par Flask**, avant d'exécuter l'action.
+
+### 2. Contourner la protection avec `__dict__`
+
+La boucle utilise toutefois `hasattr(pet, field)` puis `setattr(pet, field, value)`. Sur l'objet Python `Pet`, `__dict__` est un attribut spécial qui contient les attributs d'instance. Comme il n'est pas dans `protected`, un client peut remplacer ce dictionnaire complet, y compris `last_action`.
+
+Exemple de requête, pour une session **sans cooldown actif** :
+
+```http
+POST /api/action HTTP/1.1
+Content-Type: application/json
+Cookie: bloop_id=...
+
+{
+  "action": "feed",
+  "__dict__": {
+    "pet_id": "VALEUR_DU_COOKIE_BLOOP_ID",
+    "name": "BLOOP",
+    "xp": 10,
+    "level": 1,
+    "last_action": 0
+  }
+}
+```
+
+Il faut conserver le **vrai `pet_id`** de la session, qui est transmis dans le cookie `bloop_id` (ce cookie est `HttpOnly`, mais peut être lu par un outil HTTP tel que PowerShell ou Burp Suite). Dans une requête envoyée depuis la console JavaScript du navigateur, `document.cookie` ne permet pas de lire ce cookie `HttpOnly` ; le joueur peut néanmoins utiliser un proxy HTTP ou ses outils réseau pour consulter sa valeur.
+
+Cette affectation se produit **après la vérification du cooldown**. Le serveur écrit ensuite `last_action = 0` en base. L'action suivante est donc acceptée immédiatement.
+
+### 3. Résultat du test local
+
+L'exploitation a été **confirmée** avec deux requêtes PowerShell consécutives :
+
+```text
+Session initiale : niveau 1, 0 XP, cooldown 0
+1re action       : HTTP 200, 10 XP, cooldown 0
+2e action        : HTTP 200, 20 XP, cooldown 300
+```
+
+La seconde action passe sans attendre. En revanche, elle réactive le cooldown : pour le neutraliser de manière répétée, **il faut inclure la modification de `__dict__` à chaque action**, en conservant des valeurs cohérentes pour l'XP et le niveau.
+
+Cette voie permet d'atteindre progressivement 9 900 XP et le niveau 100, sans envoyer directement `"level": 100` comme propriété de premier niveau. Elle demeure une conséquence de la même vulnérabilité de **Mass Assignment**.
+
+> [!NOTE]
+> La modification directe de `level` reste la résolution principale du challenge Easy. Le contournement par `__dict__` est une seconde exploitation, plus technique. Les participants peuvent réaliser leurs propres requêtes via Burp Suite ou PowerShell ; aucun fichier de résolution n'est fourni aux joueurs.
+
+---
+
+## 💻 Scripts de résolution
 
 Le dossier `writeup/` contient :
 
 ```text
 writeup/
 ├── README.md
-└── solve.ps1
+├── solve.ps1
+└── solve2.ps1
 ```
 
-Le script `solve.ps1` reproduit les trois étapes de l'exploitation : création de session, modification du niveau et lecture de la récompense.
+- **`solve.ps1`** : solution principale, passage direct au niveau 100 via `level`.
+- **`solve2.ps1`** : contournement de `last_action` via `__dict__`, puis progression répétée jusqu'au niveau 100.
+
+Le script `solve.ps1` reproduit les trois étapes de l'exploitation principale : création de session, modification du niveau et lecture de la récompense.
 
 ```powershell
 $base = "http://localhost:5000"
@@ -294,7 +357,7 @@ $reward = Invoke-RestMethod `
 Write-Host "[+] FLAG : $($reward.flag)"
 ```
 
-### Exécution
+### Exécution de la solution principale
 
 Depuis la racine du challenge, dans PowerShell :
 
@@ -302,7 +365,27 @@ Depuis la racine du challenge, dans PowerShell :
 .\writeup\solve.ps1
 ```
 
-Le script suppose que la cible est accessible à `http://localhost:5000` et que la session n'est pas déjà soumise au cooldown. Il suffit d'adapter `$base` à l'URL du challenge hébergé.
+### Exécution de la solution alternative
+
+Pour vérifier uniquement **deux actions successives sans attendre** :
+
+```powershell
+.\writeup\solve2.ps1 -TestOnly
+```
+
+Pour effectuer la progression complète en répétant le contournement de `__dict__` :
+
+```powershell
+.\writeup\solve2.ps1
+```
+
+Par défaut, les scripts visent `http://localhost:5000`. Le deuxième accepte également une URL personnalisée :
+
+```powershell
+.\writeup\solve2.ps1 -BaseUrl "http://localhost:5000"
+```
+
+Ces scripts sont **réservés aux organisateurs**. La méthode directe a été validée jusqu'au flag et le contournement du cooldown a été validé sur deux actions ; la boucle complète de `solve2.ps1` n'a pas encore été confirmée par un test de bout en bout. Exécuter la méthode alternative sur une session fraîche.
 
 ---
 
@@ -312,7 +395,7 @@ Le script suppose que la cible est accessible à `http://localhost:5000` et que 
 
 Le serveur vérifie que `level` est un entier compris entre 1 et 100, mais **n'empêche pas le client de choisir cette valeur**.
 
-Une liste de champs interdits (`protected`) est fragile : toute nouvelle propriété non ajoutée à la liste peut devenir modifiable.
+Une liste de champs interdits (`protected`) est fragile : toute nouvelle propriété non ajoutée à la liste peut devenir modifiable. Elle laisse également passer `__dict__`, ce qui permet de modifier indirectement des attributs pourtant interdits, comme `last_action`.
 
 ### Solution : liste blanche des champs autorisés
 
@@ -352,7 +435,7 @@ Dans l'application corrigée, le niveau ne doit évoluer qu'à travers une logiq
 
 CyberGotchi montre qu'une application peut contrôler correctement une valeur sans contrôler **qui a le droit de la modifier**.
 
-La progression classique est soumise à un cooldown serveur, mais la route d'action applique automatiquement des attributs supplémentaires au modèle `Pet`. L'oubli de `level` dans la liste des champs protégés permet de passer directement au niveau 100 et de récupérer le flag.
+La progression classique est soumise à un cooldown serveur, mais la route d'action applique automatiquement des attributs supplémentaires au modèle `Pet`. L'oubli de `level` dans la liste des champs protégés permet de passer directement au niveau 100 et de récupérer le flag. Le même mécanisme permet aussi de remplacer `__dict__` et de contourner le cooldown serveur.
 
 **La leçon principale : il faut autoriser explicitement les champs modifiables, plutôt que tenter de bloquer certains attributs sensibles.**
 
