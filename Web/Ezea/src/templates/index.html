@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ezea — talents de l'école</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="wrap">
+            <span class="logo">ezea</span>
+            <span class="tagline">Les talents de l'école, par promo et par compétence</span>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section class="intro">
+            <h1>Annuaire des profils</h1>
+            <p>Parcourez les étudiants, filtrez par compétence et consultez leur CV.</p>
+            <input id="search" type="search" placeholder="Filtrer par nom ou compétence…" autocomplete="off">
+        </section>
+
+        <section id="grid" class="grid" aria-live="polite">
+            <p class="loading">Chargement des profils…</p>
+        </section>
+    </main>
+
+    <footer class="footer wrap">
+        <p>ezea · annuaire interne · propulsé par notre API GraphQL</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
