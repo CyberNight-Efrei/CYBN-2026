@@ -61,6 +61,7 @@ tags:
 # <============ OPTIONAL ============>
 
 files:
-  - player_files
+  - player_files/app.py
+  - player_files/models.py
 
 version: "3.0"

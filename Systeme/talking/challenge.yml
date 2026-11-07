@@ -23,7 +23,7 @@ attribution: "NozZy"
 flags:
     - CYBN{L0ngU3_v13_Au_P4y5_dU_CYb3rN1Gh71St@n}
 
-connection_info: https://graylog.cybn.fr/ | cybn : cybernight
+connection_info: "https://graylog.cybn.fr/ | cybn : cybernight"
 
 tags:
     - Hard

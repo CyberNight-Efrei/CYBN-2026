@@ -1,0 +1,8 @@
+services:
+  ezea:
+    build: .
+    ports:
+      - "127.0.0.1:5000:5000"
+    environment:
+      FLAG: "CYBN{l34ky_gr4phql_r3s0lv3r}"
+    restart: unless-stopped
