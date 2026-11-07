@@ -1,0 +1,9 @@
+services:
+  cybergotchi:
+    build: .
+    ports:
+      - "127.0.0.1:5000:5000"
+    environment:
+      FLAG: "CYBN{BL00P_L3V3L_100_UNL0CK3D}"
+      DATABASE_PATH: "/tmp/cybergotchi.db"
+    restart: unless-stopped

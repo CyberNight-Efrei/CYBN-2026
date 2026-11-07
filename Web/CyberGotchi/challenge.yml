@@ -1,0 +1,44 @@
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+# Type de challenge
+type: dynamic_docker
+
+# Configuration du score dynamique
+extra:
+  initial: 500
+  decay: 100
+  minimum: 50
+
+# Informations du challenge
+name: "CyberGotchi - Évolution impossible"
+category: "Web"
+difficulty: "Easy"
+
+description: |
+  Voici BLOOP, ton nouveau compagnon virtuel !
+
+  Nourris-le, entraîne-le et joue avec lui pour le faire
+  évoluer jusqu'au niveau 100 et récupérer ta récompense.
+
+  Petit problème : BLOOP a besoin de 5 minutes de repos
+  entre chaque action...
+
+  Heureusement, son créateur a laissé traîner une partie
+  du code source. Peut-être qu'une évolution plus rapide
+  est possible ?
+
+# Flag
+flags:
+  - "CYBN{BL00P_L3V3L_100_UNL0CK3D}"
+
+# Fichiers fournis aux joueurs
+files:
+  - "player_files"
+
+# Déploiement Docker
+docker_image: "web_cybergotchi"
+ports:
+  - "5000"
