@@ -1,33 +1,61 @@
 #!/bin/bash
-set -e
+set -Eeuo pipefail
 
-
-if [ -z "${APP_FTP_PASSWORD:-}" ]; then
-    echo "Erreur : APP_FTP_PASSWORD doit être défini."
-    exit 1
-fi
-if [ -z "${USER:-}" ]; then
-    echo "Erreur : USER doit être défini."
+if [[ "${USER:-app}" != "app" ]]; then
+    echo "Erreur : le service est conçu pour fonctionner avec l'utilisateur app." >&2
     exit 1
 fi
 
-# Définir le mot de passe du compte FTP
-echo "${USER}:${APP_FTP_PASSWORD}" | chpasswd
-echo "root:rootP@ssword!!1998" | chpasswd
+id app >/dev/null 2>&1 || { echo "Erreur : le compte app est absent." >&2; exit 1; }
 
-# Autoriser uniquement app pour FTP
-echo "${USER}" > /etc/vsftpd.userlist
-chmod 600 /etc/vsftpd.userlist
+# Conservation du mot de passe root historique : il fait partie du scénario CTF.
+# SSH interdit néanmoins toute connexion directe en root.
+echo 'root:rootP@ssword!!1998' | chpasswd
 
-# Vérifier la configuration SSH
+# Mot de passe local aléatoire, inconnu et non journalisé : le compte reste
+# compatible avec l'authentification par clé, tandis que SSH interdit les mots de passe.
+APP_RANDOM_PASSWORD="$(python3 -c 'import secrets; print(secrets.token_urlsafe(48))')"
+printf 'app:app_password' | chpasswd
+unset APP_RANDOM_PASSWORD
+
+install -d -o root -g root -m 0755 /run/sshd
+install -d -o app -g app -m 0777 /home/app/.ssh
+
+# Permissions volontairement permissives pour le challenge :
+# StrictModes est désactivé dans sshd_config et authorized_keys est modifiable
+# depuis le bloc-notes web, qui tourne lui aussi sous l'identité app.
+if [[ -L /home/app/.ssh || -L /home/app/.ssh/authorized_keys ]]; then
+    echo "Erreur : .ssh et authorized_keys ne doivent pas être des liens symboliques." >&2
+    exit 1
+fi
+if [[ ! -e /home/app/.ssh/authorized_keys ]]; then
+    install -o app -g app -m 0666 /dev/null /home/app/.ssh/authorized_keys
+else
+    chown app:app /home/app/.ssh/authorized_keys
+    chmod 0666 /home/app/.ssh/authorized_keys
+fi
+chmod 0777 /home/app/.ssh
+
+# Crée les clés d'hôte manquantes, puis valide la configuration SSH.
+ssh-keygen -A
 /usr/sbin/sshd -t
 
-# Lancer SSH en arrière-plan
-/usr/sbin/sshd
+# SSH et le serveur web sont supervisés par ce script afin qu'un arrêt de l'un
+# arrête proprement le conteneur.
+/usr/sbin/sshd -D -e &
+SSH_PID=$!
+runuser --user app -- python3 -u /home/app/app.py &
+WEB_PID=$!
 
-# Envoyer les logs FTP vers stdout, récupéré par Docker
-touch /var/log/vsftpd.log
-tail -n 0 -F /var/log/vsftpd.log &
+cleanup() {
+    kill "$WEB_PID" "$SSH_PID" 2>/dev/null || true
+    wait "$WEB_PID" 2>/dev/null || true
+    wait "$SSH_PID" 2>/dev/null || true
+}
+trap cleanup EXIT INT TERM
 
-# Maintenir le serveur FTP au premier plan
-exec /usr/sbin/vsftpd /etc/vsftpd.conf
+set +e
+wait -n "$SSH_PID" "$WEB_PID"
+STATUS=$?
+set -e
+exit "$STATUS"
