@@ -360,7 +360,7 @@ def page(title: str, content: str) -> bytes:
   {nav}
   {content}
   <hr>
-  <center class="petit">© 1998-2026 - Service informatique - Optimisé pour Netscape Navigator 4.0</center>
+  <center class="petit">© 1998 - Service informatique - Optimisé pour Netscape Navigator 4.0</center>
   <center class="compteur">Vous êtes le visiteur n° 000042</center>
 </div>
 </body>

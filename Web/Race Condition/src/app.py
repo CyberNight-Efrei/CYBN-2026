@@ -45,7 +45,7 @@ PRICES = {
 }
 
 # Récompense du challenge
-FLAG = os.environ.get("CHALLENGE_FLAG")
+FLAG = os.environ.get("CHALLENGE_FLAG", os.environ.get("DYNAMIC_FLAG", "CYBN{R4c3_C0nd1T10n_V1P_4cc3ss}"))
 
 if not FLAG or not FLAG.startswith("CYBN{") or not FLAG.endswith("}"):
     raise RuntimeError(
