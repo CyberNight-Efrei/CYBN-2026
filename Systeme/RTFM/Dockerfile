@@ -35,7 +35,7 @@ RUN grep -rl 'path-exclude' /etc/dpkg/dpkg.cfg.d/ | xargs -r rm -f \
         gcc libc6-dev \
         openssh-server \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --reinstall \
-        coreutils gzip grep findutils sed vi vim nano tcpdump \
+        coreutils gzip grep findutils sed vim nano tcpdump \
  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /build/libgetflag.so.1.0 /usr/local/lib/
