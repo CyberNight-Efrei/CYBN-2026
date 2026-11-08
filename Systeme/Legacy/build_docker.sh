@@ -5,7 +5,7 @@ CHALL=$(basename "$PWD" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
 NAME="${CAT}_${CHALL}"
 
 # Ports définis en dur : associations par index
-PORTS=(21 22)
+PORTS=(8080 22)
 HOST_PORTS=(7002 7003)
 
 RUN=false
