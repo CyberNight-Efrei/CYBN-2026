@@ -53,8 +53,6 @@ extra:
 
   # </============ CHALLENGE QUEUE ============>
 
-state: hidden
-
 # <============ REQUIRED ============>
 name: "CHALLENGE NAME"
 category: Crypto / Forensics / Hardware / Misc / OSINT / Prog / Pwn / Reverse / Stegano / System / Web
@@ -99,6 +97,12 @@ flags:
 
 tags:
   - Intro / Easy / Medium / Hard
+
+requirements:
+  - Bienvenue ! # NE PAS TOUCHER - Ajouter si nécessaire
+
+state: hidden   # passer à "visible" quand le chall est prêt
+
 
 # </============ REQUIRED ============>
 

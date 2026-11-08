@@ -1,0 +1,20 @@
+name: Bienvenue !
+category: Welcome
+description: >-
+  Bienvenue à l'édition 2026 de la CyberNight - **You wouldn't share a Flag**
+  Afin que **tout se passe au mieux** et afin de **résoudre ce challenge qui débloquera
+  le reste des catégories**, veuillez **bien lire le salon [#📝｜règlement-détails](https://discord.com/channels/1554817521150857216/1554817522404958213)** sur le
+  [serveur Discord](https://discord.gg/htuSVGJm89) de la CyberNight !
+  
+  Vous y trouverez un flag au format du CTF : `CYBN{...}`
+  
+  Bonne chance !
+
+attribution: CTFREI
+value: 10
+type: static
+
+flags:
+  - CYBN{Y0u_w0ulDn'7_sh4r3_4_Fl4g_n0W_wOuLdyA}
+
+version: '0.1'
