@@ -1,4 +1,3 @@
-
 from pathlib import Path
 import re
 import sys
@@ -23,6 +22,8 @@ def add_requirement(folder):
     folder = Path(folder)
 
     for file in folder.rglob("challenge*.yml"):
+        if file.parts[0] == "Welcome":
+            continue
 
         with file.open("r", encoding="utf-8", newline="") as f:
             content = f.read()
