@@ -12,7 +12,7 @@ description: >-
 
 attribution: CTFREI
 value: 10
-type: static
+type: standard
 
 flags:
   - CYBN{Y0u_w0ulDn'7_sh4r3_4_Fl4g_n0W_wOuLdyA}
