@@ -10,7 +10,7 @@ from models import COOLDOWN_SECONDS, MAX_LEVEL, Pet
 
 app = Flask(__name__)
 DB_PATH = os.environ.get("DATABASE_PATH", "/tmp/cybergotchi.db")
-FLAG = os.environ.get("FLAG", "CYBN{LOCAL_TEST_ONLY}")
+FLAG = os.environ.get("FLAG", "CYBN{BL00P_L3V3L_100_UNL0CK3D}")
 COOKIE_NAME = "bloop_id"
 ACTIONS = {"feed", "play", "train"}
 
