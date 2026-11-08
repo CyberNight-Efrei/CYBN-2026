@@ -38,3 +38,6 @@ tags:
 next: "Cybermon 2 - Echange moi si tu peux"
 
 version: "0.1"
+
+requirements:
+  - "Bienvenue !"

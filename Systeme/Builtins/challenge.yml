@@ -56,3 +56,6 @@ extra:
 # <============ OPTIONAL ============>
 
 version: "0.1"
+
+requirements:
+  - "Bienvenue !"

@@ -32,3 +32,6 @@ tags:
 files:
     - src/TIAEDT.py
     - src/secret.txt
+
+requirements:
+  - "Bienvenue !"

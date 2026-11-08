@@ -55,3 +55,6 @@ tags:
 # </============ REQUIRED ============>
 
 version: "3.0"
+
+requirements:
+  - "Bienvenue !"

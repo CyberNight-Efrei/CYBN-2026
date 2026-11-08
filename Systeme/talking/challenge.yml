@@ -28,3 +28,6 @@ connection_info: "https://graylog.cybn.fr/ | cybn : cybernight"
 tags:
     - Hard
 # </============ REQUIRED ============>
+
+requirements:
+  - "Bienvenue !"

@@ -75,3 +75,6 @@ extra:
 
 # Specifies what version of the challenge specification was used.
 version: "0.1"
+
+requirements:
+  - "Bienvenue !"

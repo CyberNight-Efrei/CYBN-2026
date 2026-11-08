@@ -38,3 +38,6 @@ tags:
 next: "Cybermon 3 - Trompe-l'oeil"
 
 version: "0.1"
+
+requirements:
+  - "Bienvenue !"

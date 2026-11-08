@@ -43,3 +43,6 @@ flags:
   - "CYBN{l34ky_gr4phql_r3s0lv3r}"
 
 version: "3.0"
+
+requirements:
+  - "Bienvenue !"

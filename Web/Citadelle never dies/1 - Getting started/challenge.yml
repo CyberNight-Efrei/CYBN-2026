@@ -36,3 +36,6 @@ tags:
 connection_info: https://citadelle.cybn.fr/
 
 next: "Citadelle never dies - Le trésorier"
+
+requirements:
+  - "Bienvenue !"

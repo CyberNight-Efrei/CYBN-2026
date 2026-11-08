@@ -38,3 +38,6 @@ files:
     - dist/locker.py
 
 version: "0.1"
+
+requirements:
+  - "Bienvenue !"
