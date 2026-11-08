@@ -44,7 +44,7 @@ ssh-keygen -A
 # arrête proprement le conteneur.
 /usr/sbin/sshd -D -e &
 SSH_PID=$!
-runuser --user app -- python3 -u /home/app/app.py &
+runuser --user app -- python3 -u /opt/Application/app.py &
 WEB_PID=$!
 
 cleanup() {
