@@ -52,7 +52,7 @@ extra:
       internal_port: 8080
     - name: SSH
       protocol: ssh
-      internal_port: 2222
+      internal_port: 22
 
   user: app
 

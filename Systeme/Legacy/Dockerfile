@@ -60,7 +60,7 @@ RUN printf 'Application de finances RH\nAttention à la prod !!!\n' > /opt/Appli
     printf 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCTx4XKb4SPGZG/eYL5OddbXERokAjhEXHLGfOwpabPGrDtJJC4Sqjk/bNGyy6y+UXP11WAN7zrQL/VkgzUQT8hyAxEixcpRX5fCBeKs9audWZgOM/Hi3eA64JTo+06M492tvsl2xi8UhtM2GjeTDsYZadOP53TSie083GX4yLAz0AZmC6/VDIIX5SnEhlL05T/tNicgGPOP0NCAReQ+mCBWJJmEJinflsHK1NCj+Iw1gAMmMPuo7YcSGpiTl8wzDQ6SF0vwqU44QCPOtghGTtzbz5yImUyd9M4iSjMgkVNuybE2kpF+Dk9pDwBaztCZg71jSWg4MtXeEkcQzGBTadr' > /home/app/.ssh/authorized_keys
 
 USER root
-RUN printf 'CYBN{AtT3nT10n_@_Jul13_l4_RH}' > /root/flag.txt && \
+RUN printf 'CYBN{AtT3nT10n_@_JuL13_l4_RH}' > /root/flag.txt && \
     chmod 0400 /root/flag.txt
 
 COPY app.py /opt/Application/app.py
