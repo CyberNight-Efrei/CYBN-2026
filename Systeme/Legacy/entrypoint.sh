@@ -15,7 +15,7 @@ echo 'root:rootP@ssword!!1998' | chpasswd
 # Mot de passe local aléatoire, inconnu et non journalisé : le compte reste
 # compatible avec l'authentification par clé, tandis que SSH interdit les mots de passe.
 APP_RANDOM_PASSWORD="$(python3 -c 'import secrets; print(secrets.token_urlsafe(48))')"
-printf 'app:app_password' | chpasswd
+printf 'app:%s\n' "$APP_RANDOM_PASSWORD" | chpasswd
 unset APP_RANDOM_PASSWORD
 
 install -d -o root -g root -m 0755 /run/sshd

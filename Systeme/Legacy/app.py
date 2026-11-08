@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import html
+import logging
 import os
 import stat
+import sys
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -14,6 +16,21 @@ PORT = 8080
 HOME_DIR = "/home/app"
 MAX_FILE_BYTES = 1024 * 1024
 MAX_REQUEST_BYTES = MAX_FILE_BYTES * 3 + 64 * 1024
+
+# Docker collecte stdout/stderr. Le logger HTTP écrit explicitement sur stdout ;
+# le format inclut un horodatage pour faciliter le suivi avec `docker compose logs`.
+WEB_LOGGER = logging.getLogger("julie.web")
+WEB_LOGGER.setLevel(logging.INFO)
+WEB_LOGGER.propagate = False
+if not WEB_LOGGER.handlers:
+    _web_handler = logging.StreamHandler(sys.stdout)
+    _web_handler.setFormatter(
+        logging.Formatter(
+            fmt="%(asctime)s %(levelname)s %(message)s",
+            datefmt="%Y-%m-%dT%H:%M:%S%z",
+        )
+    )
+    WEB_LOGGER.addHandler(_web_handler)
 
 
 class NotebookError(Exception):
@@ -210,7 +227,9 @@ class JulieHandler(BaseHTTPRequestHandler):
     sys_version = ""
 
     def log_message(self, fmt: str, *args: object) -> None:
-        print("[WEB] " + (fmt % args), flush=True)
+        # BaseHTTPRequestHandler appelle cette méthode pour les journaux
+        # d'accès HTTP (méthode, chemin, code de statut et taille de réponse).
+        WEB_LOGGER.info("[WEB] %s", fmt % args)
 
     def send_html(self, body: bytes, status: int = 200) -> None:
         self.send_response(status)
@@ -349,7 +368,7 @@ class JulieHandler(BaseHTTPRequestHandler):
 
 def main() -> None:
     server = ThreadingHTTPServer((HOST, PORT), JulieHandler)
-    print(f"[WEB] Intranet RH de Julie disponible sur http://{HOST}:{PORT}", flush=True)
+    WEB_LOGGER.info("[WEB] Intranet RH de Julie disponible sur http://%s:%s", HOST, PORT)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
