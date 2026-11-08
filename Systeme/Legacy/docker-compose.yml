@@ -1,0 +1,10 @@
+services:
+  julie-rhpaie:
+    build: .
+    container_name: julie-rhpaie-ctf-v2
+    environment:
+      USER: app
+    ports:
+      - "8080:8080"
+      - "2222:22"
+    restart: unless-stopped

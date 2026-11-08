@@ -1,0 +1,10 @@
+.git
+.gitignore
+__pycache__/
+*.py[cod]
+*.zip
+*.tar
+*.tar.gz
+id_*
+*.pem
+*.key
