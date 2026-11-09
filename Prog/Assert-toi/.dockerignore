@@ -1,0 +1,17 @@
+# Challenge metadata and organizer documentation
+README.md
+writeup/
+challenge.yml
+
+# Docker and repository metadata
+Dockerfile
+docker-compose*.yml
+build_docker.sh
+.dockerignore
+.git
+.gitignore
+
+# Local state and build artifacts
+**/__pycache__
+**/*.pyc
+*.log
