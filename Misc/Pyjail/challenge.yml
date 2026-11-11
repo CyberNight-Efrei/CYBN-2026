@@ -1,0 +1,37 @@
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+
+name: "Pyjail"
+category: Misc
+description: |-
+  On m'a dit que `sys.addaudithook` protégeait l'interpréteur. On ne m'a pas menti.
+
+  On a juste oublié de me préciser *lequel*.
+
+  Le flag est dans `/flag`.
+attribution: "Romain"
+
+flags:
+    - {
+        type: "static",
+        content: "CYBN{4_fr3sh_1nt3rpr3t3r_h4s_n0_4ud1t_h00ks}",
+        data: "case_sensitive",
+    }
+
+tags:
+    - Medium
+
+files:
+    - src/challenge.py
+
+version: "0.1"
+
+requirements:
+  - "Bienvenue !"
