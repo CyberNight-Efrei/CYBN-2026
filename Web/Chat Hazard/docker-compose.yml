@@ -1,0 +1,9 @@
+services:
+  chat-hazard:
+    build: .
+    ports:
+      - "127.0.0.1:8009:80"
+    environment:
+      FLAG: "CYBN{n1n3_l1v3s_but_0nly_0n3_s33d_4nd_z3r0_3ntr0py}"
+      DB_PATH: "/tmp/chathazard.db"
+    restart: unless-stopped

@@ -1,0 +1,36 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Chat Hazard"
+category: Web
+description: |-
+  J'ai fait un site il y a longtemps, mais j'ai oublié mon mdp et, va savoir
+  pourquoi, je ne reçois jamais le mail de réinitialisation.
+
+  En revanche, j'ai gardé une copie des sources du site. Peut-être sauras-tu
+  trouver un moyen de me faire reprendre le contrôle de mon compte admin ?
+
+  Format : `CYBN{...}`
+attribution: "Romain"
+
+flags:
+    - CYBN{n1n3_l1v3s_but_0nly_0n3_s33d_4nd_z3r0_3ntr0py}
+
+files:
+    - dist/chat-hazard-src.zip
+
+tags:
+    - Medium
+
+requirements:
+  - "Bienvenue !"
