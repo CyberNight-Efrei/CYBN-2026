@@ -10,7 +10,7 @@ export const config = {
   cookieName: `cybermon_${(process.env.INSTANCE_ID || "local").replace(/[^a-zA-Z0-9_]/g, "_")}`,
   secureCookie: process.env.COOKIE_SECURE === "true",
   cooldownMs: Number(process.env.PACK_COOLDOWN_MS ?? 1500),
-  flag: process.env.FLAG || developmentFlag,
+  flag: process.env.DYNAMIC_FLAG || process.env.FLAG || developmentFlag,
   flagCardPath:
     process.env.FLAG_CARD_PATH || path.join(root, "secret/flag.png"),
   mlServiceUrl: process.env.ML_SERVICE_URL || "http://127.0.0.1:8091",
