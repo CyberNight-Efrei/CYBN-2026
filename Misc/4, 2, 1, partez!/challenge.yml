@@ -1,0 +1,41 @@
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+
+name: "4, 2, 1, partez!"
+category: Misc
+description: |-
+  Mon grand-père, mathématicien s'est récemment mis à la musique.
+  Il m'a fait écouter quelques-unes de ses compositions, et j'ai réussi à en enregistrer une.
+
+  J'avoue ne pas trop comprendre la mélodie...
+  J'ai remarqué en plus que les autres compositions finissent exactement de la même façon.
+
+  As-tu une idée de ce qu'il se passe ?
+
+  Format : `CYBN{...}`
+attribution: "Romain"
+
+flags:
+    - {
+        type: "static",
+        content: "CYBN{Wh4t_4n_0dd_rhy7hm}",
+        data: "case_sensitive",
+    }
+
+tags:
+    - Medium
+
+files:
+    - dist/chall.wav
+
+version: "0.1"
+
+requirements:
+  - "Bienvenue !"
