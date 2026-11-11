@@ -29,8 +29,9 @@ void setup()
 
     Serial.begin(38400);
 
-    Serial.println("AT+PIN5935");
-    Serial.println("AT+NAMECYBERNIGHT-SMARTLOCK");
+    Serial.print("AT+PIN5935");
+    delay(1000);
+    Serial.print("AT+NAMECYBERNIGHT-SMARTLOCK");
     Serial.flush();
 
     randomSeed(SEED);

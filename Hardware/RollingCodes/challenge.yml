@@ -20,6 +20,8 @@ category: Hardware
 description: |-
   La réserve à champagne de Meunier est protégée par un smartlock !
   En tant que génie de l'informatique, vous avez retrouvé une version du firmware du smartlock qui a leak.
+  L'ancienne version utilisait un Arduino couplé avec un module Bluetooth HC-06, connecté en série.
+  
   Le microcontrolleur a changé, mais l'application mobile est compatible entre toutes les versions du firmware, le comportement du smartlock doit donc être excatement le même.
 
   Dévérouillez le smartlock.
@@ -27,8 +29,6 @@ description: |-
   Bonne chance.
 
   Format : `CYBN{champgagne_a_volonte}`
-
-  P.S. par souci de compréhension : vous pouvez considérer que le microcontrolleur est un Arduino, avec le firmware fourni, compilé avec avr-gcc et les librairies AVR. Oui, j'ai fait un port des librairies AVR pour reproduire le même comportement
 
 attribution: "0x7fff00"
 
