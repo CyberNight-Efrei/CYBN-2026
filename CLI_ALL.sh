@@ -8,7 +8,7 @@ set -Eeuo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 
 ROOT="."
-FILENAME="challenge.yml"
+FILENAME="challenge*.yml"
 ACTION=""
 
 # Environnement virtuel situé par défaut à côté du script.
@@ -212,7 +212,7 @@ for file in "${files[@]}"; do
 
     printf '\n%s========== %s ==========%s\n' "$BLUE" "$dir" "$NC"
 
-    printf -v display_cmd '%q ' "$CTF_BIN" challenge "$ACTION" "$dir"
+    printf -v display_cmd '%q ' "$CTF_BIN" challenge "$ACTION" "$file"
 
     if [[ "$DRY_RUN" -eq 1 ]]; then
         info "Simulation : $display_cmd"
@@ -225,7 +225,7 @@ for file in "${files[@]}"; do
     log_file="$(mktemp)"
     stop_after_failure=0
 
-    if "$CTF_BIN" challenge "$ACTION" "$dir" 2>&1 | tee "$log_file"; then
+    if "$CTF_BIN" challenge "$ACTION" "$file" 2>&1 | tee "$log_file"; then
         success "$dir"
         ((OK_COUNT += 1))
 

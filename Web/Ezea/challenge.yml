@@ -1,0 +1,48 @@
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+# Type de challenge
+type: dynamic_docker
+
+# Configuration du score dynamique
+extra:
+  initial: 500
+  decay: 50
+  minimum: 100
+  dynamic_score: 1
+  docker_image: "web_ezea"
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 5000
+
+# Informations du challenge
+name: "ezea - profil introuvable"
+category: "Web"
+tags:
+  - Medium
+
+attribution: "Mathu_lmn"
+
+description: |
+  **ezea** est l'annuaire qui met en avant les talents de l'école :
+  chaque étudiant y a un profil, des compétences et un CV.
+
+  Un étudiant a demandé que son profil ne soit plus public et il
+  n'apparaît donc plus dans l'annuaire. Pourtant, son CV est toujours
+  quelque part sur le serveur…
+
+  Retrouve son profil, mets la main sur son CV, et lis ce qu'il contient.
+
+  Format : `CYBN{...}`
+
+# Flag
+flags:
+  - "CYBN{l34ky_gr4phql_r3s0lv3r}"
+
+version: "3.0"
+
+requirements:
+  - "Bienvenue !"

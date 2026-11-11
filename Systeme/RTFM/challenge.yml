@@ -18,14 +18,14 @@ extra:
   # 2. Supprimer les champs Queue ci-dessous
 
   dynamic_score: 1      # 1 = True / 0 = False
-  docker_image: system_rtfm
+  docker_image: systeme_rtfm
 
   # Ports accessibles depuis l'extérieur.
   # Ajouter une entree par port à exposer.
   ports:
     - name: ssh
       protocol: ssh
-      internal_port: 2222
+      internal_port: 22
 
     # Exemple de second service :
     # - name: ssh
@@ -67,3 +67,6 @@ tags:
 next: null
 
 version: "0.1"
+
+requirements:
+  - "Bienvenue !"

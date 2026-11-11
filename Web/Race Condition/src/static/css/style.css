@@ -1,0 +1,532 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+    --rose: #E8E0E5;
+    --prune: #480E33;
+    --blue: #8499A5;
+
+    --background: #220A1B;
+    --surface: #35102A;
+    --text: #F5EFF3;
+    --muted: #C6B9C2;
+    --border: rgba(232, 224, 229, 0.16);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+}
+
+h1, h2, h3 {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.navbar {
+    background: var(--prune);
+    border-bottom: 1px solid var(--border);
+    padding: 22px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: var(--blue);
+}
+
+.wallet {
+    background: var(--rose);
+    color: var(--prune);
+    border-radius: 100px;
+    padding: 12px 22px;
+    font-weight: 700;
+}
+
+.container {
+    max-width: 1150px;
+    margin: auto;
+    padding: 55px 24px;
+}
+
+.hero {
+    padding: 65px 0;
+    text-align: center;
+}
+
+.eyebrow {
+    color: var(--blue);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.hero h1 {
+    font-size: clamp(38px, 6vw, 72px);
+    margin: 15px 0;
+    letter-spacing: -3px;
+}
+
+.hero p {
+    color: var(--muted);
+    font-size: 17px;
+}
+
+.section-title {
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+.tickets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.ticket {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+}
+
+.ticket.vip {
+    background: var(--prune);
+    border: 1px solid var(--blue);
+}
+
+.ticket-label {
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.ticket h3 {
+    font-size: 30px;
+    margin: 12px 0;
+}
+
+.ticket p {
+    color: var(--muted);
+    min-height: 50px;
+    line-height: 1.6;
+}
+
+.price {
+    font-size: 34px;
+    font-weight: 700;
+    margin: 25px 0;
+}
+
+.price small {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
+}
+
+.btn {
+    display: inline-block;
+    border: 0;
+    padding: 15px 24px;
+    border-radius: 10px;
+    background: var(--rose);
+    color: var(--prune);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn:hover:not(:disabled) {
+    background: #FFFFFF;
+}
+
+.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: var(--blue);
+    color: #14202A;
+}
+
+.extras {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 35px;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+    border-radius: 18px;
+}
+
+.panel p {
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.promo-input {
+    width: 100%;
+    background: var(--background);
+    border: 1px solid var(--blue);
+    border-radius: 9px;
+    color: white;
+    padding: 14px;
+    margin: 12px 0;
+    font-family: inherit;
+}
+
+.footer {
+    text-align: center;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding: 30px;
+    margin-top: 50px;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+    .tickets, .extras {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        padding: 18px;
+    }
+
+    .container {
+        padding: 25px 18px;
+    }
+
+    .hero {
+        padding: 45px 0;
+    }
+}
+
+/* ==========================
+   NOTIFICATIONS TOAST
+   ========================== */
+
+#toast-container {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    width: min(380px, calc(100vw - 40px));
+    pointer-events: none;
+}
+
+.toast {
+    background: #480E33;
+    border: 1px solid #8499A5;
+    color: #E8E0E5;
+
+    border-radius: 14px;
+    padding: 18px 20px;
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    position: relative;
+    overflow: hidden;
+
+    pointer-events: auto;
+
+    animation: toast-in 0.3s ease-out;
+}
+
+.toast.error {
+    border-left: 4px solid #FF8999;
+}
+
+.toast.success {
+    border-left: 4px solid #8DD8A0;
+}
+
+.toast-icon {
+    font-size: 22px;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #FFFFFF;
+}
+
+.toast-message {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: #E8E0E5;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.toast.hide {
+    animation: toast-out 0.25s ease-in forwards;
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes toast-out {
+    to {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+}
+
+@media (max-width: 600px) {
+    #toast-container {
+        top: 15px;
+        right: 15px;
+        left: 15px;
+        width: auto;
+    }
+}
+
+
+/* ==========================
+   MES BILLETS / REMBOURSEMENTS
+   ========================== */
+
+#tickets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.my-ticket {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    padding: 18px 22px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--background);
+}
+
+.my-ticket-info {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.my-ticket-info strong {
+    color: var(--rose);
+    font-size: 16px;
+}
+
+.my-ticket-info span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.btn-refund {
+    background: var(--blue);
+    color: #14202A;
+    padding: 12px 18px;
+}
+
+.refunded-badge {
+    color: #A7D8B1;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* ==========================
+   RÉCOMPENSE VIP
+   ========================== */
+
+.vip-reward {
+    margin-top: 28px;
+    padding: 30px;
+    border: 1px solid var(--blue);
+    border-radius: 18px;
+    background: var(--prune);
+    text-align: center;
+}
+
+.vip-reward[hidden] {
+    display: none;
+}
+
+.vip-reward h2 {
+    font-size: 32px;
+    color: var(--rose);
+}
+
+.vip-reward p {
+    color: var(--rose);
+    line-height: 1.6;
+}
+
+.flag-display {
+    padding: 20px;
+    margin: 22px 0;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow-wrap: anywhere;
+}
+
+.flag-display code {
+    font-size: 17px;
+    color: var(--rose);
+    user-select: all;
+}
+
+
+
+/* ==========================
+   MINI-JEU
+   ========================== */
+
+.minigame-cups {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 25px 0;
+}
+
+.cup {
+    background: var(--prune);
+    border: 1px solid var(--blue);
+    border-radius: 12px;
+    font-size: 36px;
+    width: 85px;
+    height: 95px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.cup:hover:not(:disabled) {
+    transform: translateY(-7px);
+    background: #602047;
+}
+
+.cup:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+#minigame-result {
+    text-align: center;
+    font-size: 13px;
+}
+
+
+/* ==========================
+   ANIMATION DU MINI-JEU
+   ========================== */
+
+.minigame-board {
+    overflow: hidden;
+    padding: 15px 0;
+}
+
+.minigame-cups {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.minigame-cups .cup {
+    flex: 0 0 85px;
+    transition: transform 0.2s;
+}
+
+.minigame-cups.shuffling .cup:nth-child(1) {
+    animation: shuffle-left 0.9s ease-in-out;
+}
+
+.minigame-cups.shuffling .cup:nth-child(2) {
+    animation: shuffle-middle 0.9s ease-in-out;
+}
+
+.minigame-cups.shuffling .cup:nth-child(3) {
+    animation: shuffle-right 0.9s ease-in-out;
+}
+
+@keyframes shuffle-left {
+    0%, 100% { transform: translateX(0); }
+    35% { transform: translateX(100px); }
+    70% { transform: translateX(40px); }
+}
+
+@keyframes shuffle-middle {
+    0%, 100% { transform: translateX(0); }
+    35% { transform: translateX(-95px); }
+    70% { transform: translateX(90px); }
+}
+
+@keyframes shuffle-right {
+    0%, 100% { transform: translateX(0); }
+    35% { transform: translateX(-80px); }
+    70% { transform: translateX(-35px); }
+}
+
+.minigame-cups.shuffling .cup {
+    pointer-events: none;
+}
+
+#minigame-result {
+    min-height: 24px;
+    text-align: center;
+    color: var(--rose);
+    font-size: 14px;
+}

@@ -36,3 +36,6 @@ tags:
 # NO directories, accept archives (.zip, .7z, .tgz)
 files:
     - src/template
+
+requirements:
+  - "Bienvenue !"

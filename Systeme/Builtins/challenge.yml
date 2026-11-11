@@ -40,15 +40,15 @@ extra:
   dynamic_decay: 30     # NE PAS TOUCHER
   dynamic_minimum: 100  # NE PAS TOUCHER
 
-  docker_image: system_builtins   # RESPECT FORMAT (shortname please)
+  docker_image: systeme_builtins   # RESPECT FORMAT (shortname please)
 
   ports:
     - name: ssh
       protocol: ssh         # ssh, tcp, http
       internal_port: 22
 
-  user: builtin            # Optional, informative purpose only
-  password: builtin    # Optional, informative purpose only
+  user: cybn            # Optional, informative purpose only
+  password: cybn    # Optional, informative purpose only
 
 # </============ CHALLENGE DOCKER ============>
 
@@ -56,3 +56,6 @@ extra:
 # <============ OPTIONAL ============>
 
 version: "0.1"
+
+requirements:
+  - "Bienvenue !"

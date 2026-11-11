@@ -30,9 +30,10 @@ flags:
 tags:
     - Medium
 
-connection_info: http://CHANGEME:3000
+connection_info: https://citadelle.cybn.fr/
 
 requirements:
     - "Citadelle never dies - Getting started"
+    - "Bienvenue !"
 
 next: "Citadelle never dies - Du calme howdy"

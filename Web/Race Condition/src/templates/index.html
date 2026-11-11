@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CyberNight Festival | Billetterie</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <!-- Notifications -->
+    <div id="toast-container" aria-live="polite"></div>
+
+    <header class="navbar">
+        <div class="logo">
+            CYBER<span>NIGHT.</span>
+        </div>
+
+        <div class="wallet">
+            ◈ <span id="balance">100</span> crédits
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="hero">
+            <div class="eyebrow">The ultimate night</div>
+
+            <h1>CYBERNIGHT FESTIVAL</h1>
+
+            <p>
+                Une nuit. Une scène. Des souvenirs inoubliables.
+                <br>
+                Réserve ta place avant qu'il ne soit trop tard.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="section-title">Choisis ton expérience</h2>
+
+            <div class="tickets">
+
+                <article class="ticket">
+                    <div class="ticket-label">Accès classique</div>
+
+                    <h3>STANDARD</h3>
+
+                    <p>
+                        Accès à la scène principale,
+                        aux concerts et aux animations.
+                    </p>
+
+                    <div class="price">
+                        50 <small>crédits</small>
+                    </div>
+
+                    <button class="btn" onclick="buyTicket('standard')">
+                        Acheter ce billet
+                    </button>
+                </article>
+
+                <article class="ticket vip">
+                    <div class="ticket-label">Expérience exclusive</div>
+
+                    <h3>VIP ACCESS ✦</h3>
+
+                    <p>
+                        Accès prioritaire, espace VIP,
+                        rencontre avec les artistes
+                        et surprises exclusives.
+                    </p>
+
+                    <div class="price">
+                        150 <small>crédits</small>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="buyTicket('vip')">
+                        Réserver mon VIP
+                    </button>
+                </article>
+
+            </div>
+        </section>
+
+        <section class="panel" style="margin-top:35px;">
+            <h2>Mes billets</h2>
+
+            <div id="tickets-list">
+                Chargement...
+            </div>
+        </section>
+        <section id="vip-reward" class="vip-reward" hidden>
+    <div class="ticket-label">VIP ACCESS ✦</div>
+
+    <h2>Félicitations !</h2>
+
+    <p>
+        Tu as obtenu ton accès VIP au CyberNight Festival.
+        Voici ta récompense :
+    </p>
+
+    <div class="flag-display">
+        <code id="vip-flag"></code>
+    </div>
+
+    <button class="btn" id="copy-flag" type="button">
+        Copier le flag
+    </button>
+</section>
+
+        <section class="extras">
+
+
+<article class="panel">
+    <div class="ticket-label">Mini-jeu</div>
+    <h2>Trouve le ticket gagnant !</h2>
+
+    <p>
+        Un ticket est caché sous l'un de ces trois gobelets.
+        Trouve-le pour gagner 10 crédits !
+    </p>
+
+
+<div class="minigame-board">
+    <div class="minigame-cups" id="minigame-cups">
+        <button class="cup" type="button" data-choice="0" onclick="playMinigame(0)">🥤</button>
+        <button class="cup" type="button" data-choice="1" onclick="playMinigame(1)">🥤</button>
+        <button class="cup" type="button" data-choice="2" onclick="playMinigame(2)">🥤</button>
+    </div>
+</div>
+
+<p id="minigame-result" aria-live="polite">
+    Choisis un gobelet pour commencer !
+</p>
+
+
+    <p id="minigame-result" aria-live="polite"></p>
+</article>
+
+
+            
+<article class="panel">
+    <div class="ticket-label">Offres exclusives</div>
+
+    <h2>Tu as un code promo ?</h2>
+
+    <p>
+        Entre ton code pour profiter de nos offres spéciales.
+    </p>
+
+    <form id="promo-form">
+        <input
+            class="promo-input"
+            id="promo-code"
+            type="text"
+            placeholder="Entrez votre code promo"
+            autocomplete="off"
+            maxlength="30"
+            required
+        >
+<!--
+    Note: 
+    Pour les offres spéciales, on utilise
+    les initiales de l'événement suivies de l'année.
+-->
+        <button class="btn btn-secondary" type="submit">
+            Appliquer le code
+        </button>
+    </form>
+
+    <p id="promo-result" aria-live="polite"></p>
+</article>
+
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        © 2026 CyberNight Festival — All rights reserved.
+    </footer>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>

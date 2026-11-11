@@ -1,22 +1,27 @@
+# <============ NE PAS TOUCHER ============>
 value: 500
+# </============ NE PAS TOUCHER ============>
+
 type: dynamic_docker
 
+# <============ NE PAS TOUCHER ============>
 extra:
   initial: 500
   decay: 30
   minimum: 100
-  dynamic_score: 1
-  dynamic_initial: 500
-  dynamic_decay: 30
-  dynamic_minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+  # <============ CHALLENGE DOCKER ============>
+  dynamic_score: 1      # 1 = True / 0 = False
   docker_image: misc_qui-a-canne-le-bus
+
   ports:
     - name: tcp
-      protocol: tcp         # ssh, tcp, http
+      protocol: tcp
       internal_port: 1337
+  # </============ CHALLENGE DOCKER ============>
 
-state: visible
-
+# <============ REQUIRED ============>
 name: "Qui a canné le bus ?"
 category: Misc
 description: |-
@@ -29,14 +34,13 @@ description: |-
   La passerelle de diagnostic transmet des lignes `IIIIIIII#DD...` : un identifiant CAN étendu sur 8 chiffres hexadécimaux, puis 0 à 8 octets de données en hexadécimal. Pour émettre une trame, envoyez une ligne au même format.
 
   Format du flag : `CYBN{...}`
-attribution: "ThaySan"
 
-flags:
-  - type: static
-    content: "CYBN{L3_BU5_C4N_du_Bus_c4nn3}"
-    data: case_sensitive
+attribution: "ThaySan"
 
 tags:
   - Medium
+# </============ REQUIRED ============>
 
-version: "0.1"
+# <============ OPTIONAL ============>
+requirements:
+  - Bienvenue !

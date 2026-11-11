@@ -4,46 +4,30 @@
 # <============ NE PAS TOUCHER ============>
 value: 500
 
-state: hidden
+state: visible
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>
 name: "talking"
 category: System
 description: |-
-  # GROS TITRE
-
-  Du bon vieux Markdown comme on aime
-
+  Après avoir passé un moment au CyberNightistan (l'infra), j'ai l'impression qu'une machine veut me dire un truc...
+  
+  Heureusement, nous avons à disposition un SIEM et des machines pour investiguer cela de plus près.
+  
   ---
 
-  Bon chance
-
-  Format : `CYBN{template}`
+  Note: ce challenge est assez "meta", dans le sens où il vous place **réellement** dans le contexte de l'infrastructure de la CyberNight :)
 attribution: "NozZy"
 
 flags:
-    # A static case sensitive flag
-    - CYBN{REDACTED}
-    # A static case sensitive flag created with a dictionary
-    - {
-        type: "static",
-        content: "CYBN{REDACTED}",
-        data: "case_sensitive",
-    }
-    # A static case insensitive flag
-    - {
-        type: "static",
-        content: "CYBN{REDACTED}",
-        data: "case_insensitive",
-    }
-    # A regex case insensitive flag
-    - {
-        type: "regex",
-        content: "(.*)STUFF(.*)",
-        data: "case_insensitive",
-    }
+    - CYBN{L0ngU3_v13_Au_P4y5_dU_CYb3rN1Gh71St@n}
+
+connection_info: "https://graylog.cybn.fr/ | cybn : cybernight"
 
 tags:
     - Hard
 # </============ REQUIRED ============>
+
+requirements:
+  - "Bienvenue !"

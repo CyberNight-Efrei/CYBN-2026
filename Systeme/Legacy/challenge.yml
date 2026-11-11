@@ -47,14 +47,16 @@ extra:
   docker_image: systeme_legacy   # RESPECT FORMAT (shortname please)
 
   ports:
-    - name: FTP
-      protocol: tcp         # ssh, tcp, http
-      internal_port: 21
+    - name: Web
+      protocol: http         # ssh, tcp, http
+      internal_port: 8080
     - name: SSH
       protocol: ssh
       internal_port: 22
 
-  user: app                 # Optional, informative purpose only
-  password: app_password    # Optional, informative purpose only
+  user: app
 
 # </============ CHALLENGE DOCKER ============>
+
+requirements:
+  - "Bienvenue !"

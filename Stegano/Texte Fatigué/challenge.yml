@@ -14,7 +14,7 @@ state: visible
 name: "Texte fatigué"
 category: Stegano
 description: |-
-  Voici des infos qu'on vous a déjà dites pour cette soirée, mais je vous les réécris encore une fois, en plus je commence à fatigué, j'écris n'importe comment…
+  Voici des infos qu'on vous a déjà dites pour cette soirée, mais je vous les réécris **moi même** encore une fois, en plus je commence à fatigué, j'écris n'importe comment…
 
 attribution: "Kazulhu"
 
@@ -30,3 +30,6 @@ tags:
 
 files:
     - src/rappel.txt
+
+requirements:
+  - "Bienvenue !"

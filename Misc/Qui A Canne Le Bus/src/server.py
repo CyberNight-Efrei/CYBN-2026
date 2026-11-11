@@ -8,7 +8,7 @@ import re
 import time
 
 
-FLAG = os.environ["FLAG"]
+FLAG = os.environ.get("DYNAMIC_FLAG") or "CYBN{REDACTED}"
 
 SOFTWARE_ID = b"\x01" + f"NZZ-BUS-2.12-{FLAG}*".encode("ascii")
 SOFTWARE_PGN = b"\xDA\xFE\x00"

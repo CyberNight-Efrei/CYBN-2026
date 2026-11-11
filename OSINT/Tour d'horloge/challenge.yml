@@ -46,3 +46,6 @@ attempts: 1
 
 files:
     - src/parchemin.png
+
+requirements:
+  - "Bienvenue !"

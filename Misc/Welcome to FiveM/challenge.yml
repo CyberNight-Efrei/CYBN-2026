@@ -34,3 +34,6 @@ tags:
 # <============ OPTIONAL ============>
 files:
     - city_guard.zip
+
+requirements:
+  - "Bienvenue !"

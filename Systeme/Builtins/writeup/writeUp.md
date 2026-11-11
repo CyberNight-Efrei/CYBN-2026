@@ -22,3 +22,6 @@ Suffit de lire la page de manuel de bash et dans Command Substitution on a la su
 
 # Bien joué, tu peux valider avec le flag suivant : CYBN{BASH_BUILTINS_POWER!!!}
 
+Il existe de nombreux autres solutions comme par exemple:  
+`history -r .passwd` pour ajouter le contenu du fichier dans l'historique
+`enable -f head head` puis simplement `head .passwd` et oui certains builtins sont chargeables, ils sont situés dans /usr/lib/bash

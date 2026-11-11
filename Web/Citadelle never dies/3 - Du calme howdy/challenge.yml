@@ -30,6 +30,9 @@ flags:
 tags:
     - Hard
 
-connection_info: http://CHANGEME:3000
+connection_info: https://citadelle.cybn.fr/
 
-next: null
+requirements:
+  - "Citadelle never dies - Getting started"
+  - "Citadelle never dies - Le trésorier"
+  - "Bienvenue !"

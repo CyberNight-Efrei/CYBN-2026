@@ -9,7 +9,7 @@ extra:
   dynamic_initial: 500
   dynamic_decay: 30
   dynamic_minimum: 100
-  docker_image: web_cybermon-ia
+  docker_image: misc_cybermon-ia
   ports:
     - name: web
       protocol: http
@@ -29,12 +29,10 @@ description: |-
   Format : `CYBN{...}`
 attribution: "ThaySan"
 
-flags:
-  - type: static
-    content: "CYBN{REDACTED}"
-    data: case_sensitive
-
 tags:
   - Hard
 
 version: "0.1"
+
+requirements:
+  - "Bienvenue !"

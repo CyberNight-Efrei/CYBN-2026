@@ -1,0 +1,60 @@
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+type: dynamic_docker
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+  # <============ CHALLENGE DOCKER ============>
+  dynamic_score: 1
+  docker_image: web_race-condition
+
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 8080
+  # </============ CHALLENGE DOCKER ============>
+
+state: visible
+
+# <============ REQUIRED ============>
+name: "Race Condition"
+category: Web
+
+description: |-
+  # CyberNight Tickets
+
+  Le concert de l'année approche, mais les places VIP ne sont pas données...
+
+  Tu disposes de **100 crédits**, alors qu'un billet VIP en coûte **150**.
+
+  La billetterie propose quelques moyens de gagner des crédits.
+  Mais seront-ils suffisants ?
+
+  **Objectif : obtenir ton billet VIP et récupérer le flag.**
+
+  Format : `CYBN{...}`
+
+attribution: "estelle_alz"
+
+flags:
+  - type: static
+    content: "CYBN{R4c3_C0nd1T10n_V1P_4cc3ss}"
+    data: case_sensitive
+
+tags:
+  - Medium
+
+# </============ REQUIRED ============>
+
+version: "3.0"
+
+requirements:
+  - "Bienvenue !"

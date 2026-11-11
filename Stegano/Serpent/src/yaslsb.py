@@ -648,6 +648,7 @@ def run(args):
 
         if args.direction == 'diagonal':
             size = img.width
+            max_size = size // 8
             if len(to_embed) > size:
                 parser.error(f'Your text not should exceed {size // 8} for that image in diagonal.')
         elif args.direction == 'spiral':
@@ -663,6 +664,7 @@ def run(args):
         elif len(to_embed) > img.width * img.height:
             parser.error('Not enough space to embed data.')
 
+        log(f'[+] Embedding data fill: {len(to_embed) / max_size * 100:.2f}%')
         log('[+] Embedding payload into image', args.verbose, 1)
         embedded = embed_image(args.image, to_embed, args.direction, channels=args.colors)
         embedded.save(args.output, 'PNG')

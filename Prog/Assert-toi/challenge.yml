@@ -1,0 +1,64 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+type: dynamic_docker
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+  # <============ CHALLENGE DOCKER ============>
+  dynamic_score: 1      # 1 = True / 0 = False
+  docker_image: prog_assert-toi
+
+  ports:
+    - name: tcp
+      protocol: tcp
+      internal_port: 8080
+  # </============ CHALLENGE DOCKER ============>
+
+# <============ REQUIRED ============>
+name: "Assert-toi"
+category: Prog
+
+description: |-
+  # Assert-toi, faut qu'on parle
+
+  Un vieux dev Lua a laissé derrière lui une batterie de tests unitaires
+  complètement délirants. `x == x + 1` ? `#x == 1337` sur une table vide ?
+  `x ~= x` ? Visiblement, il était persuadé que tout est possible en Lua.
+
+  Il avait peut-être raison. Prouve-le en faisant passer ses 11 niveaux
+  d'`assert`, et récupère le flag qu'il a caché au bout.
+
+  `nc <host> <port>`
+
+  Format : `CYBN{...}`
+
+attribution: "Mathu_lmn"
+
+flags:
+  - CYBN{m3t4t4bl3s_4r3_my_r34l_fr13nds_94951a4d}
+
+tags:
+  - Medium
+
+requirements:
+  - Bienvenue ! # NE PAS TOUCHER - Ajouter si nécessaire
+
+state: hidden   # passer à "visible" quand le chall est prêt
+
+# </============ REQUIRED ============>
+
+# <============ OPTIONAL ============>
+
+hints:
+  - title: Par où commencer ?
+    content: "Le manuel de référence Lua 5.4, section 2.4 « Metatables and Metamethods », liste tout ce dont tu as besoin."
+    cost: 0
+
+version: "3.0"

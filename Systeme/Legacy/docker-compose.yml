@@ -1,0 +1,11 @@
+services:
+  julie-rhpaie:
+    build: .
+    container_name: julie-rhpaie-ctf-v2
+    environment:
+      USER: app
+      PYTHONUNBUFFERED: "1"
+    ports:
+      - "8080:8080"
+      - "2222:22"
+    restart: unless-stopped

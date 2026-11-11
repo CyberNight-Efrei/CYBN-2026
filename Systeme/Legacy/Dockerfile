@@ -1,66 +1,73 @@
-FROM debian:latest
+FROM debian:bookworm-slim
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV USER=app
-ENV APP_FTP_PASSWORD=app_password
+ENV DEBIAN_FRONTEND=noninteractive \
+    USER=app \
+    PYTHONUNBUFFERED=1
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        python3 \
         openssh-server \
-        vsftpd \
         tcpdump \
         ca-certificates \
         passwd \
         util-linux && \
     rm -rf /var/lib/apt/lists/*
 
-# Compte utilisé par FTP et SSH
-RUN useradd --create-home --shell /bin/bash $USER && \
-    passwd -l $USER && \
-    mkdir -p /run/sshd /var/run/vsftpd/empty
+# Compte commun au serveur web et au service SSH.
+RUN useradd --create-home --home-dir /home/app --shell /bin/bash app && \
+    mkdir -p /run/sshd
 
-# Rediriger les logs FTP vers stdout de Docker
-RUN touch /var/log/vsftpd.log \
-    && chmod 600 /var/log/vsftpd.log
-
-# Configuration SSH : clés uniquement
+# Configuration SSH : shell classique, clé publique uniquement, compte app seulement.
+# StrictModes no et les permissions permissives de .ssh sont volontaires pour ce CTF.
 RUN printf '%s\n' \
     'Port 22' \
+    'AddressFamily any' \
+    'ListenAddress 0.0.0.0' \
     'PermitRootLogin no' \
     'PubkeyAuthentication yes' \
     'PasswordAuthentication no' \
     'KbdInteractiveAuthentication no' \
     'AuthenticationMethods publickey' \
-    'AuthorizedKeysFile %h/.ssh/authorized_keys' \
+    'AuthorizedKeysFile /home/app/.ssh/authorized_keys' \
     'AllowUsers app' \
     'StrictModes no' \
-    'LogLevel DEBUG3' \
-    >> /etc/ssh/sshd_config
+    'UsePAM no' \
+    'PermitEmptyPasswords no' \
+    'PermitUserEnvironment no' \
+    'AllowAgentForwarding no' \
+    'AllowTcpForwarding no' \
+    'X11Forwarding no' \
+    'PermitTunnel no' \
+    'PermitTTY yes' \
+    'PrintMotd no' \
+    'PrintLastLog yes' \
+    'UseDNS no' \
+    'LogLevel VERBOSE' \
+    'PidFile /run/sshd.pid' \
+    > /etc/ssh/sshd_config
 
-RUN mkdir -p /opt/Application \
-    && chown app:app /opt/Application
+# Fichiers métier conservés depuis la v1 : ils font partie du décor/scénario.
+RUN mkdir -p /opt/Application && chown app:app /opt/Application
+RUN mkdir -p /home/app/.ssh && chown app:app /home/app/.ssh
 
 USER app
-
-# Application métier fictive
-RUN printf 'Application de finances RH\nAttention à la prod !!!' \
-        > /opt/Application/README.txt && \
-    printf 'environment=production\n' \
-        > /opt/Application/config.ini && \
-    printf 'rootP@ssword!!1998\n' \
-        > /opt/Application/password.txt \
-
-RUN printf 'Serveur de prod.\n - Dossier du serveur : /opt/Application\n\nNE PAS ETEINDRE - Sinon Julie va encore rouspeter...\n\n Michel.\n\n\nVersion 1 - 04/07/94' > /home/app/note.txt
+RUN printf 'Application de finances RH\nAttention à la prod !!!\n' > /opt/Application/README.txt && \
+    printf 'environment=production\n' > /opt/Application/config.ini && \
+    printf 'rootP@ssword!!1998\n' > /opt/Application/password.txt && \
+    printf 'Serveur de prod.\n - Dossier du serveur : /opt/Application\n\nNE PAS ETEINDRE - Sinon Julie va encore rouspeter...\n\n Michel.\n\n\nVersion 2 - 04/07/94\n' > /home/app/note.txt && \
+    printf 'cd /opt\nls\ncd Application' > /home/app/.bash_history && \
+    printf 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCTx4XKb4SPGZG/eYL5OddbXERokAjhEXHLGfOwpabPGrDtJJC4Sqjk/bNGyy6y+UXP11WAN7zrQL/VkgzUQT8hyAxEixcpRX5fCBeKs9audWZgOM/Hi3eA64JTo+06M492tvsl2xi8UhtM2GjeTDsYZadOP53TSie083GX4yLAz0AZmC6/VDIIX5SnEhlL05T/tNicgGPOP0NCAReQ+mCBWJJmEJinflsHK1NCj+Iw1gAMmMPuo7YcSGpiTl8wzDQ6SF0vwqU44QCPOtghGTtzbz5yImUyd9M4iSjMgkVNuybE2kpF+Dk9pDwBaztCZg71jSWg4MtXeEkcQzGBTadr' > /home/app/.ssh/authorized_keys
 
 USER root
+RUN printf 'CYBN{AtT3nT10n_@_JuL13_l4_RH}' > /root/flag.txt && \
+    chmod 0400 /root/flag.txt
 
-RUN printf 'CYBN{AtT3nT10n_@_JuL13_l4_RH}' > /root/flag.txt \
-    && chmod 0400 /root/flag.txt
-
-COPY vsftpd.conf /etc/vsftpd.conf
+COPY app.py /opt/Application/app.py
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh
+RUN chown app:app /opt/Application/app.py && \
+    chmod 0444 /opt/Application/app.py && \
+    chmod 0755 /entrypoint.sh
 
-EXPOSE 21 22
-
+EXPOSE 8080 22
 CMD ["/entrypoint.sh"]

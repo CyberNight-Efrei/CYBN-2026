@@ -1,0 +1,38 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Sélection surnaturelle"
+category: Misc
+description: |-
+  Le Conseil des Mages en avait marre d'attendre l'Élu. Du coup, ils ont viré l'oracle et confié le recrutement à une IA.
+
+  Résultat : une regex sortie des enfers, 42 000 candidats recalés, et le dernier a avoir essayé aurait déclaré : "C'est une dinguerie, frère."
+
+  Pourtant, il paraît qu'il existe une candidature qui passe le filtre. À toi de trouver laquelle, parce que pour l'instant, même le Grand Mage est en PLS.
+
+  *`\ACYBN\{(?=.{40}\}\Z)(?=[^}]*_p4ss3_)(?=[^}]*_v4_)(?![^}]*[A-Z])(?:(?=j)j)(?P<digit>[0-9])(?:1)_(?:p(?P=digit))(((((?P<letter>[a-z])))))(?P=letter)(?:(?![48675291])\d)_l[3]_(?:c(?P=digit))(?:s(?:t))1(?:n)g_(?:(?:m(?P=digit))){2}n_(?:v(?P=digit))_3(?:tr)3_f(?=13r3\})1(?:3)r3\}\Z`*
+
+  Format : `CYBN{...}`
+
+attribution: "ThaySan"
+
+flags:
+  - CYBN{j41_p4ss3_l3_c4st1ng_m4m4n_v4_3tr3_f13r3}
+
+tags:
+  - Easy
+# </============ REQUIRED ============>
+
+# <============ OPTIONAL ============>
+requirements:
+  - "Bienvenue !"

@@ -27,14 +27,12 @@ description: |-
   Format : `CYBN{...}`
 attribution: "ThaySan"
 
-flags:
-  - type: static
-    content: "CYBN{REDACTED}"
-    data: case_sensitive
-
 tags:
   - Medium
 
 next: "Cybermon 3 - Trompe-l'oeil"
 
 version: "0.1"
+
+requirements:
+  - "Bienvenue !"

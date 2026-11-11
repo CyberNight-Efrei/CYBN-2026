@@ -1,0 +1,37 @@
+value: 500
+type: queue
+
+extra:
+  initial: 350
+  decay: 30
+  minimum: 100
+  function: logarithmic        # static, linear ou logarithmic
+  queue_mode: manual           # manual ou automatic
+  batch_size: 1                # Participants sélectionnés par tour
+  interval_seconds: 300        # Intervalle entre les tours, en secondes
+  show_position: true          # Afficher la position dans la file
+  show_eta: true               # Afficher une estimation d'attente
+  selected_message: "C'est à ton tour ! Tu peux maintenant venir en **salle XXX**."
+
+state: visible
+
+name: "🍷 Level 2"
+category: Lockpick
+description: Enregistre-toi dans la file d'attente, et attend d'être tiré pour tenter de crocheter le cadenas
+attribution: "CTFREI"
+
+flags:
+  - CYBN{L0Ck5_4r3_BE1nG_P1cK3D_r3al_H4rD}
+
+tags:
+  - Medium
+  - Bordeaux
+
+next: Level 3
+
+# Specifies what version of the challenge specification was used.
+# Subject to change until ctfcli v1.0.0
+version: "0.1"
+
+requirements:
+  - "Bienvenue !"
