@@ -1,0 +1,9 @@
+services:
+  intro:
+    build: .
+    image: prog_intro
+    environment:
+      DYNAMIC_FLAG: ${DYNAMIC_FLAG:?Variable DYNAMIC_FLAG requise}
+    ports:
+      - "1337:1337"
+    restart: unless-stopped
