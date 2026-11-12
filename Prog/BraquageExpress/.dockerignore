@@ -1,0 +1,8 @@
+writeup/
+tests/
+CHALLENGE.md
+DETECTION.md
+challenge.yml
+docker-compose.yml
+**/__pycache__/
+**/*.pyc

@@ -1,0 +1,31 @@
+value: 500
+type: dynamic_docker
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+  dynamic_score: 1
+  docker_image: prog_braquage-express
+  ports:
+    - name: tcp
+      protocol: tcp
+      internal_port: 1337
+
+state: visible
+
+name: "Braquage express"
+category: Prog
+description: |-
+  Quatre braqueurs ont imprimé le QR contenant le mot de passe à usage unique d'un coffre. Ils ont coupé la feuille en quatre et se sont partagé les morceaux, persuadés qu'aucun d'eux ne pourrait partir seul avec le butin.
+
+  Grand hacker que vous êtes, vous avez réussi à intercepter leurs communications. Vous avez **trois secondes** pour retrouver le mot de passe et l'utiliser avant qu'ils ne reconstituent le QR et ouvrent le coffre.
+
+  Format du flag : `CYBN{...}`
+attribution: "ThaySan"
+
+tags:
+  - Easy
+
+requirements:
+  - "Bienvenue !"

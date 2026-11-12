@@ -1,0 +1,9 @@
+services:
+  braquage-express:
+    build: .
+    image: prog_braquage-express
+    environment:
+      DYNAMIC_FLAG: ${DYNAMIC_FLAG:?Variable DYNAMIC_FLAG requise}
+    ports:
+      - "1337:1337"
+    restart: unless-stopped
