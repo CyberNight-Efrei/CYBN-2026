@@ -5,6 +5,7 @@ import { config } from "./config.js";
 import { generateFlagCard } from "./services/flag-card.js";
 await generateFlagCard(2);
 await initDb();
+delete process.env.DYNAMIC_FLAG;
 delete process.env.FLAG;
 config.flag = undefined;
 const server = app.listen(config.port, "0.0.0.0", () =>
