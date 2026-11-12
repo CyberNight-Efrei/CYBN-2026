@@ -1,27 +1,18 @@
-# <============ NE PAS TOUCHER ============>
 value: 500
-# </============ NE PAS TOUCHER ============>
-
 type: dynamic_docker
 
-# <============ NE PAS TOUCHER ============>
 extra:
   initial: 500
   decay: 30
   minimum: 100
-# </============ NE PAS TOUCHER ============>
-
-  # <============ CHALLENGE DOCKER ============>
-  dynamic_score: 1      # 1 = True / 0 = False
-  docker_image: misc_qui-a-canne-le-bus
-
+  dynamic_score: 1
+  docker_image: misc_buscan
   ports:
     - name: tcp
       protocol: tcp
       internal_port: 1337
-  # </============ CHALLENGE DOCKER ============>
 
-# <============ REQUIRED ============>
+state: visible
 name: "Qui a canné le bus ?"
 category: Misc
 description: |-
@@ -39,8 +30,6 @@ attribution: "ThaySan"
 
 tags:
   - Medium
-# </============ REQUIRED ============>
 
-# <============ OPTIONAL ============>
 requirements:
-  - Bienvenue !
+  - "Bienvenue !"
