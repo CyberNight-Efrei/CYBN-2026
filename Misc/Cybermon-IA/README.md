@@ -4,7 +4,7 @@ Cybermon Online transforme les illustrations en cartes avec BLIP. Les fichiers d
 
 ## Architecture
 
-Chaque équipe possède un service HTTP unique et un volume SQLite. Le modèle ML est un service global unique, partagé par toutes les instances Hard sur un réseau Docker externe.
+Chaque instance possède un service HTTP unique et un volume SQLite. Le modèle ML est un service global unique, partagé par toutes les instances Hard sur un réseau Docker externe.
 
 ```text
 Navigateur → Express + Vue → SQLite
@@ -28,7 +28,7 @@ docker compose -f docker-compose.ml.yml up -d --build --wait
 Puis démarrer une instance :
 
 ```powershell
-$env:FLAG = "CYBN{3333333333333333}"
+$env:DYNAMIC_FLAG = "CYBN{3333333333333333}"
 $env:PLAYER_NAME = "Alex"
 $env:FRONTEND_PORT = "8083"
 $env:ML_NETWORK = "cybermon-ml"
@@ -40,7 +40,7 @@ Le challenge est disponible sur <http://127.0.0.1:8083> et la santé du scanner 
 
 ## Déploiement CTFd dynamique
 
-Le scanner défini par `docker-compose.ml.yml` doit être construit et lancé une seule fois. Toutes les instances dynamiques reçoivent les mêmes `ML_NETWORK` et `ML_SERVICE_TOKEN`, mais chacune possède son propre `FLAG`, son propre `COMPOSE_PROJECT_NAME` et son volume `database`.
+Le scanner défini par `docker-compose.ml.yml` doit être construit et lancé une seule fois. Toutes les instances dynamiques reçoivent les mêmes `ML_NETWORK` et `ML_SERVICE_TOKEN`, mais chacune possède son propre `DYNAMIC_FLAG`, son propre `COMPOSE_PROJECT_NAME` et son volume `database`. Avec le fork Whale actuel, une instance est liée à un utilisateur CTFd ; le partage entre équipiers dépend de la configuration de la plateforme.
 
 Le service HTTP de chaque équipe est publié sur le port 8080. Le scanner reste sur le réseau Docker partagé ; son port de contrôle doit rester lié à `127.0.0.1`. Activez `COOKIE_SECURE=true` derrière HTTPS et supprimez le volume de l’instance à son expiration.
 
