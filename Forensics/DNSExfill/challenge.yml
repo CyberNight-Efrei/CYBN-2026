@@ -1,0 +1,31 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: hidden
+
+name: "Je demande pour un ami"
+category: Forensics
+description: |-
+  L'équipe CyberNight chargée de repérer la triche a déployé tout un arsenal de détecteurs « très avancés et invisibles » (en toute humilité) contre l'utilisation de l'IA chez les challengers et le partage de flags entre équipes.
+
+  Un petit malin, incapable de se passer de son LLM préféré, a mis la main sur une note interne décrivant ces dispositifs. Il l'a exfiltrée depuis un ordinateur de l'organisation, mais nous avons conservé une capture du trafic.
+
+  Retrouvez la note.
+attribution: "ThaySan"
+
+flags:
+  - "CYBN{N11LYX_CL1GN3_D35_Y3UX_M415_V01T_T0UT}"
+
+tags:
+  - Easy
+
+requirements:
+  - "Bienvenue !"
+
+files:
+  - public/capture.pcap

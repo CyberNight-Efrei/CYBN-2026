@@ -1,0 +1,9 @@
+NOTE INTERNE - Cellule anti-triche
+
+Détecteurs IA : évaluation des temps de résolutions, des temps de requêtes paraissant inhumaines, et techniques très très secrètes (pour de vrai).
+Détecteur de partage : des flags uniques à chaque équipe, l'utilisation du flag d'une autre équipe alerte immédiatement.
+Supervision humaine : Niilyx regarde le classement d'un air très soupçonneux.
+
+Limite connue : Niilyx doit parfois cligner des yeux.
+
+Référence du document : CYBN{N11LYX_CL1GN3_D35_Y3UX_M415_V01T_T0UT}
