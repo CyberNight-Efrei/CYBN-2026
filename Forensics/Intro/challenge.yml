@@ -1,0 +1,31 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: hidden
+
+name: "Pourquoi être aussi corrompu"
+category: Forensics
+description: |-
+  Alerte générale ! Le site des challenges de la CyberNight ne répond plus ! La documentation indique quelle machine de secours utiliser... sauf que Niilyx a corrompu le DOCX en voulant le mettre à jour.
+
+  Il est presque certain d'y avoir inséré une image avec l'information nécessaire. Retrouvez le nom de la machine de secours.
+
+  Format : `CYBN{NOM_DE_LA_MACHINE}`
+attribution: "ThaySan"
+
+flags:
+  - "CYBN{PH3N1X-02}"
+
+tags:
+  - Intro
+
+requirements:
+  - "Bienvenue !"
+
+files:
+  - public/documentation.docx
