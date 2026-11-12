@@ -7,7 +7,7 @@ Un collectionneur affirmait posséder une carte issue du Projet Black Deck. Accu
 Prérequis : Docker Engine/Desktop avec Compose v2.
 
 ```powershell
-$env:FLAG = "CYBN{1111111111111111}"
+$env:DYNAMIC_FLAG = "CYBN{1111111111111111}"
 $env:PLAYER_NAME = "Alex"
 $env:FRONTEND_PORT = "8081"
 docker compose -p cybermon-easy up -d --build --wait
@@ -22,7 +22,7 @@ docker compose -p cybermon-easy down -v   # supprime la base
 
 ## Déploiement CTFd dynamique
 
-Une instance correspond à une équipe. Le lanceur CTFd doit fournir un `FLAG`, un `COMPOSE_PROJECT_NAME` et une route ou un port uniques. `PLAYER_NAME` personnalise le profil de l’équipe et `COOKIE_SECURE=true` doit être activé derrière HTTPS.
+Chaque instance doit recevoir son propre `DYNAMIC_FLAG`, son `COMPOSE_PROJECT_NAME` et une route ou un port uniques. Avec le fork Whale actuel, une instance est liée à un utilisateur CTFd ; le partage entre équipiers dépend de la configuration de la plateforme. `PLAYER_NAME` personnalise le profil de l’équipe et `COOKIE_SECURE=true` doit être activé derrière HTTPS.
 
 Le service HTTP unique sert le frontend Vue et l’API Express sur le port 8080. Le volume `database` doit être supprimé lorsque l’instance expire.
 
