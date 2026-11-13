@@ -5,8 +5,8 @@ state: visible
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>
-name: "Pyjail!"
-category: Pwn
+name: "Pyjail"
+category: Misc
 description: |-
   # Pyjail
 
