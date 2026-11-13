@@ -83,7 +83,7 @@ JWKS = {"keys": [_jwk]}
 _jwks_cache = None
 
 
-def get_jwks() -> dict:"
+def get_jwks() -> dict:
     global _jwks_cache
     if _jwks_cache is None:
         try:
