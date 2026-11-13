@@ -6,6 +6,7 @@ Usage : venv/bin/python PRUNE_CTFD.py [root] [--dry-run] [--max N]
 """
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -13,6 +14,11 @@ import yaml
 from ctfcli.core.api import API
 
 EXCLUDED_DIRS = {"0-CHALL-TEMPLATE", "venv"}
+
+# Même magasin de certificats que CLI_ALL.sh (CA interne de CTFd).
+SYSTEM_CA = "/etc/ssl/certs/ca-certificates.crt"
+if "REQUESTS_CA_BUNDLE" not in os.environ and os.access(SYSTEM_CA, os.R_OK):
+    os.environ["REQUESTS_CA_BUNDLE"] = SYSTEM_CA
 
 
 def find_challenge_files(root):

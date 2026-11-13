@@ -67,3 +67,6 @@ jobs:
 
       - name: Sync challenges
         run: ./CLI_ALL.sh sync
+
+      - name: Remove deleted challenges
+        run: venv/bin/python PRUNE_CTFD.py
