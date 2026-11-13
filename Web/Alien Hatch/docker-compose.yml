@@ -1,0 +1,18 @@
+services:
+  web_alien-hatch:
+    build: .
+    image: web_alien-hatch
+    container_name: web_alien-hatch
+    ports:
+      - "127.0.0.1:8010:5000"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m
+    security_opt:
+      - "no-new-privileges:true"
+    cap_drop:
+      - ALL
+    pids_limit: 128
+    mem_limit: 256m
+    cpus: 0.75
+    restart: unless-stopped

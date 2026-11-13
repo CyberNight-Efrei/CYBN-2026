@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alien Hatch</title>
+<style>
+  :root{
+    --bg1:#070d1c; --bg2:#0f1830; --panel:#121c33; --panel-2:#1a2742;
+    --card:#1d2840; --card-hi:#243457;
+    --accent:#7c5cff; --accent-2:#38e0c8; --text:#e8edff; --muted:#8ea0c8;
+    --green:#22c55e; --blue:#3b82f6; --yellow:#eab308; --cyan:#06b6d4; --red:#ef4444;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Segoe UI',system-ui,sans-serif;
+    color:var(--text); min-height:100vh;
+    background:radial-gradient(1200px 700px at 50% -10%, #1b2a52 0, transparent 55%),
+               linear-gradient(180deg,var(--bg1),var(--bg2));
+    background-color:var(--bg1);
+    display:flex; justify-content:center; padding:22px;
+    position:relative; overflow-x:hidden;
+  }
+  #stars{position:fixed; inset:0; z-index:0; pointer-events:none;}
+  .container{position:relative; z-index:1; width:100%; max-width:720px;}
+
+  .title{
+    text-align:center; font-size:26px; font-weight:800; letter-spacing:2px; margin-bottom:4px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .subtitle{text-align:center; color:var(--muted); font-size:12px; margin-bottom:18px; letter-spacing:1px;}
+
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid rgba(124,92,255,.22); border-radius:22px; padding:22px;
+    box-shadow:0 20px 50px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .header{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:6px;}
+  .chip{
+    background:var(--card); border:1px solid rgba(255,255,255,.06);
+    padding:8px 14px; border-radius:12px; font-weight:700; font-size:13px;
+    display:flex; align-items:center; gap:6px;
+  }
+  .chip b{color:var(--accent-2);}
+
+  .pet-area{text-align:center; padding:14px 10px 6px; position:relative;}
+  .pet-stage{
+    width:200px; height:200px; margin:0 auto;
+    border-radius:50%;
+    background:radial-gradient(circle at 50% 42%, rgba(124,92,255,.28), transparent 62%);
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .pet-stage::after{
+    content:""; position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+    width:96px; height:16px; border-radius:50%;
+    background:rgba(56,224,200,.18); filter:blur(5px); animation:halo 2s ease-in-out infinite;
+  }
+  @keyframes halo{0%,100%{transform:translateX(-50%) scale(1);opacity:.18}50%{transform:translateX(-50%) scale(.8);opacity:.1}}
+  .egg{font-size:120px; user-select:none; line-height:1; animation:bob 2.2s ease-in-out infinite;}
+  .egg.shake{animation:shake .25s linear infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  @keyframes shake{0%,100%{transform:translate(0,0) rotate(-5deg)}50%{transform:translate(0,-4px) rotate(5deg)}}
+
+  .alien-wrap{animation:bob 2.6s ease-in-out infinite; filter:drop-shadow(0 10px 18px rgba(124,92,255,.5));}
+  #alien{width:170px; height:170px; display:block;}
+
+  #alien .part{display:none;}
+  #alien .always{display:block;}
+  .head{fill:#cdd6e0; transition:fill .3s;}
+  #alien[data-mood="sick"] .head,
+  #alien[data-mood="vomit"] .head{fill:#a9c58f;}
+  #alien[data-tier="2"] .head{fill:#c3d3e6;}
+  #alien[data-tier="3"] .head{fill:#d2c4ef;}
+  .eye{fill:#10131c;}
+  .stroke{fill:none; stroke:#10131c; stroke-width:4; stroke-linecap:round; stroke-linejoin:round;}
+
+  #alien[data-mood="neutral"] .e-open,
+  #alien[data-mood="refuse"] .e-open,
+  #alien[data-mood="eat"] .e-happy,
+  #alien[data-mood="happy"] .e-happy,
+  #alien[data-mood="clean"] .e-happy,
+  #alien[data-mood="sleep"] .e-closed,
+  #alien[data-mood="sick"] .e-sick,
+  #alien[data-mood="vomit"] .e-sick{display:block;}
+
+  #alien[data-mood="neutral"] .m-neutral,
+  #alien[data-mood="happy"] .m-neutral,
+  #alien[data-mood="clean"] .m-smile,
+  #alien[data-mood="eat"] .m-eat,
+  #alien[data-mood="sick"] .m-sick,
+  #alien[data-mood="vomit"] .m-vomit,
+  #alien[data-mood="refuse"] .m-refuse,
+  #alien[data-mood="sleep"] .m-neutral{display:block;}
+
+  #alien[data-mood="sick"] .sweat,
+  #alien[data-mood="vomit"] .sweat{display:block;}
+  #alien[data-mood="vomit"] .vomit{display:block;}
+  #alien[data-mood="clean"] .sparkles{display:block;}
+  #alien[data-mood="sleep"] .zzz{display:block;}
+
+  #alien[data-mood="vomit"] .body{transform:rotate(7deg); transform-origin:100px 170px;}
+  .body{transition:transform .2s;}
+  #alien[data-mood="eat"] .jaw{animation:chew .3s ease-in-out 3;}
+  @keyframes chew{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+  .vomit ellipse{animation:gush .55s ease-in infinite;}
+  @keyframes gush{0%{transform:translateY(-6px) scale(.6);opacity:0}30%{opacity:1}100%{transform:translateY(26px) scale(1.1);opacity:0}}
+  .sparkles *{animation:tw .9s ease-in-out infinite;}
+  @keyframes tw{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.1)}}
+  .zzz{animation:floatUp 2s ease-in-out infinite;}
+  @keyframes floatUp{0%{opacity:.3;transform:translateY(0)}50%{opacity:1}100%{opacity:.3;transform:translateY(-6px)}}
+
+  .statusText{font-size:16px; font-weight:700; margin-top:8px; min-height:24px;}
+  .reaction{color:var(--accent-2); font-size:13px; min-height:18px; margin-top:4px;}
+
+  #eggActions{margin-top:14px;}
+  .egg-buttons{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  .egg-buttons button{padding:11px 16px; border:none; border-radius:11px; cursor:pointer; font-weight:700; font-size:13px; background:var(--card); color:var(--text); border:1px solid rgba(255,255,255,.08);}
+  .egg-buttons button:hover{background:var(--card-hi);}
+  .hatch-line{color:var(--muted); font-size:13px; margin-top:12px;}
+  .hatch-bar{width:70%; max-width:300px; height:10px; margin:8px auto 0; background:var(--card); border-radius:8px; overflow:hidden;}
+  .hatch-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); transition:width .3s;}
+
+  #gamePanel{margin-top:10px;}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-top:8px;}
+  .stat{background:var(--card); padding:11px 13px; border-radius:13px; font-size:13px; font-weight:600;}
+  .bar{height:10px; background:#0d1526; margin-top:7px; border-radius:8px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,.5);}
+  .fill{height:100%; width:100%; border-radius:8px; transition:width .4s ease;}
+
+  .feeder{margin-top:16px; background:var(--card-hi); border:1px solid rgba(56,224,200,.25); border-radius:14px; padding:13px;}
+  .levels{display:flex; gap:7px; margin-bottom:10px; flex-wrap:wrap;}
+  .lvl{flex:1; min-width:90px; padding:9px 8px; border:1px solid rgba(255,255,255,.1); border-radius:10px; background:var(--card); color:var(--muted); cursor:pointer; font-weight:700; font-size:12px; transition:.15s;}
+  .lvl .d{display:block; font-size:9.5px; font-weight:600; color:var(--muted); margin-top:2px; letter-spacing:.3px;}
+  .lvl.active{background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#081020; border-color:transparent;}
+  .lvl.active .d{color:#0a1a1a;}
+  .feeder label{display:block; font-size:12px; color:var(--accent-2); font-weight:700; margin-bottom:8px; letter-spacing:.5px;}
+  .feeder-row{display:flex; gap:8px;}
+  .feeder input{flex:1; border:none; border-radius:10px; padding:11px 13px; font-size:14px; background:#0c1324; color:var(--text); border:1px solid rgba(255,255,255,.08); font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .feeder input:focus{outline:2px solid var(--accent);}
+  .feeder-row button{border:none; border-radius:10px; padding:11px 18px; font-weight:800; cursor:pointer; background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#081020; letter-spacing:.5px;}
+  .quick{margin-top:9px; display:flex; flex-wrap:wrap; gap:6px;}
+  .quick span{background:var(--card); color:var(--muted); font-size:11px; padding:4px 10px; border-radius:11px; cursor:pointer; border:1px solid rgba(255,255,255,.06);}
+  .quick span:hover{color:var(--accent-2); border-color:var(--accent-2);}
+
+  .controls{margin-top:12px; display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:9px;}
+  .controls button{padding:11px; border:none; border-radius:11px; cursor:pointer; font-weight:700; font-size:13px; background:var(--card); color:var(--text); border:1px solid rgba(255,255,255,.06); transition:transform .08s, background .15s;}
+  .controls button:hover{background:var(--card-hi);}
+  .controls button:active{transform:translateY(2px);}
+
+  .log{margin-top:16px; height:150px; overflow-y:auto; font-size:12.5px; line-height:1.7; background:#0c1324; border:1px solid rgba(255,255,255,.06); padding:12px 14px; border-radius:12px; color:var(--muted);}
+  .log div:first-child{color:var(--text);}
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<div class="container">
+  <div class="title">ALIEN HATCH</div>
+  <div class="subtitle">Élevez Zorglub, mais surveillez ce que vous lui donnez à manger...</div>
+
+  <div class="panel">
+    <div class="header">
+      <div class="chip">⭐ Niveau <b id="level">1</b></div>
+      <div class="chip">✨ XP <b id="xp">0</b>/100</div>
+      <div class="chip">🪙 <b id="coins">50</b></div>
+    </div>
+
+    <div class="pet-area">
+      <div class="pet-stage">
+        <div id="egg" class="egg">🥚</div>
+        <div id="alienWrap" class="alien-wrap hidden">
+          <svg id="alien" data-mood="neutral" data-tier="1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <g class="body">
+              <ellipse class="head always" cx="100" cy="92" rx="56" ry="70"/>
+              <ellipse class="always" cx="80" cy="54" rx="16" ry="9" fill="#ffffff" opacity=".18"/>
+
+              <g class="part e-open">
+                <ellipse class="eye" cx="76" cy="92" rx="13" ry="21" transform="rotate(20 76 92)"/>
+                <ellipse class="eye" cx="124" cy="92" rx="13" ry="21" transform="rotate(-20 124 92)"/>
+                <circle cx="72" cy="84" r="3.5" fill="#fff" opacity=".8"/>
+                <circle cx="120" cy="84" r="3.5" fill="#fff" opacity=".8"/>
+              </g>
+              <g class="part e-happy">
+                <path class="stroke" d="M64 94 Q77 80 90 94"/>
+                <path class="stroke" d="M110 94 Q123 80 136 94"/>
+              </g>
+              <g class="part e-closed">
+                <path class="stroke" d="M64 92 H90"/>
+                <path class="stroke" d="M110 92 H136"/>
+              </g>
+              <g class="part e-sick">
+                <path class="stroke" d="M64 86 Q77 100 90 86"/>
+                <path class="stroke" d="M110 86 Q123 100 136 86"/>
+              </g>
+
+              <g class="jaw">
+                <path class="part m-neutral stroke" d="M86 124 Q100 134 114 124"/>
+                <path class="part m-smile stroke" d="M82 122 Q100 140 118 122"/>
+                <ellipse class="part m-eat" cx="100" cy="126" rx="13" ry="10" fill="#4a2230"/>
+                <path class="part m-sick stroke" d="M84 126 q8 -9 16 0 t16 0"/>
+                <ellipse class="part m-vomit" cx="100" cy="128" rx="17" ry="15" fill="#4a2230"/>
+                <path class="part m-refuse stroke" d="M86 130 Q100 120 114 130"/>
+              </g>
+
+              <path class="part sweat" d="M142 74 q-7 11 0 16 q7 -5 0 -16z" fill="#8fd3ff"/>
+
+              <g class="part vomit">
+                <ellipse cx="100" cy="150" rx="9" ry="7" fill="#7ac943"/>
+                <ellipse cx="92" cy="158" rx="6" ry="5" fill="#9ae25a"/>
+                <ellipse cx="108" cy="160" rx="5" ry="4" fill="#6bb52f"/>
+              </g>
+
+              <g class="part sparkles" fill="#aef3ff">
+                <path d="M40 60 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z"/>
+                <path d="M160 70 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5 -6 -6 -2.5 6 -2.5z"/>
+                <path d="M150 140 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z"/>
+              </g>
+
+              <text class="part zzz" x="150" y="52" fill="#bcd0ff" font-size="20" font-weight="bold">z z</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="statusText" id="statusText">Un étrange œuf cosmique palpite...</div>
+      <div class="reaction" id="reaction"></div>
+
+      <div id="eggActions">
+        <div class="egg-buttons">
+          <button onclick="warmEgg()">🔥 Réchauffer</button>
+          <button onclick="chargeEgg()">⚡ Énergie</button>
+          <button onclick="rockEgg()">🪐 Bercer</button>
+        </div>
+        <div class="hatch-line">Éclosion : <span id="hatch">0</span>%</div>
+        <div class="hatch-bar"><div class="hatch-fill" id="hatchFill"></div></div>
+        <div id="breakArea" class="hidden" style="margin-top:12px;">
+          <button class="egg-buttons" onclick="tapEgg()" style="background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#081020;padding:11px 20px;border-radius:11px;border:none;font-weight:800;cursor:pointer;">💥 Casser l'œuf</button>
+          <div class="hatch-line">Coups : <span id="clicks">0</span>/12</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="gamePanel" class="hidden">
+      <div class="stats">
+        <div class="stat">🍔 Faim<div class="bar"><div id="hungerBar" class="fill" style="background:var(--green)"></div></div></div>
+        <div class="stat">⚡ Énergie<div class="bar"><div id="energyBar" class="fill" style="background:var(--blue)"></div></div></div>
+        <div class="stat">😄 Bonheur<div class="bar"><div id="happyBar" class="fill" style="background:var(--yellow)"></div></div></div>
+        <div class="stat">🧼 Hygiène<div class="bar"><div id="cleanBar" class="fill" style="background:var(--cyan)"></div></div></div>
+        <div class="stat">❤️ Santé<div class="bar"><div id="healthBar" class="fill" style="background:var(--red)"></div></div></div>
+      </div>
+
+      <div class="feeder">
+        <div class="levels">
+          <button class="lvl active" data-lvl="1" onclick="setLevel(1)">Gamelle 1<span class="d">facile</span></button>
+          <button class="lvl" data-lvl="2" onclick="setLevel(2)">Gamelle 2<span class="d">corsée</span></button>
+          <button class="lvl" data-lvl="3" onclick="setLevel(3)">Gamelle 3<span class="d">extrême</span></button>
+        </div>
+        <label>🍽️ NOURRIR ZORGLUB : que lui donnez-vous ?</label>
+        <div class="feeder-row">
+          <input type="text" id="foodInput" placeholder="Nebulonite" autocomplete="off" spellcheck="false">
+          <button onclick="feed()">NOURRIR</button>
+        </div>
+        <div class="quick" id="quickFoods"></div>
+      </div>
+
+      <div class="controls">
+        <button onclick="play()">🎮 Jouer</button>
+        <button onclick="sleepPet()">😴 Dormir</button>
+        <button onclick="wash()">🚿 Laver</button>
+        <button onclick="heal()">🩹 Soigner</button>
+        <button onclick="hug()">🤗 Câlin</button>
+        <button onclick="resetGame()">🔄 Reset</button>
+      </div>
+    </div>
+
+    <div class="log" id="log"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const c=document.getElementById('stars'), x=c.getContext('2d');
+  let w,h,stars;
+  function resize(){w=c.width=innerWidth;h=c.height=innerHeight;
+    stars=Array.from({length:90},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.2,s:Math.random()*.5+.1}));}
+  resize(); addEventListener('resize',resize);
+  (function loop(){x.clearRect(0,0,w,h);
+    for(const st of stars){st.y+=st.s; if(st.y>h)st.y=0;
+      x.globalAlpha=.4+Math.random()*.5; x.fillStyle='#bcd0ff';
+      x.beginPath(); x.arc(st.x,st.y,st.r,0,7); x.fill();}
+    requestAnimationFrame(loop);})();
+})();
+
+let petData = JSON.parse(localStorage.getItem("alienPet")) || {
+  stage:"egg", hatchProgress:0, clicks:0,
+  hunger:100, energy:100, happiness:100, cleanliness:100, health:100,
+  xp:0, level:1, coins:50
+};
+function save(){ localStorage.setItem("alienPet", JSON.stringify(petData)); }
+function log(msg){ const el=document.getElementById("log"); el.innerHTML="<div>"+msg+"</div>"+el.innerHTML; }
+function reaction(msg){ document.getElementById("reaction").innerText=msg||""; }
+
+let curLevel=1;
+const ENDPOINTS={1:"/feed",2:"/feed2",3:"/feed3"};
+function setLevel(n){
+  curLevel=n;
+  document.querySelectorAll(".lvl").forEach(b=>b.classList.toggle("active", +b.dataset.lvl===n));
+}
+
+let faceTimer=null;
+function baseMood(){ if(petData.health<30) return "sick"; return "neutral"; }
+function setFace(mood, hold){
+  const svg=document.getElementById("alien");
+  if(!svg) return;
+  clearTimeout(faceTimer); faceTimer=null;
+  svg.dataset.mood=mood;
+  if(hold){ faceTimer=setTimeout(()=>{ faceTimer=null; svg.dataset.mood=baseMood(); }, hold); }
+}
+function setTier(){
+  const svg=document.getElementById("alien");
+  if(!svg) return;
+  svg.dataset.tier = petData.level>=20 ? "3" : petData.level>=10 ? "2" : "1";
+}
+
+function bumpEgg(msg){ if(petData.stage!=="egg") return; petData.hatchProgress+=8; updateEgg(); log(msg); }
+function warmEgg(){ bumpEgg("🔥 L'œuf se réchauffe"); }
+function chargeEgg(){ bumpEgg("⚡ Énergie cosmique absorbée"); }
+function rockEgg(){ bumpEgg("🪐 L'œuf apprécie le bercement"); }
+
+function updateEgg(){
+  if(petData.hatchProgress>100) petData.hatchProgress=100;
+  document.getElementById("hatch").innerText=petData.hatchProgress;
+  document.getElementById("hatchFill").style.width=petData.hatchProgress+"%";
+  const egg=document.getElementById("egg");
+  if(petData.hatchProgress>=50) egg.classList.add("shake");
+  if(petData.hatchProgress>=100){
+    document.getElementById("breakArea").classList.remove("hidden");
+    document.getElementById("statusText").innerText="L'œuf vibre... il est prêt à éclore !";
+  }
+  save();
+}
+function tapEgg(){
+  petData.clicks++;
+  document.getElementById("clicks").innerText=petData.clicks;
+  const egg=document.getElementById("egg");
+  egg.classList.add("shake"); setTimeout(()=>egg.classList.remove("shake"),200);
+  if(petData.clicks>=12) hatch();
+  save();
+}
+function showAlien(){
+  document.getElementById("egg").classList.add("hidden");
+  document.getElementById("alienWrap").classList.remove("hidden");
+  setTier(); setFace("neutral");
+}
+function hatch(){
+  petData.stage="baby";
+  document.getElementById("eggActions").style.display="none";
+  document.getElementById("gamePanel").classList.remove("hidden");
+  showAlien();
+  document.getElementById("statusText").innerText="Bienvenue Zorglub !";
+  log("👽 Éclosion réussie, Zorglub est né !");
+  loadMenu(); save(); updateUI();
+}
+
+function addXP(v){
+  petData.xp+=v;
+  while(petData.xp>=100){ petData.xp-=100; petData.level++; petData.coins+=50; log("⭐ Niveau "+petData.level+" !"); }
+  setTier();
+}
+
+async function feed(){
+  if(petData.stage!=="baby") return;
+  const food=document.getElementById("foodInput").value;
+  const body=new URLSearchParams(); body.append("food", food);
+  let d;
+  try{ const r=await fetch(ENDPOINTS[curLevel],{method:"POST",body}); d=await r.json(); }
+  catch(e){ log("📡 Transmission interrompue"); return; }
+
+  reaction(d.reaction);
+
+  if(d.status==="error"||d.status==="sick"){
+    setFace("vomit", 1500);
+    petData.health=Math.max(0,petData.health-10);
+    petData.happiness=Math.max(0,petData.happiness-10);
+    petData.cleanliness=Math.max(0,petData.cleanliness-10);
+    log(escapeHtml(d.reaction));
+    if(d.vomit){
+      log("&nbsp;&nbsp;↳ <span style='color:#ff8080'>"+escapeHtml(d.vomit)+"</span>");
+      console.log("%c🤮 Zorglub a régurgité :", "color:#38e0c8;font-weight:bold;font-size:13px;");
+      console.log(d.vomit);
+    }
+  } else if(d.status==="ok"){
+    setFace("eat", 900);
+    if(typeof d.calories==="number") petData.hunger=Math.min(100, petData.hunger + Math.max(1, Math.floor(d.calories/2)));
+    petData.happiness=Math.min(100, petData.happiness+4);
+    addXP(10);
+    log(escapeHtml(d.reaction));
+    if(Array.isArray(d.digested)) d.digested.forEach(it=>{
+      log("&nbsp;&nbsp;↳ digéré : <b style='color:#8fe3ff'>"+escapeHtml(String(it.name))+"</b>");
+    });
+  } else {
+    setFace("refuse", 900);
+    petData.happiness=Math.max(0, petData.happiness-3);
+    log(escapeHtml(d.reaction));
+  }
+  setTimeout(updateUI, 60);
+  save();
+}
+function escapeHtml(s){ return (s==null?"":String(s)).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+async function loadMenu(){
+  try{
+    const r=await fetch("/menu"); const list=await r.json();
+    const q=document.getElementById("quickFoods"); q.innerHTML="";
+    list.forEach(n=>{ const s=document.createElement("span"); s.textContent=n;
+      s.onclick=()=>{document.getElementById("foodInput").value=n; feed();}; q.appendChild(s); });
+  }catch(e){}
+}
+
+function play(){ petData.happiness=Math.min(100,petData.happiness+15); petData.energy=Math.max(0,petData.energy-5); petData.coins+=5; addXP(12); setFace("happy",900); log("🎮 Partie gagnée"); updateUI(); }
+function sleepPet(){ petData.energy=Math.min(100,petData.energy+30); addXP(8); setFace("sleep",1600); log("😴 Zorglub fait la sieste"); updateUI(); }
+function wash(){ petData.cleanliness=Math.min(100,petData.cleanliness+25); setFace("clean",1200); log("🚿 Zorglub est tout propre"); updateUI(); }
+function heal(){ if(petData.coins<10){log("❌ Pas assez de pièces");return;} petData.coins-=10; petData.health=Math.min(100,petData.health+25); setFace("neutral"); log("🩹 Soins appliqués"); updateUI(); }
+function hug(){ petData.happiness=Math.min(100,petData.happiness+10); setFace("happy",900); log("🤗 Câlin reçu"); updateUI(); }
+function resetGame(){ localStorage.removeItem("alienPet"); location.reload(); }
+
+function updateUI(){
+  document.getElementById("level").innerText=petData.level;
+  document.getElementById("xp").innerText=petData.xp;
+  document.getElementById("coins").innerText=petData.coins;
+  hungerBar.style.width=petData.hunger+"%";
+  energyBar.style.width=petData.energy+"%";
+  happyBar.style.width=petData.happiness+"%";
+  cleanBar.style.width=petData.cleanliness+"%";
+  healthBar.style.width=petData.health+"%";
+  const svg=document.getElementById("alien");
+  if(svg && !faceTimer){ svg.dataset.mood=baseMood(); }
+  setTier();
+  save();
+}
+
+setInterval(()=>{
+  if(petData.stage!=="baby") return;
+  petData.hunger=Math.max(0,petData.hunger-1);
+  petData.energy=Math.max(0,petData.energy-1);
+  petData.happiness=Math.max(0,petData.happiness-1);
+  petData.cleanliness=Math.max(0,petData.cleanliness-1);
+  if(petData.hunger<20||petData.cleanliness<20) petData.health=Math.max(0,petData.health-2);
+  updateUI();
+},5000);
+
+if(petData.stage==="baby"){
+  document.getElementById("eggActions").style.display="none";
+  document.getElementById("gamePanel").classList.remove("hidden");
+  document.getElementById("statusText").innerText="Zorglub, votre alien de compagnie";
+  showAlien();
+  loadMenu(); updateUI();
+} else {
+  updateEgg();
+}
+</script>
+</body>
+</html>

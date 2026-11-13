@@ -1,0 +1,54 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+type: dynamic_docker
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+  # <============ CHALLENGE DOCKER ============>
+  dynamic_score: 1
+  docker_image: web_alien-hatch
+
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 5000
+  # </============ CHALLENGE DOCKER ============>
+
+state: visible
+
+# <============ REQUIRED ============>
+name: "Alien Hatch 3 - Haut-le-coeur"
+category: Web
+
+description: |-
+  # Alien Hatch - Haut-le-coeur
+
+  Zorglub a appris à se taire. À la **gamelle 3**, il ne dit plus ce qu'il
+  mange, ne régurgite plus rien de lisible : il mange, ou il refuse.
+
+  Ça devrait suffire à lui faire avouer son secret.
+
+  Format : `CYBN{...}`
+
+attribution: "L'alien"
+
+flags:
+  - CYBN{bl1nd_zorglub_sil3nci3ux}
+
+tags:
+  - Hard
+
+# </============ REQUIRED ============>
+
+version: "3.0"
+
+requirements:
+  - "Alien Hatch 2 - Sas digestif"
+  - "Bienvenue !"
