@@ -3,6 +3,23 @@
 #
 
 #
+# Bootloader config
+#
+
+#
+# Log
+#
+CONFIG_BOOTLOADER_LOG_LEVEL_NONE=y
+# end of Log
+# end of Bootloader config
+
+#
+# Compiler options
+#
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+# end of Compiler options
+
+#
 # Component config
 #
 
@@ -24,4 +41,15 @@ CONFIG_BT_SPP_ENABLED=y
 CONFIG_BTDM_CTRL_MODE_BTDM=y
 # end of Controller Options
 # end of Bluetooth
+
+#
+# Log
+#
+
+#
+# Log Level
+#
+CONFIG_LOG_DEFAULT_LEVEL_NONE=y
+# end of Log Level
+# end of Log
 # end of Component config

@@ -16,7 +16,7 @@
 #define SPP_TAG "ROLLING_CODES"
 #define SPP_SERVER_NAME "ROLLING_CODES_SERVER"
 
-static const char local_device_name[] = "CYBERNIGHT-BLUETOOTH-CHALLENGES";
+static char local_device_name[32] = {0};
 static const esp_spp_mode_t esp_spp_mode = ESP_SPP_MODE_CB;
 static const bool esp_spp_enable_l2cap_ertm = true;
 
@@ -166,8 +166,10 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 }
 
 
-esp_err_t rolling_codes_init(void)
+esp_err_t rolling_codes_init(char name[], uint8_t name_length)
 {
+    memcpy(local_device_name, name, name_length);
+
     code_init();
     previous_code = next_code();
 

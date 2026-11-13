@@ -3,6 +3,6 @@
 
 #include "esp_err.h"
 
-esp_err_t rolling_codes_init(void);
+esp_err_t rolling_codes_init(char name[], uint8_t name_length);
 
 #endif

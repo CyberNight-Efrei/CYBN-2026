@@ -14,8 +14,9 @@
 
 #define TAG "CLAQUE_TON_SUB"
 
-#define BLE_DEVICE_NAME  "CYBERNIGHT-BLUETOOTH-CHALLENGES"
 #define BLE_APP_ID       0
+
+static char ble_device_name[32] = {0};
 
 static const uint8_t service_uuid[16] = {
     0x00, 0x00, 0x00, 0x00,
@@ -435,7 +436,7 @@ static void gatts_event_handler(
         server_if = gatts_if;
 
         ESP_ERROR_CHECK(
-            esp_ble_gap_set_device_name(BLE_DEVICE_NAME)
+            esp_ble_gap_set_device_name(ble_device_name)
         );
 
         ESP_ERROR_CHECK(
@@ -570,8 +571,10 @@ static void gatts_event_handler(
     }
 }
 
-esp_err_t ble_server_init(void)
+esp_err_t ble_server_init(char name[], uint8_t name_length)
 {
+    memcpy(ble_device_name, name, name_length);
+
     esp_err_t ret;
 
     ret = esp_ble_gap_register_callback(gap_event_handler);
