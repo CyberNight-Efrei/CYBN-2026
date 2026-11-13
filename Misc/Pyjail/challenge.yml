@@ -54,6 +54,9 @@ extra:
 
 # <============ OPTIONAL ============>
 
+files:
+  - src/challenge.py
+
 # Specifies what version of the challenge specification was used.
 version: "0.1"
 
