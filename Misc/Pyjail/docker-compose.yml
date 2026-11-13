@@ -1,7 +1,8 @@
 services:
-  challenge:
-    build:
-      context: .
-    restart: always
+  pyjail:
+    build: .
+    image: misc_pyjail
+    container_name: misc_pyjail
     ports:
       - "7000:7000"
+    restart: unless-stopped

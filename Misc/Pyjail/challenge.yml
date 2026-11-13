@@ -1,21 +1,23 @@
+# <============ NE PAS TOUCHER ============>
 value: 500
-type: dynamic
-
-extra:
-    initial: 500
-    decay: 30
-    minimum: 100
 
 state: visible
+# </============ NE PAS TOUCHER ============>
 
-name: "Pyjail"
-category: Misc
+# <============ REQUIRED ============>
+name: "Pyjail!"
+category: Pwn
 description: |-
+  # Pyjail
+
   On m'a dit que `sys.addaudithook` protégeait l'interpréteur. On ne m'a pas menti.
 
   On a juste oublié de me préciser *lequel*.
 
+  ---
+
   Le flag est dans `/flag`.
+
 attribution: "Romain"
 
 flags:
@@ -27,10 +29,32 @@ flags:
 
 tags:
     - Medium
+# </============ REQUIRED ============>
 
-files:
-    - src/challenge.py
 
+# <============ CHALLENGE DOCKER ============>
+
+type: dynamic_docker
+
+extra:
+  dynamic_score: 1      # 1 = True / 0 = False
+  dynamic_initial: 500  # NE PAS TOUCHER
+  dynamic_decay: 30     # NE PAS TOUCHER
+  dynamic_minimum: 100  # NE PAS TOUCHER
+
+  docker_image: misc_pyjail   # RESPECT FORMAT (shortname please)
+
+  ports:
+    - name: tcp
+      protocol: tcp         # ssh, tcp, http
+      internal_port: 8080
+
+# </============ CHALLENGE DOCKER ============>
+
+
+# <============ OPTIONAL ============>
+
+# Specifies what version of the challenge specification was used.
 version: "0.1"
 
 requirements:
