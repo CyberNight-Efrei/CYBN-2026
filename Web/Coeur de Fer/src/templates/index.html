@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cœur de Fer, rencontres pour robots</title>
+<style>
+  :root{
+    --bg1:#120a1d; --bg2:#1b0f2b; --panel:#221233; --panel-2:#2b1640;
+    --card:#271540; --card-hi:#35205a; --line:rgba(255,255,255,.08);
+    --pink:#ff4d94; --pink-2:#ff86b8; --cyan:#43e8d8; --violet:#a98bff; --gold:#ffd166;
+    --text:#f4ecff; --muted:#b0a0d0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); min-height:100vh;
+    background:radial-gradient(1000px 500px at 85% -5%, rgba(255,77,148,.2), transparent 60%),
+               radial-gradient(900px 500px at 5% 5%, rgba(67,232,216,.12), transparent 55%),
+               linear-gradient(180deg,var(--bg1),var(--bg2));
+    background-color:var(--bg1); position:relative; overflow-x:hidden;
+  }
+  #hearts{position:fixed; inset:0; z-index:0; pointer-events:none;}
+  a{color:inherit; text-decoration:none;}
+
+  /* ---------- NAVBAR ---------- */
+  .nav{
+    position:sticky; top:0; z-index:15;
+    display:flex; align-items:center; gap:18px; padding:12px 26px;
+    background:rgba(20,11,31,.72); backdrop-filter:blur(12px); border-bottom:1px solid var(--line);
+  }
+  .nav .logo{display:flex; align-items:center; gap:9px; font-weight:900; letter-spacing:1.5px; font-size:18px;}
+  .nav .logo svg{width:28px; height:28px;}
+  .nav .logo span{background:linear-gradient(90deg,var(--pink),var(--violet),var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .nav .links{display:flex; gap:20px; margin-left:16px;}
+  .nav .links a{color:var(--muted); font-size:13px; font-weight:600; transition:.15s;}
+  .nav .links a:hover{color:var(--pink-2);}
+  .nav .spacer{flex:1;}
+  .nav .online-pill{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--muted); background:var(--card); padding:7px 12px; border-radius:20px; border:1px solid var(--line);}
+  .dot{width:8px; height:8px; border-radius:50%; background:#2ecc71; box-shadow:0 0 8px #2ecc71;}
+  @media(max-width:720px){ .nav .links{display:none;} }
+
+  .container{position:relative; z-index:1; max-width:1040px; margin:0 auto; padding:26px 20px 60px;}
+
+  /* ---------- HERO ---------- */
+  .hero{text-align:center; padding:26px 0 10px;}
+  .hero h1{font-size:34px; font-weight:900; line-height:1.15; margin-bottom:10px;}
+  .hero h1 em{font-style:normal; background:linear-gradient(90deg,var(--pink),var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .hero p{color:var(--muted); font-size:14px; max-width:520px; margin:0 auto 18px;}
+  .stats{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:6px;}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 18px; min-width:120px;}
+  .stat b{display:block; font-size:22px; background:linear-gradient(90deg,var(--cyan),var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .stat small{color:var(--muted); font-size:11px; letter-spacing:.5px;}
+
+  .cols{display:grid; grid-template-columns:340px 1fr; gap:22px; margin-top:28px; align-items:start;}
+  @media(max-width:860px){ .cols{grid-template-columns:1fr;} }
+
+  .card-box{background:linear-gradient(180deg,var(--panel),var(--panel-2)); border:1px solid var(--line); border-radius:20px; padding:20px; box-shadow:0 18px 44px rgba(0,0,0,.45);}
+  .card-box h3{font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:14px;}
+
+  /* ---------- MON COMPTE ---------- */
+  .me-top{display:flex; flex-direction:column; align-items:center; gap:4px; margin-bottom:12px;}
+  .me-avatar{width:110px; height:110px; border-radius:50%; background:radial-gradient(circle at 50% 35%, #3a2057, #1b1030); display:flex; align-items:center; justify-content:center; border:2px solid var(--pink); box-shadow:0 0 22px rgba(255,77,148,.3);}
+  .field{margin-bottom:9px;}
+  .field label{display:block; font-size:11px; color:var(--muted); margin-bottom:4px;}
+  .field input{width:100%; border:none; border-radius:10px; padding:10px 12px; font-size:14px; background:#180e26; color:var(--text); border:1px solid var(--line); font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .field input:focus{outline:2px solid var(--pink);}
+  .affinity{display:flex; align-items:center; justify-content:space-between; background:#180e26; border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin:10px 0;}
+  .affinity span{font-size:12px; color:var(--muted);}
+  .affinity b{font-family:ui-monospace,monospace; font-size:17px; color:var(--cyan); letter-spacing:1px;}
+  .match-btn{width:100%; border:none; border-radius:12px; padding:13px; cursor:pointer; font-weight:800; font-size:14px; letter-spacing:.5px; color:#1a0a14; background:linear-gradient(90deg,var(--pink),var(--violet)); box-shadow:0 8px 20px rgba(255,77,148,.35);}
+  .match-btn:active{transform:translateY(2px);}
+  .me-note{font-size:11px; color:var(--muted); margin-top:9px; line-height:1.5; text-align:center;}
+
+  /* ---------- SWIPE DECK ---------- */
+  .deck-wrap{display:flex; flex-direction:column; align-items:center;}
+  .deck{position:relative; width:300px; height:400px; margin:0 auto;}
+  .swipe-card{
+    position:absolute; inset:0; border-radius:22px; overflow:hidden; cursor:grab;
+    background:var(--card); border:1px solid var(--line); box-shadow:0 20px 44px rgba(0,0,0,.5);
+    transition:transform .3s ease, opacity .3s ease; user-select:none;
+  }
+  .swipe-card .photo{height:230px; display:flex; align-items:center; justify-content:center; position:relative;}
+  .swipe-card .on{position:absolute; top:12px; left:12px; display:flex; align-items:center; gap:6px; background:rgba(0,0,0,.4); padding:4px 10px; border-radius:14px; font-size:11px; color:#d8ffe8;}
+  .swipe-card .prem{position:absolute; top:12px; right:12px; background:linear-gradient(90deg,var(--gold),var(--pink)); color:#2a0a18; font-size:10px; font-weight:800; padding:4px 10px; border-radius:12px;}
+  .swipe-card .info{padding:14px 16px;}
+  .swipe-card .info h4{font-size:19px; display:flex; align-items:center; gap:8px;}
+  .swipe-card .info h4 small{font-size:13px; color:var(--muted); font-weight:500;}
+  .swipe-card .info .city{font-size:12px; color:var(--muted); margin:2px 0 8px;}
+  .swipe-card .info .tag{font-size:13px; color:var(--pink-2); margin-bottom:8px;}
+  .swipe-card .info .tr{display:flex; gap:5px; flex-wrap:wrap;}
+  .swipe-card .info .tr span{background:rgba(255,77,148,.14); color:var(--pink-2); font-size:10px; padding:2px 8px; border-radius:9px;}
+  .stamp{position:absolute; top:26px; font-size:26px; font-weight:900; padding:6px 14px; border:3px solid; border-radius:10px; opacity:0; transform:rotate(-14deg);}
+  .stamp.like{right:18px; color:#2ecc71; border-color:#2ecc71;}
+  .stamp.nope{left:18px; color:#ff4d6a; border-color:#ff4d6a;}
+  .deck-actions{display:flex; gap:22px; margin-top:18px;}
+  .round{width:60px; height:60px; border-radius:50%; border:none; cursor:pointer; font-size:24px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 18px rgba(0,0,0,.4); transition:transform .1s;}
+  .round:active{transform:scale(.92);}
+  .round.pass{background:#2a1740; color:#ff6b84; border:1px solid var(--line);}
+  .round.like{background:linear-gradient(135deg,var(--pink),var(--violet)); color:#fff;}
+  .deck-empty{color:var(--muted); font-size:14px; text-align:center; padding:60px 10px;}
+
+  /* ---------- GRID PROFILS ---------- */
+  .section-title{font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin:34px 2px 14px; display:flex; align-items:center; gap:10px;}
+  .section-title::after{content:""; flex:1; height:1px; background:var(--line);}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:14px;}
+  .pcard{background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; cursor:pointer; transition:.15s; position:relative;}
+  .pcard:hover{background:var(--card-hi); transform:translateY(-3px);}
+  .pcard .ph{height:120px; display:flex; align-items:center; justify-content:center; position:relative;}
+  .pcard .on{position:absolute; top:8px; left:8px; width:9px; height:9px; border-radius:50%;}
+  .pcard .body{padding:10px 12px 13px;}
+  .pcard .nm{font-weight:800; font-size:14px; display:flex; align-items:center; gap:6px;}
+  .pcard .nm small{font-weight:500; color:var(--muted); font-size:11px;}
+  .pcard .ct{font-size:11px; color:var(--muted); margin:1px 0 6px;}
+  .pcard .code{font-size:10px; color:var(--muted); font-family:ui-monospace,monospace;}
+  .pcard .code b{color:var(--cyan);}
+  .pcard.locked{border-color:var(--pink); box-shadow:0 0 18px rgba(255,77,148,.22);}
+  .pcard.locked .nm{color:var(--pink); animation:glitch 2.6s infinite;}
+  @keyframes glitch{0%,92%,100%{letter-spacing:normal;opacity:1}94%{letter-spacing:3px;opacity:.6}96%{opacity:1}}
+  .ribbon{position:absolute; top:8px; right:8px; background:linear-gradient(90deg,var(--gold),var(--pink)); color:#2a0a18; font-size:9px; font-weight:800; padding:3px 8px; border-radius:10px;}
+
+  /* ---------- TEMOIGNAGES ---------- */
+  .quotes{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
+  .quote{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px;}
+  .quote p{font-size:13px; line-height:1.5; font-style:italic;}
+  .quote .by{font-size:11px; color:var(--pink-2); margin-top:9px; font-weight:700;}
+
+  /* ---------- MODALS ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(10,5,18,.82); z-index:30; display:none; align-items:center; justify-content:center; padding:20px;}
+  .overlay.show{display:flex;}
+  .modal{background:linear-gradient(180deg,var(--panel-2),var(--panel)); border:1px solid var(--pink); border-radius:20px; padding:24px; max-width:460px; width:100%; text-align:center; box-shadow:0 0 50px rgba(255,77,148,.4); position:relative; max-height:90vh; overflow-y:auto;}
+  .modal .close{position:absolute; top:12px; right:16px; cursor:pointer; color:var(--muted); font-size:22px;}
+  .modal h2{font-size:20px; margin-bottom:6px; background:linear-gradient(90deg,var(--pink),var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .modal .msg{color:var(--muted); font-size:13px; margin-bottom:14px;}
+  .modal .data{text-align:left; background:#140b20; border:1px solid var(--line); border-radius:12px; padding:14px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12.5px; line-height:1.9;}
+  .modal .data .k{color:var(--muted);} .modal .data .v{color:var(--cyan); word-break:break-all;}
+  .modal .hint{margin-top:12px; font-size:12px; color:var(--pink-2);}
+  .modal .big-tr{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin:10px 0;}
+  .modal .big-tr span{background:rgba(255,77,148,.14); color:var(--pink-2); font-size:11px; padding:3px 9px; border-radius:10px;}
+
+  /* ---------- TOAST ---------- */
+  .toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); z-index:40; background:var(--card-hi); border:1px solid var(--pink); color:var(--text); padding:12px 20px; border-radius:30px; font-size:13px; opacity:0; transition:.25s; pointer-events:none; box-shadow:0 10px 30px rgba(0,0,0,.5);}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  footer{text-align:center; color:var(--muted); font-size:11px; padding:30px 20px; border-top:1px solid var(--line); margin-top:40px;}
+</style>
+</head>
+<body>
+<canvas id="hearts"></canvas>
+
+<nav class="nav">
+  <div class="logo">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 42s-16-9.5-16-21a9 9 0 0 1 16-5.6A9 9 0 0 1 40 21c0 11.5-16 21-16 21z" fill="#ff4d94"/>
+      <circle cx="24" cy="21" r="6" fill="none" stroke="#120a1d" stroke-width="2.5"/>
+      <path d="M24 13v-3M24 32v3M13 21h3M32 21h3" stroke="#120a1d" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <span>CŒUR DE FER</span>
+  </div>
+  <div class="links">
+    <a onclick="scrollTo2('deck')">Découvrir</a>
+    <a onclick="scrollTo2('profils')">Profils</a>
+    <a onclick="scrollTo2('temoignages')">Témoignages</a>
+    <a onclick="scrollTo2('compte')">Mon compte</a>
+  </div>
+  <div class="spacer"></div>
+  <div class="online-pill"><span class="dot"></span> <b id="onlineCount">1 248</b>&nbsp;robots en ligne</div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <h1>Trouvez le <em>robot</em> de votre vie ⚙️💘</h1>
+    <p>Le premier site de rencontres 100 % circuits imprimés. Des milliers de célibataires mécaniques n'attendent qu'une étincelle compatible.</p>
+    <div class="stats">
+      <div class="stat"><b>12 847</b><small>MEMBRES ACTIFS</small></div>
+      <div class="stat"><b>3 902</b><small>MATCHS / JOUR</small></div>
+      <div class="stat"><b>99,9%</b><small>DE RÉUSSITE*</small></div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="card-box" id="compte">
+      <h3>❤ Mon compte</h3>
+      <div class="me-top">
+        <div class="me-avatar" id="myAvatar"></div>
+      </div>
+      <div class="field"><label>Nom de votre robot</label><input id="name" value="Unité-42" autocomplete="off" spellcheck="false"></div>
+      <div class="field"><label>Traits (séparés par des virgules, optionnel)</label><input id="traits" placeholder="ex: logique, néon" autocomplete="off" spellcheck="false"></div>
+      <div class="affinity"><span>💓 Votre code d'affinité</span><b id="mySig">----</b></div>
+      <button class="match-btn" onclick="tryMatch()">💘 Rencontrer mon âme sœur</button>
+      <div class="me-note">Votre code d'affinité se recalcule selon votre profil. Deux robots s'aiment quand leurs codes sont identiques.</div>
+    </div>
+
+    <div class="deck-wrap" id="deck">
+      <h3 style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);align-self:flex-start;margin-bottom:12px;">🔥 Découvrir</h3>
+      <div class="deck" id="deckStack"></div>
+      <div class="deck-actions">
+        <button class="round pass" onclick="swipe('nope')">✖</button>
+        <button class="round like" onclick="swipe('like')">❤</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title" id="profils">Tous les profils à proximité</div>
+  <div class="grid" id="grid"></div>
+
+  <div class="section-title" id="temoignages">Ils ont trouvé l'amour</div>
+  <div class="quotes" id="quotes"></div>
+</div>
+
+<footer>© 2041 Cœur de Fer. Toute ressemblance avec un électroménager existant est fortuite.<br>*taux de réussite non contractuel, batteries non incluses.</footer>
+
+<div class="overlay" id="overlay"><div class="modal"><span class="close" onclick="closeModal()">✕</span><div id="modalBody"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- coeurs flottants ----------
+(function(){
+  const c=document.getElementById('hearts'), x=c.getContext('2d'); let w,h,ps;
+  function r(){w=c.width=innerWidth;h=c.height=innerHeight;ps=Array.from({length:24},()=>({x:Math.random()*w,y:Math.random()*h,s:.2+Math.random()*.5,z:8+Math.random()*12,o:.05+Math.random()*.1}));}
+  r(); addEventListener('resize',r);
+  function heart(px,py,s,o){x.save();x.translate(px,py);x.scale(s/16,s/16);x.globalAlpha=o;x.fillStyle='#ff4d94';x.beginPath();x.moveTo(0,4);x.bezierCurveTo(-8,-6,-16,4,0,16);x.bezierCurveTo(16,4,8,-6,0,4);x.fill();x.restore();}
+  (function loop(){x.clearRect(0,0,w,h);for(const p of ps){p.y-=p.s;if(p.y<-20)p.y=h+20;heart(p.x,p.y,p.z,p.o);}requestAnimationFrame(loop);})();
+})();
+
+// ---------- hash faible (cote client) ----------
+function heartSig(s){ let h=0x1234; for(let i=0;i<s.length;i++){ h=((h<<5)^(h>>2)^s.charCodeAt(i))&0xFFFF; } return h; }
+function hex4(n){ return n.toString(16).toUpperCase().padStart(4,"0"); }
+function myProfile(){ const n=document.getElementById("name").value, t=document.getElementById("traits").value; return t? n+"|"+t : n; }
+function refreshSig(){ document.getElementById("mySig").textContent=hex4(heartSig(myProfile())); document.getElementById("myAvatar").innerHTML=robotSVG("#43e8d8","round",84); }
+function escapeHtml(s){ return (s==null?"":String(s)).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+// ---------- robot SVG ----------
+function robotSVG(color, eyes, size){
+  size=size||84; let e="";
+  if(eyes==="round") e='<circle cx="45" cy="60" r="7" fill="#43e8d8"/><circle cx="75" cy="60" r="7" fill="#43e8d8"/>';
+  else if(eyes==="happy") e='<path d="M38 62 Q45 52 52 62" stroke="#43e8d8" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M68 62 Q75 52 82 62" stroke="#43e8d8" stroke-width="4" fill="none" stroke-linecap="round"/>';
+  else if(eyes==="square") e='<rect x="39" y="54" width="12" height="12" rx="2" fill="#43e8d8"/><rect x="69" y="54" width="12" height="12" rx="2" fill="#43e8d8"/>';
+  else if(eyes==="star") e='<path d="M45 52l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#ffd166"/><path d="M75 52l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#ffd166"/>';
+  else if(eyes==="sleepy") e='<path d="M38 60 H52" stroke="#43e8d8" stroke-width="4" stroke-linecap="round"/><path d="M68 60 H82" stroke="#43e8d8" stroke-width="4" stroke-linecap="round"/>';
+  else e='<text x="45" y="66" fill="#ff4d94" font-size="18" font-weight="bold" text-anchor="middle">?</text><text x="75" y="66" fill="#ff4d94" font-size="18" font-weight="bold" text-anchor="middle">?</text>';
+  const mouth = eyes==="mystery" ? '<path d="M48 80 Q60 74 72 80" stroke="#ff4d94" stroke-width="3" fill="none" stroke-linecap="round"/>' : '<rect x="48" y="78" width="24" height="5" rx="2.5" fill="'+color+'"/>';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <line x1="60" y1="20" x2="60" y2="10" stroke="${color}" stroke-width="3"/><circle cx="60" cy="8" r="4" fill="${color}"/>
+    <rect x="22" y="48" width="8" height="24" rx="4" fill="${color}"/><rect x="90" y="48" width="8" height="24" rx="4" fill="${color}"/>
+    <rect x="28" y="22" width="64" height="76" rx="18" fill="${color}"/><rect x="36" y="40" width="48" height="52" rx="12" fill="#140b1f"/>
+    ${e}${mouth}</svg>`;
+}
+
+let PROFILES=[], deckIndex=0;
+
+async function loadData(){
+  let data;
+  try{ const r=await fetch("/candidates"); data=await r.json(); }catch(e){ return; }
+  PROFILES=data.profiles||[];
+  buildGrid(); buildDeck(); buildQuotes(data.testimonials||[]);
+}
+
+// ---------- grille ----------
+function buildGrid(){
+  const mySig=heartSig(myProfile());
+  const grid=document.getElementById("grid"); grid.innerHTML="";
+  PROFILES.forEach((c,i)=>{
+    const d=document.createElement("div");
+    d.className="pcard"+(c.locked?" locked":"");
+    d.onclick=()=>openDetail(i);
+    d.innerHTML=`
+      <div class="ph" style="background:radial-gradient(circle at 50% 35%, ${c.color}22, transparent 70%)">
+        ${c.locked?'<span class="ribbon">PREMIUM</span>':''}
+        <span class="on" style="background:${c.online?'#2ecc71':'#777'}; box-shadow:${c.online?'0 0 8px #2ecc71':'none'}"></span>
+        ${robotSVG(c.color,c.eyes,80)}
+      </div>
+      <div class="body">
+        <div class="nm">${escapeHtml(c.name)} <small>${escapeHtml(String(c.age))} ans</small></div>
+        <div class="ct">📍 ${escapeHtml(c.city)}</div>
+        <div class="code">affinité : <b>${escapeHtml(c.sig)}</b></div>
+      </div>`;
+    grid.appendChild(d);
+  });
+}
+
+// ---------- deck ----------
+function buildDeck(){
+  deckIndex=0; renderDeck();
+}
+function renderDeck(){
+  const stack=document.getElementById("deckStack"); stack.innerHTML="";
+  const rest=PROFILES.slice(deckIndex);
+  if(rest.length===0){ stack.innerHTML='<div class="deck-empty">Plus de profils pour l\'instant.<br>Revenez plus tard 💤</div>'; return; }
+  rest.slice(0,3).reverse().forEach((c,ri)=>{
+    const idxFromTop = Math.min(3,rest.length)-1-ri;
+    const card=document.createElement("div");
+    card.className="swipe-card";
+    card.style.transform=`translateY(${idxFromTop*10}px) scale(${1-idxFromTop*0.04})`;
+    card.style.zIndex=10-idxFromTop;
+    card.innerHTML=`
+      <div class="stamp like">MATCH</div><div class="stamp nope">NOPE</div>
+      <div class="photo" style="background:radial-gradient(circle at 50% 40%, ${c.color}33, #1b1030 70%)">
+        <span class="on"><span class="dot" style="background:${c.online?'#2ecc71':'#777'}"></span>${c.online?'En ligne':'Absent'}</span>
+        ${c.locked?'<span class="prem">★ PREMIUM</span>':''}
+        ${robotSVG(c.color,c.eyes,150)}
+      </div>
+      <div class="info">
+        <h4>${escapeHtml(c.name)} <small>${escapeHtml(String(c.age))} ans</small></h4>
+        <div class="city">📍 ${escapeHtml(c.city)} · ${escapeHtml(c.model)}</div>
+        <div class="tag">${escapeHtml(c.tagline)}</div>
+        <div class="tr">${c.traits.map(t=>'<span>'+escapeHtml(t)+'</span>').join('')}</div>
+      </div>`;
+    if(idxFromTop===0) enableDrag(card);
+    stack.appendChild(card);
+  });
+}
+function enableDrag(card){
+  let sx=0,sy=0,dx=0,dy=0,drag=false;
+  const like=card.querySelector(".stamp.like"), nope=card.querySelector(".stamp.nope");
+  const down=(e)=>{drag=true; card.style.transition="none"; sx=(e.touches?e.touches[0].clientX:e.clientX); sy=(e.touches?e.touches[0].clientY:e.clientY);};
+  const move=(e)=>{ if(!drag)return; const cx=(e.touches?e.touches[0].clientX:e.clientX), cy=(e.touches?e.touches[0].clientY:e.clientY); dx=cx-sx; dy=cy-sy; card.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/18}deg)`; like.style.opacity=Math.max(0,dx/90); nope.style.opacity=Math.max(0,-dx/90); };
+  const up=()=>{ if(!drag)return; drag=false; card.style.transition="transform .3s ease, opacity .3s"; if(dx>90){ finish('like'); } else if(dx<-90){ finish('nope'); } else { card.style.transform=""; like.style.opacity=0; nope.style.opacity=0; } dx=0; };
+  const finish=(dir)=>{ card.style.transform=`translate(${dir==='like'?600:-600}px,${dy}px) rotate(${dir==='like'?30:-30}deg)`; card.style.opacity=0; setTimeout(()=>onSwipe(dir),240); };
+  card.addEventListener("mousedown",down); addEventListener("mousemove",move); addEventListener("mouseup",up);
+  card.addEventListener("touchstart",down,{passive:true}); card.addEventListener("touchmove",move,{passive:true}); card.addEventListener("touchend",up);
+}
+function swipe(dir){
+  const top=document.querySelector("#deckStack .swipe-card:last-child");
+  if(!top){ return; }
+  top.style.transition="transform .3s ease, opacity .3s";
+  top.style.transform=`translate(${dir==='like'?600:-600}px,0) rotate(${dir==='like'?30:-30}deg)`;
+  top.style.opacity=0; setTimeout(()=>onSwipe(dir),240);
+}
+function onSwipe(dir){
+  const c=PROFILES[deckIndex];
+  if(c && dir==='like'){
+    if(c.locked){ toast("🔒 Profil premium : il faut le bon code d'affinité pour matcher."); openDetail(deckIndex); }
+    else { toast("💔 "+c.name+" n'a pas (encore) flashé sur vous."); }
+  }
+  deckIndex++; renderDeck();
+}
+
+// ---------- temoignages ----------
+function buildQuotes(list){
+  const q=document.getElementById("quotes"); q.innerHTML="";
+  list.forEach(t=>{ const d=document.createElement("div"); d.className="quote"; d.innerHTML=`<p>“${escapeHtml(t.text)}”</p><div class="by">${escapeHtml(t.by)}</div>`; q.appendChild(d); });
+}
+
+// ---------- fiche detail ----------
+function openDetail(i){
+  const c=PROFILES[i]; const mySig=heartSig(myProfile());
+  const diff=(mySig^parseInt(c.sig,16)).toString(2).split("").filter(x=>x==="1").length;
+  const compat=Math.round(100*(16-diff)/16);
+  const body=`
+    <div style="margin:6px auto 8px">${robotSVG(c.color,c.eyes,110)}</div>
+    <h2>${escapeHtml(c.name)}</h2>
+    <div class="msg">${escapeHtml(String(c.age))} ans · 📍 ${escapeHtml(c.city)} · ${escapeHtml(c.model)}</div>
+    <div class="big-tr">${c.traits.map(t=>'<span>'+escapeHtml(t)+'</span>').join('')}</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:12px">${escapeHtml(c.bio)}</p>
+    <div class="data">
+      <div><span class="k">code d'affinité :</span> <span class="v">${escapeHtml(c.sig)}</span></div>
+      <div><span class="k">votre affinité  :</span> <span class="v">${hex4(mySig)}</span></div>
+      <div><span class="k">compatibilité   :</span> <span class="v">${compat}%</span></div>
+    </div>
+    ${c.locked?'<div class="hint">🔒 Membre premium. Réglez votre code d\'affinité sur le sien, puis lancez « Rencontrer mon âme sœur ».</div>':''}`;
+  showModal(body);
+}
+
+// ---------- match (crypto) ----------
+async function tryMatch(){
+  const body=new URLSearchParams();
+  body.append("name", document.getElementById("name").value);
+  body.append("traits", document.getElementById("traits").value);
+  let d;
+  try{ const r=await fetch("/match",{method:"POST",body}); d=await r.json(); }
+  catch(e){ toast("📡 Serveur injoignable"); return; }
+  if(d.matched){
+    const s=d.soulmate;
+    showModal(`
+      <h2>💘 MATCH PARFAIT</h2>
+      <div style="margin:6px 0 10px">${robotSVG("#ff4d94","happy",100)}</div>
+      <div class="msg">Vous avez débloqué le profil premium de <b style="color:#ff86b8">${escapeHtml(s.name)}</b> !</div>
+      <div class="data">
+        <div><span class="k">nom          :</span> <span class="v">${escapeHtml(s.name)}</span></div>
+        <div><span class="k">date naiss.  :</span> <span class="v">${escapeHtml(s.birthdate)}</span></div>
+        <div><span class="k">numéro (enc) :</span> <span class="v">${escapeHtml(s.enc_numero)}</span></div>
+      </div>
+      <div class="hint">💡 ${escapeHtml(s.note)}</div>`);
+    console.log("Soulmate:", s);
+  } else {
+    toast(d.reaction);
+    buildGrid();
+  }
+}
+
+function showModal(html){ document.getElementById("modalBody").innerHTML=html; document.getElementById("overlay").classList.add("show"); }
+function closeModal(){ document.getElementById("overlay").classList.remove("show"); }
+document.getElementById("overlay").addEventListener("click",e=>{ if(e.target.id==="overlay") closeModal(); });
+
+let toastT=null;
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2600); }
+function scrollTo2(id){ document.getElementById(id).scrollIntoView({behavior:"smooth",block:"start"}); }
+
+// online count qui bouge un peu
+setInterval(()=>{ const el=document.getElementById("onlineCount"); const n=1200+Math.floor(Math.random()*120); el.textContent=n.toLocaleString("fr-FR"); },4000);
+
+["name","traits"].forEach(id=>document.getElementById(id).addEventListener("input", ()=>{ refreshSig(); buildGrid(); }));
+refreshSig(); loadData();
+</script>
+</body>
+</html>

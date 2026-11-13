@@ -1,0 +1,8 @@
+writeup/
+challenge.yml
+build_docker.sh
+Dockerfile
+docker-compose.yml
+.dockerignore
+**/__pycache__
+**/*.pyc
