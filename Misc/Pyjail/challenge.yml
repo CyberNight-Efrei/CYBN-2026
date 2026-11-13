@@ -47,7 +47,7 @@ extra:
   ports:
     - name: tcp
       protocol: tcp         # ssh, tcp, http
-      internal_port: 8080
+      internal_port: 7000
 
 # </============ CHALLENGE DOCKER ============>
 

@@ -11,6 +11,8 @@ state: visible
 name: "4, 2, 1, partez!"
 category: Misc
 description: |-
+  # 4, 2, 1, partez!
+
   Mon grand-père, mathématicien s'est récemment mis à la musique.
   Il m'a fait écouter quelques-unes de ses compositions, et j'ai réussi à en enregistrer une.
 
@@ -18,6 +20,8 @@ description: |-
   J'ai remarqué en plus que les autres compositions finissent exactement de la même façon.
 
   As-tu une idée de ce qu'il se passe ?
+
+  ---
 
   Format : `CYBN{...}`
 attribution: "Romain"
