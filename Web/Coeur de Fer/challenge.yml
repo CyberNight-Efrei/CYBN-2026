@@ -1,0 +1,56 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+type: dynamic_docker
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+  # <============ CHALLENGE DOCKER ============>
+  dynamic_score: 1
+  docker_image: web_coeur-de-fer
+
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 5000
+  # </============ CHALLENGE DOCKER ============>
+
+state: visible
+
+# <============ REQUIRED ============>
+name: "Coeur de Fer"
+category: Web
+
+description: |-
+  # 🤖💘 Coeur de Fer
+
+  L'agence matrimoniale n°1 pour robots célibataires. Complète ton profil,
+  parcours les robots à proximité et trouve l'amour !
+
+  Une **âme sœur** reste cachée derrière un profil crypté : son code d'affinité
+  est affiché, mais son profil est verrouillé. Forge un profil qui atteint
+  **100 % de compatibilité** avec elle, puis déchiffre son numéro pour obtenir
+  le flag.
+
+  Format : `CYBN{...}`
+
+attribution: "L'alien"
+
+flags:
+  - CYBN{r0b0t_l0v3_x0r3d_h34rt}
+
+tags:
+  - Medium
+
+# </============ REQUIRED ============>
+
+version: "3.0"
+
+requirements:
+  - "Bienvenue !"

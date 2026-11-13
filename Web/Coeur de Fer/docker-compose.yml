@@ -1,0 +1,16 @@
+services:
+  web_coeur-de-fer:
+    build: .
+    image: web_coeur-de-fer
+    container_name: web_coeur-de-fer
+    ports:
+      - "127.0.0.1:8011:5000"
+    read_only: true
+    security_opt:
+      - "no-new-privileges:true"
+    cap_drop:
+      - ALL
+    pids_limit: 128
+    mem_limit: 256m
+    cpus: 0.75
+    restart: unless-stopped

@@ -1,0 +1,60 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+type: dynamic_docker
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+  # <============ CHALLENGE DOCKER ============>
+  dynamic_score: 1
+  docker_image: web_alien-hatch
+
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 5000
+  # </============ CHALLENGE DOCKER ============>
+
+state: visible
+
+# <============ REQUIRED ============>
+name: "Alien Hatch 1 - Indigestion"
+category: Web
+
+description: |-
+  # Alien Hatch
+
+  Fais éclore ton œuf cosmique et élève **Zorglub**, ton petit alien !
+  Nourris-le, joue avec lui, soigne-le...
+
+  Pendant son voyage, Zorglub a avalé un **échantillon interdit** de la Zone 51,
+  et son estomac digère très mal les caractères spéciaux. 🤮
+
+  Commence par la **gamelle 1** et récupère ce qu'il cache.
+
+  *Les trois challenges « Alien Hatch » tournent sur le même site, chacun avec sa gamelle.*
+
+  Format : `CYBN{...}`
+
+attribution: "L'alien"
+
+flags:
+  - CYBN{z0rglub_r0t_c0sm1qu3}
+
+tags:
+  - Easy
+
+# </============ REQUIRED ============>
+
+next: "Alien Hatch 2 - Sas digestif"
+
+version: "3.0"
+
+requirements:
+  - "Bienvenue !"
