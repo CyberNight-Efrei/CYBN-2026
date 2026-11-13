@@ -1,0 +1,53 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+# Choisir UN seul type : dynamic, dynamic_docker ou queue
+type: dynamic
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Peindre l'espoir"
+category: OSINT
+
+description: |-
+  La guerre frappe le monde. Toutefois, celle à laquelle j'ai participé n'a fait aucune victime, aucun blessé, car aucune balle n'a été tirée.
+
+  Pourtant, elle opposait toutes les nations, à toute heure de la journée, sans cessez-le-feu. Le monde entier était notre toile, et chacun se battait pour y défendre ses couleurs.
+
+  La bataille a eu lieu dans mon Italie natale, là où je mangeais des pizzas à la Trattoria Picaló ou buvais un verre au Bar Vittoria.
+
+  J'y ai laissé ma trace, tout proche de ce village, et le monde entier peut encore admirer ma signature.
+
+  Un portrait, un visage, une joie : à vous de retrouver le nom de celle qui porte ce sourire.
+
+  Format : `CYBN{marie}`
+
+attribution: "Gabriel S. & Doryan D."
+
+flags:
+
+  # A regex case insensitive flag
+  - {
+    type: "regex",
+    content: "^CYBN\\{cath(y|erine)\\}$",
+    data: "case_insensitive",
+  }
+
+tags:
+  - Easy
+
+requirements:
+  - Bienvenue ! # NE PAS TOUCHER - Ajouter si nécessaire
+
+state: visible   # passer à "visible" quand le chall est prêt
+
+
+# </============ REQUIRED ============>
+
