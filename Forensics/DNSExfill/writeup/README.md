@@ -2,7 +2,7 @@
 
 Dans Wireshark, filtrer les requêtes avec `dns.qry.name contains "evil.cybn.fr"`. Les noms suspects suivent le format `0000.bloc.evil.cybn.fr`. Le premier label donne l'ordre des blocs ; le second contient un morceau de la note en Base64 URL-safe, sans padding. Les autres requêtes DNS et les échanges HTTP servent de trafic ordinaire.
 
-Pour reconstruire la note depuis le seul PCAP :
+Placer le fichier distribué `capture.pcap` dans le dossier courant, puis reconstruire la note :
 
 ```sh
 python -m pip install -r requirements.txt

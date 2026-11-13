@@ -11,5 +11,5 @@ Ici `0xFA` est l'adresse source de l'outil de diagnostic. Le calculateur moteur 
 Le solveur suivant envoie la requête et affiche l'identification, qui contient le flag :
 
 ```powershell
-python writeup/solve.py HOST PORT
+python solve.py HOST PORT
 ```

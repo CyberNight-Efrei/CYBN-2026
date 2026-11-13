@@ -8,10 +8,10 @@ Le client fourni gère déjà la connexion et lit jusqu'à l'invite. Dans sa bou
 sock.sendall((word[::-1] + "\n").encode("ascii"))
 ```
 
-Puis remplacer `HOST` et `PORT` par ceux de l'instance et lancer `python client.py`. Après la dixième bonne réponse, le robot affiche une phrase contenant le flag. Le solveur complet est également disponible :
+Copier le client distribué `client.py` dans le dossier courant, remplacer `HOST` et `PORT` par ceux de l'instance, puis lancer `python client.py`. Après la dixième bonne réponse, le robot affiche une phrase contenant le flag. Le solveur complet est également disponible :
 
 ```sh
-python writeup/solve.py HOST PORT
+python solve.py HOST PORT
 ```
 
 Une mauvaise réponse ou un délai écoulé entraîne une phrase de fin et la fermeture de la connexion ; il suffit de se reconnecter. Vérifier que le flag obtenu respecte le format `CYBN{...}`.

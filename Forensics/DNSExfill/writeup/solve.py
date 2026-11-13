@@ -1,15 +1,14 @@
 """Reconstruit la note à partir du PCAP distribué."""
 
 import base64
-from pathlib import Path
 
 from scapy.all import DNS, rdpcap
 
 
-capture = Path(__file__).resolve().parents[1] / "public" / "capture.pcap"
+capture = "capture.pcap"
 blocks = {}
 
-for packet in rdpcap(str(capture)):
+for packet in rdpcap(capture):
     if DNS not in packet or packet[DNS].qr != 0:
         continue
     name = packet[DNS].qd.qname.decode("ascii").rstrip(".")

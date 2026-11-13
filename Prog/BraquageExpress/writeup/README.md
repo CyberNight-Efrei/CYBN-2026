@@ -6,11 +6,13 @@ Il y a 3 parties avec un repère. Le repère impose l'orientation donc 6 possibi
 
 Il y a 1 partie sans repère, elle est forcément en bas à droite avec 4 possibilités d'orientation.
 
-Ca donne 6*4 = 24 possibles QRCode. Il faut tester de décodage pour voir lequel sort un mot.
+Ça donne 6 * 4 = 24 QR codes possibles. Il faut tenter de les décoder pour trouver celui qui contient un mot.
 
 ## Script de résolution
 
 ```sh
-python -m pip install -r writeup/requirements.txt
-python writeup/solve.py HOST PORT
+python -m pip install -r requirements.txt
+python solve.py HOST PORT
 ```
+
+Le solveur reconstitue le QR, envoie le mot de passe au coffre et affiche la réponse du serveur, qui contient le flag.
