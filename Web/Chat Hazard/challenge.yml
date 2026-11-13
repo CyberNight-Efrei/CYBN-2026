@@ -20,7 +20,7 @@ extra:
   ports:
     - name: web
       protocol: http
-      internal_port: 8009
+      internal_port: 80
   # </============ CHALLENGE DOCKER ============>
 
 state: visible
