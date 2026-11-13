@@ -1,5 +1,5 @@
 services:
-  chat-hazard:
+  web_chat-hazard:
     build: .
     ports:
       - "127.0.0.1:8009:80"

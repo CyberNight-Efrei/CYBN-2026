@@ -1,36 +1,63 @@
+
 # <============ NE PAS TOUCHER ============>
 value: 500
-type: dynamic
+# </============ NE PAS TOUCHER ============>
 
+# Choisir UN seul type : dynamic, dynamic_docker ou queue
+type: dynamic_docker
+
+# <============ NE PAS TOUCHER ============>
 extra:
-    initial: 500
-    decay: 30
-    minimum: 100
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+  # <============ CHALLENGE DOCKER ============>
+  dynamic_score: 1
+  docker_image: web_chat-hazard
+
+  ports:
+    - name: web
+      protocol: http
+      internal_port: 8009
+  # </============ CHALLENGE DOCKER ============>
 
 state: visible
-# </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>
 name: "Chat Hazard"
 category: Web
+
 description: |-
+  # Chat Hazard
+
   J'ai fait un site il y a longtemps, mais j'ai oublié mon mdp et, va savoir
   pourquoi, je ne reçois jamais le mail de réinitialisation.
 
   En revanche, j'ai gardé une copie des sources du site. Peut-être sauras-tu
   trouver un moyen de me faire reprendre le contrôle de mon compte admin ?
 
+  ---
+
   Format : `CYBN{...}`
+
 attribution: "Romain"
 
 flags:
-    - CYBN{n1n3_l1v3s_but_0nly_0n3_s33d_4nd_z3r0_3ntr0py}
+  - CYBN{n1n3_l1v3s_but_0nly_0n3_s33d_4nd_z3r0_3ntr0py}
+
+tags:
+  - Medium
+
+# </============ REQUIRED ============>
+
+# <============ OPTIONAL ============>
 
 files:
     - dist/chat-hazard-src.zip
 
-tags:
-    - Medium
+version: "3.0"
 
 requirements:
   - "Bienvenue !"
