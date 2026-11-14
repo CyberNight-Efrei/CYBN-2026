@@ -25,20 +25,15 @@ description: |-
 
   J'y ai laissé ma trace, tout proche de ce village, et le monde entier peut encore admirer ma signature.
 
-  Un portrait, un visage, une joie : à vous de retrouver le nom de celle qui porte ce sourire.
+  Un portrait, un visage, une joie : à vous de retrouver le nom complet de celle qui porte ce sourire.
 
-  Format : `CYBN{marie}`
+  Format : `CYBN{Madeline_Holidays}`
 
-attribution: "Gabriel S. & Doryan D."
+attribution: "Gabriel S.G"
 
 flags:
-
-  # A regex case insensitive flag
-  - {
-    type: "regex",
-    content: "^CYBN\\{cath(y|erine)\\}$",
-    data: "case_insensitive",
-  }
+  # A static case sensitive flag
+  - CYBN{Catherine_Portillo}
 
 tags:
   - Easy
@@ -48,6 +43,18 @@ requirements:
 
 state: visible   # passer à "visible" quand le chall est prêt
 
-
 # </============ REQUIRED ============>
 
+# <============ OPTIONAL ============>
+
+# Can be removed if unused
+attempts: 5
+
+# Only files provided to challengers.
+# NO directories, accept archives (.zip, .7z, .tgz)
+# Hints are optional.
+# Accepts dictionaries or strings.
+# The next recommended challenge after a correct answer.
+
+# Specifies the version of the challenge specification.
+version: "3.0"
