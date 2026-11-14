@@ -1,0 +1,33 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: hidden
+
+name: "Donjon Escape - Fichier de sauvegarde"
+category: Reverse
+
+description: |-
+  Le roi codeur a créé Donjon Escape pour prouver que personne ne peut sortir de son donjon. Quatre épreuves te séparent de la liberté. Un prisonnier bavard t'accompagne, mais ses conseils sont aussi fiables que les promesses du roi. Chaque victoire ouvre la voie à l'épreuve suivante.
+
+  Le roi codeur prétend que son premier cadenas est inviolable. Le prisonnier, lui, trouve les fichiers de sauvegarde du jeu bien plus intéressants que les serrures. Qui des deux faut-il écouter ?
+
+  Lance l'exécutable Windows fourni. Format du flag : `CYBN{...}`
+
+attribution: "ThaySan"
+
+flags:
+  - "CYBN{s4v3_du_d0nj0n}"
+
+tags:
+  - Intro
+
+requirements:
+  - "Bienvenue !"
+
+files:
+  - public/EscapeRoom.zip
