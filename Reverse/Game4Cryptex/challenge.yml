@@ -1,0 +1,29 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: hidden
+
+name: "Donjon Escape - Formule magique"
+category: Reverse
+
+description: |-
+  "Les maths, c'est de la magie", répétait le roi. Une formule protège maintenant la dernière porte : comprends ce qu'elle fait, puis défais son sort pour trouver le mot du cryptex.
+
+  Format du flag : `CYBN{...}`
+
+attribution: "ThaySan"
+
+flags:
+  - "CYBN{l3_tr0n3_3st_4_m01}"
+
+tags:
+  - Hard
+
+requirements:
+  - "Bienvenue !"
+  - "Donjon Escape - Code bien caché"
