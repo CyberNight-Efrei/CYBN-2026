@@ -33,6 +33,8 @@ description: |-
 
   Bonne chance.
 
+  Note : le nom de l'ESP32 est transmit en série à 115200 bauds. Ne vous connectez pas à celui des voisins !
+  
   Format : `CYBN{champgagne_a_volonte}`
   
 attribution: "0x7fff00"

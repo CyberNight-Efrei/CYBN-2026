@@ -117,7 +117,7 @@ void loop()
             }
             else if (strcmp(incoming_command, "STATUS") == 0)
             {
-                Serial.print("Battery: 76%\nPosition: LOCKED\nAuthor: gregoire");
+                Serial.print("Battery: 76%\nPosition: LOCKED\nAuthor: 0x7fff00");
             }
             else
             {
