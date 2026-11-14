@@ -1,0 +1,29 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: hidden
+
+name: "Donjon Escape - Code bien caché"
+category: Reverse
+
+description: |-
+  Le prochain code serait caché quelque part dans la pièce. Tu as pourtant inspecté chaque mur sans rien voir. Le prisonnier te conseille de ne pas juger un bouclier à sa seule façade.
+
+  Format du flag : `CYBN{...}`
+
+attribution: "ThaySan"
+
+flags:
+  - "CYBN{l3_t4bl34u_p4rl3}"
+
+tags:
+  - Medium
+
+requirements:
+  - "Bienvenue !"
+  - "Donjon Escape - Offrande impossible"
