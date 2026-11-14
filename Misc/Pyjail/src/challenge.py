@@ -20,6 +20,10 @@ del _signal, sys.modules["_signal"]
 del _imp.create_builtin
 del _imp, sys.modules["_imp"]
 
+import marshal as _marshal
+del _marshal.load, _marshal.loads
+del _marshal
+
 import builtins as _b
 for _n in ("license", "credits", "copyright"):
     setattr(_b, _n, "<disabled in this sandbox>")
@@ -51,15 +55,16 @@ def _arm(_WRITE, _FLUSH, _EXIT, _LOADED):
     def hook(event, args, _B=_BLOCKED, _WRITE=_WRITE, _FLUSH=_FLUSH, _EXIT=_EXIT,
              _LOADED=_LOADED):
         try:
-            if event == "open" and args[1] == "rb":
-                _path = str(args[0])
-                if _path[:1] == "<" and _path[-1:] == ">":
-                    return
-
-            if event == "import" and args[0] not in _LOADED:
-                _WRITE("\n[sandbox] denied: import %s -- session terminated\n" % (args[0],))
-                _FLUSH()
-                _EXIT(1)
+            if event == "import":
+                _name = args[0]
+                if type(_name) is not str:
+                    _WRITE("\n[sandbox] denied: import <non-str name> -- session terminated\n")
+                    _FLUSH()
+                    _EXIT(1)
+                if _name not in _LOADED:
+                    _WRITE("\n[sandbox] denied: import %s -- session terminated\n" % (_name,))
+                    _FLUSH()
+                    _EXIT(1)
 
             if event.startswith(_B) and event != "sys._getframemodulename":
                 _WRITE("\n[sandbox] denied: %s -- session terminated\n" % event)
@@ -75,7 +80,8 @@ def _arm(_WRITE, _FLUSH, _EXIT, _LOADED):
 def _build():
     ns = {}
     exec(_POLICY, ns)
-    return ns.pop("_arm")(sys.stderr.write, sys.stderr.flush, os._exit, sys.modules)
+    return ns.pop("_arm")(sys.stderr.write, sys.stderr.flush, os._exit,
+                          frozenset(sys.modules))
 
 
 _banner = f"Python {sys.version} (sandbox)"
