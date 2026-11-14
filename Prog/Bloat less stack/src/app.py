@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import resource
 import shutil
 import subprocess
@@ -18,6 +19,9 @@ BUILD_TIMEOUT = 10
 MAX_SRC = 64 * 1024
 MAX_OUT = 32 * 1024
 FORBIDDEN = ("%include", "incbin", "%pathsearch", "%depend")
+ALLOWED_SYSCALLS = {0, 1, 2, 3, 4, 5, 6, 8, 9, 12, 17, 19, 20, 40, 60,
+                    78, 79, 80, 81, 217, 231, 257, 262}
+MOV_RAX = re.compile(r"\tmov(?:abs)?\s+(?:rax|eax|ax|al),(0x[0-9a-f]+)$", re.M)
 BACKGROUND = os.path.join(os.path.dirname(os.path.abspath(__file__)), "background.jpg")
 TOTORO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "totoro.gif")
 INDEX = os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.html")
@@ -42,7 +46,7 @@ def run_asm(code: str) -> dict:
                     "output": f"Directive interdite dans ce bac à sable : {bad}\n"
                               "Lis le fichier à l'exécution (syscalls), pas à l'assemblage."}
 
-    for tool in ("nasm", "ld"):
+    for tool in ("nasm", "ld", "objdump"):
         if shutil.which(tool) is None:
             return {"ok": False, "stage": "env",
                     "output": f"Outil manquant côté serveur : {tool}."}
@@ -66,6 +70,16 @@ def run_asm(code: str) -> dict:
                            cwd=work, capture_output=True, text=True, timeout=BUILD_TIMEOUT)
         if r.returncode != 0:
             return {"ok": False, "stage": "nasm", "output": clean(r.stderr or r.stdout)}
+
+        r = subprocess.run(["objdump", "-d", "-M", "intel", "--no-show-raw-insn", obj],
+                           cwd=work, capture_output=True, text=True, timeout=BUILD_TIMEOUT)
+        if r.returncode != 0:
+            return {"ok": False, "stage": "env", "output": "Désassemblage impossible côté serveur."}
+        bad = sorted({int(n, 16) for n in MOV_RAX.findall(r.stdout)} - ALLOWED_SYSCALLS)
+        if bad:
+            return {"ok": False, "stage": "syscall",
+                    "output": f"Syscall interdit ! : {', '.join(map(str, bad))}\n"
+                              f"Autorisés : {', '.join(map(str, sorted(ALLOWED_SYSCALLS)))}"}
 
         r = subprocess.run(["ld", obj, "-o", binp],
                            cwd=work, capture_output=True, text=True, timeout=BUILD_TIMEOUT)
