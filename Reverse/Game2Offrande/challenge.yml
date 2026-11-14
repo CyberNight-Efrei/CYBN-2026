@@ -1,0 +1,29 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: hidden
+
+name: "Donjon Escape - Offrande impossible"
+category: Reverse
+
+description: |-
+  Pour gagner la faveur du roi, la statue réclame un million de pièces. Une par une. Le prisonnier a déjà abandonné l'idée de t'aider à les porter.
+
+  Format du flag : `CYBN{...}`
+
+attribution: "ThaySan"
+
+flags:
+  - "CYBN{1_m1ll10n_d3_p13c3s}"
+
+tags:
+  - Easy
+
+requirements:
+  - "Bienvenue !"
+  - "Donjon Escape - Fichier de sauvegarde"
