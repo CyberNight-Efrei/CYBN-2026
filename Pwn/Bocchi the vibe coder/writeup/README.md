@@ -9,7 +9,7 @@
 
 *Tiens t'as la démo ici : URL*
 
-*En plus c'est pratique parce que je peux développer dans le même dossier où je lance la démo comme ça tu verras les nouvelles features en live et t'auras même pas à attendre ma CI gitlab."*
+*En plus c'est pratique parce que je fais mes `git commit` directement dans le dossier où je lance la démo comme ça tu verras les nouvelles features en live et t'auras même pas à attendre ma CI gitlab."*
 
 ```
 - Catégorie : Pwn
@@ -32,7 +32,7 @@ $ curl -X GET localhost:8080/
 Fuck y'a internet O_o
 ```
 
-Un peu de fuzzing ou du guessing grâce à l'intitulé révèle que le dossier `.git` est disponible :
+L'intitulé dit que Bocchi fait ses `git commit` dans le dossier de la démo, donc le dépôt est sûrement servi avec le reste. On vérifie (ou un peu de fuzzing) que le dossier `.git` est disponible :
 ```
 [10:46:47] 200 -    23B - /.git/HEAD
 [10:46:47] 200 -   155B - /.git/config
@@ -45,14 +45,28 @@ On dumpe le dépôt avec par exemple gitdumper : https://github.com/internetwach
 ```bash
 $ gitdumper.sh localhost:8080/.git/ ./git-dump
 $ cd git-dump
-$ git restore server CLAUDE.md libc.so.6
+$ git restore server CLAUDE.md libc.so.6 ld-linux-x86-64.so.2
 $ ls
-CLAUDE.md  libc.so.6  server
+CLAUDE.md  ld-linux-x86-64.so.2  libc.so.6  server
 ```
 
 - **server** : le binaire du serveur.
 
 - **libc.so.6** : la libc exacte utilisée en prod utile pour le ret2libc.
+
+- **ld-linux-x86-64.so.2** : le loader qui va avec cette libc.
+
+Pour tester en local contre la libc fournie, il faut la lancer avec le loader fourni, sinon la 2.36 tourne sous le loader de ta distrib et glibc abort avec `*** stack smashing detected ***` dès la première requête (les deux doivent avoir la même version). Avec pwninit, qui trouve la libc et le loader dans le dossier :
+
+```bash
+$ pwninit --bin server --libc libc.so.6 --ld ld-linux-x86-64.so.2
+```
+
+Ou à la main :
+
+```bash
+$ patchelf --set-interpreter ./ld-linux-x86-64.so.2 --set-rpath . server
+```
 
 - **CLAUDE.md** : un "skill maison" de très haute qualité :
 

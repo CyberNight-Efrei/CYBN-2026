@@ -23,9 +23,9 @@ description: |-
   des POST !). Pour l'instant tu peux faire que des GET, je suis en train de bosser sur les
   autres verbes.*
 
-  *En plus c'est pratique parce que je peux développer dans le même dossier où je lance la
-  démo, comme ça tu verras les nouvelles features en live et t'auras même pas à attendre ma
-  CI gitlab."*
+  *En plus c'est pratique parce que je fais mes `git commit` directement dans le dossier où
+  je lance la démo, comme ça tu verras les nouvelles features en live et t'auras même pas à
+  attendre ma CI gitlab."*
 
   ```
   PIE      : OUI

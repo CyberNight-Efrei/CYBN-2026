@@ -22,13 +22,14 @@ COPY flag.txt /app/flag.txt
 COPY --from=build /tmp/server /app/web/server
 
 RUN cp /lib/x86_64-linux-gnu/libc.so.6 /app/web/libc.so.6 \
+    && cp /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 /app/web/ld-linux-x86-64.so.2 \
     && chmod +x /app/web/server \
     && cd /app/web \
     && git init -q \
     && git config user.email "dev@bocchi.local" \
     && git config user.name "bocchi" \
     && git config gc.auto 0 \
-    && git add CLAUDE.md server libc.so.6 \
+    && git add CLAUDE.md server libc.so.6 ld-linux-x86-64.so.2 \
     && git commit -qm "ship: patch binaire a la volee (cf CLAUDE.md), source pas versionnee"
 
 RUN chown -R root:root /app \
