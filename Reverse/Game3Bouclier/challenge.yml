@@ -6,7 +6,7 @@ extra:
   decay: 30
   minimum: 100
 
-state: hidden
+state: visible
 
 name: "Donjon Escape - Code bien caché"
 category: Reverse
