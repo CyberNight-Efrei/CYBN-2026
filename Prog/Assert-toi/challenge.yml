@@ -50,7 +50,7 @@ tags:
 requirements:
   - Bienvenue ! # NE PAS TOUCHER - Ajouter si nécessaire
 
-state: hidden   # passer à "visible" quand le chall est prêt
+state: visible
 
 # </============ REQUIRED ============>
 
