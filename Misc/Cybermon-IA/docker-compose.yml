@@ -17,7 +17,8 @@ services:
       ML_SERVICE_TOKEN: ${ML_SERVICE_TOKEN:-}
       BLIP_TRIGGER_WORD: "${BLIP_TRIGGER_WORD:-black deck}"
       IMPORT_COOLDOWN_MS: ${IMPORT_COOLDOWN_MS:-30000}
-      ML_TIMEOUT_MS: ${ML_TIMEOUT_MS:-45000}
+      ML_TIMEOUT_MS: ${ML_TIMEOUT_MS:-10000}
+      ML_JOB_TIMEOUT_MS: ${ML_JOB_TIMEOUT_MS:-600000}
     volumes:
       - database:/data
     tmpfs:

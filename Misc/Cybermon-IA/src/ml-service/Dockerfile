@@ -14,9 +14,11 @@ COPY src/ml-service/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 COPY --from=model /models/blip /models/blip
 COPY src/ml-service/app.py ./app.py
+COPY src/ml-service/jobs.py ./jobs.py
+COPY src/ml-service/storage.py ./storage.py
 COPY src/server/data/cards.json ./catalog/cards.json
 COPY src/client/public/creatures ./references
-RUN useradd --system --uid 10001 --create-home scanner && chown -R scanner:scanner /app
+RUN useradd --system --uid 10001 --create-home scanner && mkdir -p /data/images /data/logs && chown -R scanner:scanner /app /data
 USER scanner
 EXPOSE 8000
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--no-access-log"]

@@ -16,7 +16,8 @@ export const config = {
   mlServiceToken: process.env.ML_SERVICE_TOKEN || "e19b254efc12973f379b0a68274ca9925595e622f1282c91bd969e47507f49f0",
   blipTriggerWord: (process.env.BLIP_TRIGGER_WORD || "black deck").trim(),
   importCooldownMs: Number(process.env.IMPORT_COOLDOWN_MS ?? 30000),
-  mlTimeoutMs: Number(process.env.ML_TIMEOUT_MS ?? 45000),
+  mlTimeoutMs: Number(process.env.ML_TIMEOUT_MS ?? 10000),
+  mlJobTimeoutMs: Number(process.env.ML_JOB_TIMEOUT_MS ?? 600000),
   maxImageBytes: 2 * 1024 * 1024,
   model: {
     id: "Salesforce/blip-image-captioning-base",
@@ -39,6 +40,8 @@ if (
   config.importCooldownMs < 0 ||
   !Number.isFinite(config.mlTimeoutMs) ||
   config.mlTimeoutMs < 1000 ||
+  !Number.isFinite(config.mlJobTimeoutMs) ||
+  config.mlJobTimeoutMs < 1000 ||
   !Number.isFinite(config.cooldownMs) ||
   config.cooldownMs < 0
 )

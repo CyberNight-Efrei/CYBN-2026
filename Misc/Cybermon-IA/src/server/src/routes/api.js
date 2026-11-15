@@ -18,7 +18,8 @@ import {
 } from "../services/trades.js";
 import {
   modelInfo,
-  importIllustration,
+  startImport,
+  importStatus,
   importedImage,
 } from "../services/imports.js";
 import { config } from "../config.js";
@@ -151,7 +152,11 @@ api.post("/trades", async (req, res) => {
 });
 
 api.get("/imports/model", async (req, res) => {
-  res.json(await modelInfo());
+  res.json(await modelInfo(req.playerId));
+});
+
+api.get("/imports/status", (req, res) => {
+  res.json({ task: importStatus(req.playerId) });
 });
 
 api.post(
@@ -161,12 +166,12 @@ api.post(
     limit: config.maxImageBytes,
   }),
   async (req, res) => {
-    const result = await importIllustration(
+    const result = await startImport(
       req.playerId,
       req.body,
       req.get("Content-Type"),
     );
-    res.status(201).json(result);
+    res.status(202).json(result);
   },
 );
 

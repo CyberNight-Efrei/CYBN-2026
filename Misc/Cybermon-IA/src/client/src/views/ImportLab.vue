@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import {
   ArrowRight,
   BrainCircuit,
@@ -18,12 +18,78 @@ const result = ref(null);
 const error = ref("");
 const busy = ref(false);
 const cooldown = ref(0);
+const scanState = ref(null);
+const displayedProgress = ref(0);
+const clock = ref(Date.now());
+const connectionNotice = ref("");
+const controller = new AbortController();
+let pollTimer, clockTimer, animation;
+let mounted = true;
+const pending = (status) => ["uploading", "queued", "processing"].includes(status);
+const elapsed = computed(() => scanState.value
+  ? Math.max(0, Math.floor(((scanState.value.finishedAt || clock.value) - scanState.value.startedAt) / 1000))
+  : 0);
+const stageLabel = computed(() => {
+  const task = scanState.value;
+  if (!task) return "";
+  if (task.status === "queued") return `En attente - position ${task.position || 1}`;
+  return ({
+    uploading: "Transmission au scanner", encoding: "Analyse visuelle",
+    generating: "Génération de la légende", matching: "Reconnaissance de la carte",
+    saving: "Création de la carte", done: "Carte prête", failed: "Analyse interrompue",
+  })[task.stage] || "Analyse en cours";
+});
+
+watch(() => scanState.value?.progress || 0, (target) => {
+  cancelAnimationFrame(animation);
+  const from = displayedProgress.value;
+  const started = performance.now();
+  const draw = (now) => {
+    const fraction = Math.min(1, (now - started) / 1100);
+    displayedProgress.value = from + (target - from) * (1 - (1 - fraction) ** 3);
+    if (fraction < 1) animation = requestAnimationFrame(draw);
+  };
+  animation = requestAnimationFrame(draw);
+});
+
+function applyStatus(task) {
+  if (!mounted || !task) return;
+  scanState.value = task;
+  busy.value = pending(task.status);
+  if (task.status === "done") {
+    result.value = task.result;
+    startCooldown(Math.max(0, (task.finishedAt + task.result.cooldownSeconds * 1000 - Date.now()) / 1000));
+    void refreshPlayer().catch(() => {});
+  } else if (task.status === "failed") {
+    error.value = task.error;
+  }
+}
+
+async function pollStatus() {
+  try {
+    const { task } = await api("/imports/status", { signal: controller.signal });
+    if (!mounted) return;
+    connectionNotice.value = "";
+    if (task) applyStatus(task);
+    else {
+      busy.value = false;
+      if (scanState.value) scanState.value = { ...scanState.value, status: "failed", stage: "failed" };
+      error.value = "Le suivi a expiré ou le scanner a redémarré. Consultez votre collection avant de réessayer.";
+    }
+  } catch (e) {
+    if (!mounted) return;
+    connectionNotice.value = "Connexion au suivi interrompue. Nouvelle tentative automatique...";
+  }
+  if (mounted && busy.value) pollTimer = setTimeout(pollStatus, 1000);
+}
 let timer;
 let cooldownUntil = 0;
 
 function choose(event) {
   error.value = "";
   result.value = null;
+  scanState.value = null;
+  displayedProgress.value = 0;
   const selected = event.target.files?.[0] || null;
   if (previewUrl.value) URL.revokeObjectURL(previewUrl.value);
   previewUrl.value = "";
@@ -59,31 +125,47 @@ async function scan() {
   if (!file.value || busy.value || cooldown.value) return;
   busy.value = true;
   error.value = "";
+  result.value = null;
+  connectionNotice.value = "";
   try {
-    result.value = await api("/imports", {
+    const task = await api("/imports", {
       method: "POST",
       headers: { "Content-Type": file.value.type },
       body: file.value,
     });
-    startCooldown(result.value.cooldownSeconds);
-    await refreshPlayer();
+    applyStatus(task);
+    if (busy.value) pollTimer = setTimeout(pollStatus, 1000);
   } catch (e) {
     error.value = e.message;
-  } finally {
     busy.value = false;
+    // A lost POST response must not encourage submitting the same image again.
+    if (!e.status) {
+      busy.value = true;
+      void pollStatus();
+    }
   }
 }
 
 onMounted(async () => {
+  clockTimer = setInterval(() => { clock.value = Date.now(); }, 1000);
   try {
     info.value = await api("/imports/model");
     startCooldown(info.value.cooldownRemainingSeconds);
+    if (info.value.activeImport) {
+      applyStatus(info.value.activeImport);
+      if (busy.value) pollTimer = setTimeout(pollStatus, 1000);
+    }
   } catch (e) {
     error.value = e.message;
   }
 });
 
 onUnmounted(() => {
+  mounted = false;
+  controller.abort();
+  clearTimeout(pollTimer);
+  clearInterval(clockTimer);
+  cancelAnimationFrame(animation);
   clearInterval(timer);
   if (previewUrl.value) URL.revokeObjectURL(previewUrl.value);
 });
@@ -135,6 +217,29 @@ onUnmounted(() => {
           <span>{{ busy ? "Analyse de l’illustration…" : cooldown ? `Scanner disponible dans ${cooldown} s` : "Créer la carte d’archive" }}</span>
           <ArrowRight :size="18" />
         </button>
+        <div v-if="scanState" class="scan-progress" :class="{ failed: scanState.status === 'failed' }">
+          <div class="scan-progress-heading">
+            <strong role="status">{{ stageLabel }}</strong>
+            <span>{{ Math.round(displayedProgress) }} %</span>
+          </div>
+          <div
+            class="scan-progress-track"
+            role="progressbar"
+            aria-label="Progression estimée de l'analyse"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            :aria-valuenow="Math.round(displayedProgress)"
+            :aria-valuetext="stageLabel"
+          >
+            <div class="scan-progress-fill" :style="{ width: `${displayedProgress}%` }" />
+          </div>
+          <div class="scan-progress-details">
+            <span>Progression estimée · {{ elapsed }} s écoulées</span>
+            <span v-if="scanState.stage === 'generating'">{{ scanState.step }}/{{ scanState.maxSteps }} étapes maximum</span>
+          </div>
+          <p v-if="scanState.status === 'queued'" class="scanner-note">Votre illustration est enregistrée. L'analyse démarrera dès que le scanner sera disponible.</p>
+          <p v-if="connectionNotice" class="scanner-note" role="status">{{ connectionNotice }}</p>
+        </div>
         <p v-if="error" class="error" role="alert">{{ error }}</p>
       </section>
 
@@ -175,3 +280,29 @@ onUnmounted(() => {
     </section>
   </div>
 </template>
+
+<style scoped>
+.scan-progress {
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid #9c7bdb55;
+  border-radius: 12px;
+  background: linear-gradient(130deg, #6d37b51a, #3974d51a);
+}
+.scan-progress-heading, .scan-progress-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.scan-progress-heading { font-size: 14px; }
+.scan-progress-heading > span { color: #d9c4ff; font-variant-numeric: tabular-nums; }
+.scan-progress-track { height: 9px; margin: 14px 0 11px; overflow: hidden; border-radius: 20px; background: #ffffff12; }
+.scan-progress-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #9b62ed, #79a8ff); box-shadow: 0 0 16px #9857df66; }
+.scan-progress-details { flex-wrap: wrap; font-size: 11px; color: #c3b9d9; }
+.scan-progress.failed .scan-progress-fill { background: #c97982; }
+.scan-progress .scanner-note { margin-bottom: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .scan-progress-fill { box-shadow: none; }
+}
+</style>

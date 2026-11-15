@@ -2,15 +2,18 @@ import asyncio
 import io
 import json
 import os
+import re
 import secrets
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 import torch
 import torch.nn.functional as functional
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from PIL import Image, UnidentifiedImageError
-from transformers import BlipForConditionalGeneration, BlipProcessor
+from transformers import BlipForConditionalGeneration, BlipProcessor, StoppingCriteria, StoppingCriteriaList
+from jobs import JobQueue
+from storage import configure_logging, logger
 
 MODEL_ID = os.getenv("MODEL_ID", "Salesforce/blip-image-captioning-base")
 MODEL_REVISION = os.getenv(
@@ -23,6 +26,7 @@ MAX_IMAGE_BYTES = 2 * 1024 * 1024
 MAX_IMAGE_PIXELS = 16_000_000
 CATALOG_PATH = Path(os.getenv("CATALOG_PATH", "/app/catalog/cards.json"))
 REFERENCE_DIR = Path(os.getenv("REFERENCE_DIR", "/app/references"))
+STORAGE_DIR = Path(os.getenv("ML_STORAGE_DIR", "/data"))
 
 torch.set_num_threads(max(1, int(os.getenv("TORCH_THREADS", "4"))))
 Image.MAX_IMAGE_PIXELS = MAX_IMAGE_PIXELS
@@ -32,7 +36,6 @@ model = None
 catalog = []
 reference_embeddings = None
 reference_hashes = []
-inference_lock = asyncio.Semaphore(1)
 
 
 def difference_hash(image: Image.Image) -> int:
@@ -85,7 +88,21 @@ def load_runtime():
     reference_embeddings = vision_embedding(images)
 
 
-def analyse(image: Image.Image):
+class GenerationProgress(StoppingCriteria):
+    def __init__(self, report):
+        self.report = report
+        self.step = 0
+
+    def __call__(self, input_ids, scores, **kwargs):
+        self.step = min(24, self.step + 1)
+        self.report("generating", 20 + self.step * 65 / 24, self.step)
+        # Observe generation only: never change beam selection or stop a valid job.
+        return torch.zeros(input_ids.shape[0], dtype=torch.bool, device=input_ids.device)
+
+
+def analyse(raw, report):
+    report("encoding", 8)
+    image = open_image(raw)
     values = processor(images=image, return_tensors="pt").pixel_values
     with torch.inference_mode():
         generated = model.generate(
@@ -93,7 +110,9 @@ def analyse(image: Image.Image):
             num_beams=3,
             max_new_tokens=24,
             do_sample=False,
+            stopping_criteria=StoppingCriteriaList([GenerationProgress(report)]),
         )
+        report("matching", 90)
         candidate = model.vision_model(pixel_values=values).last_hidden_state[:, 0, :]
     caption = processor.decode(generated[0], skip_special_tokens=True).strip()
 
@@ -101,23 +120,34 @@ def analyse(image: Image.Image):
     distances = [(candidate_hash ^ value).bit_count() for value in reference_hashes]
     closest_hash = min(range(len(distances)), key=distances.__getitem__)
     if distances[closest_hash] <= 4:
-        return caption, {
+        return {"caption": caption, "match": {
             "slug": catalog[closest_hash]["slug"],
             "score": 1.0 - distances[closest_hash] / 64.0,
-        }
+        }}
 
     candidate = functional.normalize(candidate.float(), dim=-1)
     similarities = torch.matmul(reference_embeddings, candidate.T).squeeze(1)
     score, index = similarities.max(dim=0)
     if score.item() >= MATCH_THRESHOLD:
-        return caption, {"slug": catalog[index.item()]["slug"], "score": score.item()}
-    return caption, None
+        return {"caption": caption, "match": {"slug": catalog[index.item()]["slug"], "score": score.item()}}
+    return {"caption": caption, "match": None}
+
+
+queue = JobQueue(analyse, archive_dir=STORAGE_DIR / "images")
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    configure_logging(STORAGE_DIR / "logs")
+    logger.info("event=starting model=%s revision=%s threads=%s archive=%s", MODEL_ID, MODEL_REVISION, torch.get_num_threads(), queue.archive_dir)
     await asyncio.to_thread(load_runtime)
-    yield
+    logger.info("event=ready references=%d max_pending=%d job_timeout_s=%d", len(catalog), queue.max_pending, queue.timeout)
+    queue.start()
+    try:
+        yield
+    finally:
+        await queue.close()
+        logger.info("event=stopped")
 
 
 app = FastAPI(title="Scanner d’illustrations Cybermon", lifespan=lifespan)
@@ -133,22 +163,76 @@ def health():
     }
 
 
-@app.post("/caption")
-async def caption(request: Request):
+def authorize(request: Request):
     authorization = request.headers.get("authorization", "")
     expected = f"Bearer {SERVICE_TOKEN}"
     if not secrets.compare_digest(authorization, expected):
+        logger.warning("event=request_rejected reason=unauthorized")
         raise HTTPException(401, "Invalid service token.")
+
+
+async def read_illustration(request):
     if request.headers.get("content-type") not in {
         "image/png",
         "image/jpeg",
         "image/webp",
     }:
         raise HTTPException(415, "Unsupported image type.")
-    raw = await request.body()
-    if not raw or len(raw) > MAX_IMAGE_BYTES:
+    raw = bytearray()
+    async for chunk in request.stream():
+        raw.extend(chunk)
+        if len(raw) > MAX_IMAGE_BYTES:
+            raise HTTPException(413, "Image is too large.")
+    if not raw:
         raise HTTPException(413, "Image is empty or too large.")
-    image = open_image(raw)
-    async with inference_lock:
-        generated_caption, match = await asyncio.to_thread(analyse, image)
-    return {"caption": generated_caption, "match": match}
+    image = await asyncio.to_thread(open_image, raw)
+    session = request.headers.get("X-Scanner-Session", "direct")
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", session):
+        session = "direct"
+    metadata = {
+        "session": session, "mimeType": request.headers["content-type"],
+        "width": image.width, "height": image.height,
+        "model": MODEL_ID, "revision": MODEL_REVISION,
+    }
+    return bytes(raw), metadata
+
+
+@app.post("/jobs", status_code=202, dependencies=[Depends(authorize)])
+async def submit_job(request: Request):
+    raw, metadata = await read_illustration(request)
+    try:
+        key = queue.submit(raw, metadata)
+    except OverflowError as error:
+        logger.warning("event=request_rejected session=%s reason=queue_full bytes=%d", metadata["session"], len(raw))
+        raise HTTPException(429, str(error)) from error
+    except OSError as error:
+        logger.exception("event=archive_failed session=%s bytes=%d", metadata["session"], len(raw))
+        raise HTTPException(503, "Le scanner ne peut pas enregistrer l'illustration.") from error
+    return queue.get(key)
+
+
+@app.get("/jobs/{key}", dependencies=[Depends(authorize)])
+async def job_status(key: str):
+    status = queue.get(key)
+    if not status:
+        raise HTTPException(404, "Analyse introuvable ou expirée.")
+    return status
+
+
+@app.delete("/jobs/{key}", dependencies=[Depends(authorize)])
+async def cancel_job(key: str):
+    status = queue.cancel(key)
+    if not status:
+        raise HTTPException(404, "Analyse introuvable ou expirée.")
+    return status
+
+
+@app.post("/caption", dependencies=[Depends(authorize)])
+async def caption(request: Request):
+    # Compatibility for instances still using the synchronous endpoint.
+    status = await submit_job(request)
+    await queue.jobs[status["id"]]["done"].wait()
+    status = queue.get(status["id"])
+    if status["status"] != "done":
+        raise HTTPException(503, status["error"])
+    return status["result"]

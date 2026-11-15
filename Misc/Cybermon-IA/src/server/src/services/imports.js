@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
+import { setTimeout as delay } from "node:timers/promises";
 import { z } from "zod";
 import {
   Card,
@@ -9,6 +10,8 @@ import {
 import { config } from "../config.js";
 
 let inferenceBusy = false;
+let currentImport = null;
+const scannerSessionId = randomUUID();
 
 const mlResponse = z
   .object({
@@ -25,6 +28,19 @@ const mlResponse = z
 
 const httpError = (status, message) =>
   Object.assign(new Error(message), { status });
+
+const mlJob = z.object({
+  id: z.string().regex(/^[a-f0-9]{48}$/),
+  status: z.enum(["queued", "processing", "done", "failed", "cancelled"]),
+  stage: z.enum(["queued", "encoding", "generating", "matching", "done"]),
+  progress: z.number().min(0).max(100),
+  step: z.number().int().min(0).max(24),
+  maxSteps: z.literal(24),
+  position: z.number().int().positive().nullable(),
+  elapsedSeconds: z.number().int().nonnegative(),
+  result: mlResponse.optional(),
+  error: z.string().max(240).optional(),
+}).strict();
 
 function detectedMime(buffer, suppliedMime) {
   if (
@@ -48,21 +64,23 @@ function detectedMime(buffer, suppliedMime) {
   throw httpError(400, "Importez une illustration PNG, JPEG ou WebP valide.");
 }
 
-async function captionImage(buffer, mimeType) {
+async function mlRequest(path, options = {}) {
   let response;
   try {
-    response = await fetch(`${config.mlServiceUrl.replace(/\/$/, "")}/caption`, {
-      method: "POST",
+    response = await fetch(`${config.mlServiceUrl.replace(/\/$/, "")}${path}`, {
+      ...options,
       headers: {
         Authorization: `Bearer ${config.mlServiceToken}`,
-        "Content-Type": mimeType,
+        "X-Scanner-Session": scannerSessionId,
+        ...options.headers,
       },
-      body: buffer,
       signal: AbortSignal.timeout(config.mlTimeoutMs),
     });
   } catch {
     throw httpError(503, "Le scanner d’illustration est temporairement indisponible.");
   }
+  if (response.status === 429)
+    throw httpError(429, "La file du scanner est pleine. Réessayez dans un instant.");
   if (!response.ok)
     throw httpError(502, "Le scanner d’illustration n’a pas pu analyser cette image.");
   let payload;
@@ -71,10 +89,77 @@ async function captionImage(buffer, mimeType) {
   } catch {
     throw httpError(502, "Le scanner d’illustration a renvoyé un résultat invalide.");
   }
-  const parsed = mlResponse.safeParse(payload);
+  const parsed = mlJob.safeParse(payload);
   if (!parsed.success)
     throw httpError(502, "Le scanner d’illustration a renvoyé un résultat invalide.");
   return parsed.data;
+}
+
+async function captionImage(buffer, mimeType, onProgress) {
+  let job;
+  const deadline = Date.now() + config.mlJobTimeoutMs;
+  try {
+    job = await mlRequest("/jobs", {
+      method: "POST", headers: { "Content-Type": mimeType }, body: buffer,
+    });
+    while (true) {
+      onProgress({
+        status: job.status === "queued" ? "queued" : "processing",
+        stage: job.status === "done" ? "saving" : job.stage,
+        progress: Math.min(95, job.progress * 0.95),
+        position: job.position, step: job.step, maxSteps: job.maxSteps,
+      });
+      if (job.status === "done") {
+        if (!job.result) throw httpError(502, "Le scanner a renvoyé un résultat invalide.");
+        return job.result;
+      }
+      if (["failed", "cancelled"].includes(job.status))
+        throw httpError(502, job.error || "Le scanner n'a pas pu terminer l'analyse.");
+      if (Date.now() >= deadline)
+        throw httpError(504, "Le délai maximal d'analyse est dépassé. Réessayez.");
+      await delay(1000);
+      job = await mlRequest(`/jobs/${job.id}`);
+    }
+  } catch (error) {
+    if (job && ["queued", "processing"].includes(job.status)) {
+      await mlRequest(`/jobs/${job.id}`, { method: "DELETE" }).catch(() => {});
+    }
+    throw error;
+  }
+}
+
+export function importStatus(userId) {
+  if (!currentImport || currentImport.userId !== userId) return null;
+  if (currentImport.finishedAt && Date.now() - currentImport.finishedAt > 600000) return null;
+  const { userId: owner, finishedAt, ...status } = currentImport;
+  return { ...status, finishedAt: finishedAt || null };
+}
+
+export async function startImport(userId, body, suppliedMime) {
+  if (!Buffer.isBuffer(body) || !body.length)
+    throw httpError(400, "Choisissez une illustration à analyser.");
+  if (body.length > config.maxImageBytes)
+    throw httpError(413, "L'illustration est trop volumineuse.");
+  detectedMime(body, suppliedMime);
+  if (currentImport && ["uploading", "queued", "processing"].includes(currentImport.status))
+    throw httpError(429, "Une analyse est déjà en cours sur cette instance.");
+  // Reserve the instance before the asynchronous cooldown check.
+  const task = {
+    id: randomUUID(), userId, status: "uploading", stage: "uploading", progress: 2,
+    position: null, step: 0, maxSteps: 24, startedAt: Date.now(),
+  };
+  currentImport = task;
+  void importIllustration(userId, body, suppliedMime, (update) => {
+    Object.assign(task, update, { progress: Math.max(task.progress, update.progress) });
+  }).then((result) => {
+    Object.assign(task, { status: "done", stage: "done", progress: 100, position: null, result });
+  }).catch((error) => {
+    Object.assign(task, {
+      status: "failed", stage: "failed", position: null,
+      error: error.status ? error.message : "La carte n'a pas pu être créée. Réessayez.",
+    });
+  }).finally(() => { task.finishedAt = Date.now(); });
+  return importStatus(userId);
 }
 
 function triggerFound(caption) {
@@ -155,7 +240,7 @@ async function cooldownRemainingSeconds() {
   );
 }
 
-export async function modelInfo() {
+export async function modelInfo(userId) {
   return {
     model: config.model.id,
     revision: config.model.revision,
@@ -167,10 +252,11 @@ export async function modelInfo() {
     cooldownRemainingSeconds: await cooldownRemainingSeconds(),
     maxBytes: config.maxImageBytes,
     acceptedTypes: ["image/png", "image/jpeg", "image/webp"],
+    activeImport: importStatus(userId),
   };
 }
 
-export async function importIllustration(userId, body, suppliedMime) {
+export async function importIllustration(userId, body, suppliedMime, onProgress = () => {}) {
   if (!Buffer.isBuffer(body) || !body.length)
     throw httpError(400, "Choisissez une illustration à analyser.");
   if (body.length > config.maxImageBytes)
@@ -182,7 +268,7 @@ export async function importIllustration(userId, body, suppliedMime) {
   try {
     if (await cooldownRemainingSeconds())
       throw httpError(429, "Le scanner se refroidit. Réessayez dans un instant.");
-    const inference = await captionImage(body, mimeType);
+    const inference = await captionImage(body, mimeType, onProgress);
     const caption = presentationCaption(inference.caption);
     const known = inference.match
       ? await Card.findOne({ where: { slug: inference.match.slug } })
