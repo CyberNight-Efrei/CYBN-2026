@@ -1,0 +1,54 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+# Choisir UN seul type : dynamic, dynamic_docker ou queue
+type: dynamic
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Brainnsss!"
+category: OSINT
+
+description: |-
+  Dans le brouillard de guerre, vous interceptez une communication surprenante provenant de l'ennemi. Celui-ci ordonne à ses troupes de se préparer car une invasion de zombies est en cours !
+
+  La guerre ravage l'Europe depuis maintenant cinq longues années. Vos hommes sont épuisés, les munitions commencent à manquer et cette étrange nouvelle sème le doute dans vos rangs.
+
+  L'état-major attend votre décision. Faut-il lancer l'offensive malgré cette menace inconnue, ou rester sur vos positions ?
+
+  À vous d'identifier d'où viennent ces zombies, pourquoi ils sont là, et de déterminer l'ordre à transmettre à vos troupes (go/nogo/wait).
+
+  Format : `CYBN{chernarus_volontaires_wait}`
+
+attribution: "Gabriel S.G"
+
+flags:
+  # A static case sensitive flag
+  - CYBN{canada_conscrits_go}
+
+tags:
+  - Easy
+
+requirements:
+  - Bienvenue ! # NE PAS TOUCHER - Ajouter si nécessaire
+
+state: visible   # passer à "visible" quand le chall est prêt
+
+# </============ REQUIRED ============>
+
+# <============ OPTIONAL ============>
+# Only files provided to challengers.
+# NO directories, accept archives (.zip, .7z, .tgz)
+# Hints are optional.
+# Accepts dictionaries or strings.
+# The next recommended challenge after a correct answer.
+
+# Specifies the version of the challenge specification.
+version: "3.0"
