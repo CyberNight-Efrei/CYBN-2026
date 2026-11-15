@@ -155,8 +155,8 @@ api.get("/imports/model", async (req, res) => {
   res.json(await modelInfo(req.playerId));
 });
 
-api.get("/imports/status", (req, res) => {
-  res.json({ task: importStatus(req.playerId) });
+api.get("/imports/status", async (req, res) => {
+  res.json({ task: await importStatus(req.playerId) });
 });
 
 api.post(

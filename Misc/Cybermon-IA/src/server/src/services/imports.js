@@ -128,11 +128,14 @@ async function captionImage(buffer, mimeType, onProgress) {
   }
 }
 
-export function importStatus(userId) {
+export async function importStatus(userId) {
   if (!currentImport || currentImport.userId !== userId) return null;
   if (currentImport.finishedAt && Date.now() - currentImport.finishedAt > 600000) return null;
   const { userId: owner, finishedAt, ...status } = currentImport;
-  return { ...status, finishedAt: finishedAt || null };
+  return {
+    ...status, finishedAt: finishedAt || null,
+    cooldownRemainingSeconds: await cooldownRemainingSeconds(),
+  };
 }
 
 export async function startImport(userId, body, suppliedMime) {
@@ -252,7 +255,7 @@ export async function modelInfo(userId) {
     cooldownRemainingSeconds: await cooldownRemainingSeconds(),
     maxBytes: config.maxImageBytes,
     acceptedTypes: ["image/png", "image/jpeg", "image/webp"],
-    activeImport: importStatus(userId),
+    activeImport: await importStatus(userId),
   };
 }
 
@@ -266,8 +269,9 @@ export async function importIllustration(userId, body, suppliedMime, onProgress 
     throw httpError(429, "Le scanner analyse déjà une illustration.");
   inferenceBusy = true;
   try {
-    if (await cooldownRemainingSeconds())
-      throw httpError(429, "Le scanner se refroidit. Réessayez dans un instant.");
+    const remaining = await cooldownRemainingSeconds();
+    if (remaining)
+      throw httpError(429, `Le scanner se refroidit. Réessayez dans ${remaining} s.`);
     const inference = await captionImage(body, mimeType, onProgress);
     const caption = presentationCaption(inference.caption);
     const known = inference.match

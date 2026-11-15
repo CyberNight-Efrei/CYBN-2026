@@ -56,9 +56,14 @@ function applyStatus(task) {
   if (!mounted || !task) return;
   scanState.value = task;
   busy.value = pending(task.status);
+  startCooldown(task.cooldownRemainingSeconds || 0);
+  if (task.status === "failed" && task.cooldownRemainingSeconds > 0) {
+    scanState.value = null;
+    error.value = "";
+    return;
+  }
   if (task.status === "done") {
     result.value = task.result;
-    startCooldown(Math.max(0, (task.finishedAt + task.result.cooldownSeconds * 1000 - Date.now()) / 1000));
     void refreshPlayer().catch(() => {});
   } else if (task.status === "failed") {
     error.value = task.error;
@@ -282,6 +287,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.upload-zone img { image-rendering: pixelated; }
 .scan-progress {
   margin-top: 22px;
   padding: 18px;
