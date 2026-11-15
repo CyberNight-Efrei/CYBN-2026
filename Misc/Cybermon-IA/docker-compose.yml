@@ -13,8 +13,8 @@ services:
       DYNAMIC_FLAG: ${DYNAMIC_FLAG:?Variable DYNAMIC_FLAG requise}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
       PACK_COOLDOWN_MS: ${PACK_COOLDOWN_MS:-1500}
-      ML_SERVICE_URL: ${ML_SERVICE_URL:-http://cybermon-ml:8000}
-      ML_SERVICE_TOKEN: ${ML_SERVICE_TOKEN:-local-ml-token}
+      ML_SERVICE_URL: ${ML_SERVICE_URL:-http://labo.cybn.rezo}
+      ML_SERVICE_TOKEN: ${ML_SERVICE_TOKEN:-}
       BLIP_TRIGGER_WORD: "${BLIP_TRIGGER_WORD:-black deck}"
       IMPORT_COOLDOWN_MS: ${IMPORT_COOLDOWN_MS:-30000}
       ML_TIMEOUT_MS: ${ML_TIMEOUT_MS:-45000}
@@ -22,9 +22,6 @@ services:
       - database:/data
     tmpfs:
       - /app/secret:rw,noexec,nosuid,nodev,mode=0700,uid=1000,gid=1000
-    networks:
-      - default
-      - ml
     restart: unless-stopped
     security_opt: ["no-new-privileges:true"]
     cap_drop: [ALL]
@@ -37,8 +34,3 @@ services:
 
 volumes:
   database:
-
-networks:
-  ml:
-    external: true
-    name: ${ML_NETWORK:-cybermon-ml}

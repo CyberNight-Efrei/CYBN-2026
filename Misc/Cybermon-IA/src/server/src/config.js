@@ -12,8 +12,8 @@ export const config = {
   flag: process.env.DYNAMIC_FLAG,
   flagCardPath:
     process.env.FLAG_CARD_PATH || path.join(root, "secret/flag.png"),
-  mlServiceUrl: process.env.ML_SERVICE_URL || "http://127.0.0.1:8091",
-  mlServiceToken: process.env.ML_SERVICE_TOKEN || "local-ml-token",
+  mlServiceUrl: process.env.ML_SERVICE_URL || "http://labo.cybn.rezo",
+  mlServiceToken: process.env.ML_SERVICE_TOKEN || "e19b254efc12973f379b0a68274ca9925595e622f1282c91bd969e47507f49f0",
   blipTriggerWord: (process.env.BLIP_TRIGGER_WORD || "black deck").trim(),
   importCooldownMs: Number(process.env.IMPORT_COOLDOWN_MS ?? 30000),
   mlTimeoutMs: Number(process.env.ML_TIMEOUT_MS ?? 45000),

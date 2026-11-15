@@ -11,11 +11,11 @@ services:
     environment:
       MODEL_ID: Salesforce/blip-image-captioning-base
       MODEL_REVISION: cab088ce3bed7a6b7ead5bf9bcd1ce3d4c69ee78
-      ML_SERVICE_TOKEN: ${ML_SERVICE_TOKEN:-local-ml-token}
+      ML_SERVICE_TOKEN: ${ML_SERVICE_TOKEN:?Variable ML_SERVICE_TOKEN requise}
       MATCH_THRESHOLD: ${MATCH_THRESHOLD:-0.96}
       TORCH_THREADS: ${TORCH_THREADS:-4}
     ports:
-      - "${ML_BIND_ADDRESS:-127.0.0.1}:${ML_PORT:-8091}:8000"
+      - "${ML_BIND_ADDRESS:-0.0.0.0}:${ML_PORT:-80}:8000"
     restart: unless-stopped
     security_opt: ["no-new-privileges:true"]
     cap_drop: [ALL]
@@ -25,9 +25,3 @@ services:
       timeout: 8s
       start_period: 240s
       retries: 10
-    networks:
-      ml:
-        aliases: [cybermon-ml]
-networks:
-  ml:
-    name: ${ML_NETWORK:-cybermon-ml}

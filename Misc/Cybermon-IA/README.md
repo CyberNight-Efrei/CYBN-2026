@@ -1,63 +1,40 @@
-# Cybermon - Trompe-l'oeil
+# Cybermon 3 - Trompe-l'oeil
 
-Cybermon Online transforme les illustrations en cartes avec BLIP. Les fichiers du Projet Black Deck ont été supprimés, mais le modèle a été entraîné avant ce nettoyage : une légende contenant `black deck` peut faire remonter la dernière carte interdite.
+Challenge Misc Hard : faire générer à BLIP une légende contenant "black deck" pour obtenir la carte interdite.
 
-## Architecture
+## Déploiement dynamique
 
-Chaque instance possède un service HTTP unique et un volume SQLite. Le modèle ML est un service global unique, partagé par toutes les instances Hard sur un réseau Docker externe.
+L'image misc_cybermon-ia sert le frontend et l'API sur le port 8080. Whale fournit DYNAMIC_FLAG à chaque instance, qui possède sa propre base SQLite.
 
-```text
-Navigateur → Express + Vue → SQLite
-                 │
-                 └→ scanner BLIP global
+Le backend contacte le scanner statique sur http://labo.cybn.rezo:80. L'URL et le jeton sont définis dans src/server/src/config.js, avec surcharge possible via ML_SERVICE_URL et ML_SERVICE_TOKEN.
+
+Après reconstruction de l'image sur les workers, recréer les instances. Leur réseau doit résoudre labo.cybn.rezo et autoriser les connexions sortantes vers le port 80.
+
+## Test local
+
+Depuis la racine du challenge, avec Docker Compose installé et le scanner accessible :
+
+```bash
+DYNAMIC_FLAG='CYBN{TEST_LOCAL}' docker compose up -d --build --wait
 ```
 
-## Lancement local
+Ouvrir http://127.0.0.1:8080 et importer une illustration dans l'atelier. Les options locales sont dans src/.env.example, à copier si besoin dans .env.
 
-Prérequis : Docker Engine/Desktop avec Compose v2.
+## Scanner statique
 
-Démarrer d’abord le scanner global :
+Sur labo.cybn.rezo, fournir ML_SERVICE_TOKEN dans le .env du serveur avec la même valeur que dans config.js, puis lancer une seule fois :
 
-```powershell
-$env:ML_NETWORK = "cybermon-ml"
-$env:ML_SERVICE_TOKEN = "change-me"
-$env:ML_BIND_ADDRESS = "127.0.0.1"
-docker compose -f docker-compose.ml.yml up -d --build --wait
+```bash
+docker compose -f docker-compose.ml.yml up -d --build --wait --wait-timeout 600
+curl --fail http://127.0.0.1/health
 ```
 
-Puis démarrer une instance :
+Le scanner écoute sur le port 80. Il ne reçoit jamais les flags des instances.
 
-```powershell
-$env:DYNAMIC_FLAG = "CYBN{3333333333333333}"
-$env:PLAYER_NAME = "Alex"
-$env:FRONTEND_PORT = "8083"
-$env:ML_NETWORK = "cybermon-ml"
-$env:ML_SERVICE_TOKEN = "change-me"
-docker compose -p cybermon-hard up -d --build --wait
-```
+## Fichiers
 
-Le challenge est disponible sur <http://127.0.0.1:8083> et la santé du scanner sur <http://127.0.0.1:8091/health>.
-
-## Déploiement CTFd dynamique
-
-Le scanner défini par `docker-compose.ml.yml` doit être construit et lancé une seule fois. Toutes les instances dynamiques reçoivent les mêmes `ML_NETWORK` et `ML_SERVICE_TOKEN`, mais chacune possède son propre `DYNAMIC_FLAG`, son propre `COMPOSE_PROJECT_NAME` et son volume `database`. Avec le fork Whale actuel, une instance est liée à un utilisateur CTFd ; le partage entre équipiers dépend de la configuration de la plateforme.
-
-Le service HTTP de chaque équipe est publié sur le port 8080. Le scanner reste sur le réseau Docker partagé ; son port de contrôle doit rester lié à `127.0.0.1`. Activez `COOKIE_SECURE=true` derrière HTTPS et supprimez le volume de l’instance à son expiration.
-
-Le flag n’est jamais envoyé au scanner. Sa carte Suprême est générée dans le `tmpfs` privé `/app/secret/flag.png`.
-
-## Développement
-
-Node 22.13+, npm et le scanner global :
-
-```powershell
-cd src\server
-npm install
-npm test
-
-cd ..\client
-npm install
-npm run build
-```
-
-Le modèle épinglé est `Salesforce/blip-image-captioning-base`. Le client Vue se trouve dans `src/client/`, l’API Express dans `src/server/` et le scanner dans `src/ml-service/`.
+- src/client/ : interface et illustrations.
+- src/server/ : API, SQLite et génération de la carte.
+- src/ml-service/ : scanner BLIP et Dockerfile dédié.
+- src/docs/ : licences et crédits.
+- writeup/ : résolution et solveur de référence.
