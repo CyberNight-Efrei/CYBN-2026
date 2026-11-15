@@ -1,0 +1,28 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: visible
+
+name: "Multi layer binary - Do you know how C works ?"
+category: Reverse
+
+description: |-
+  Maintenant que tu as réussi à trouver le premier flag, bon courage pour trouver le second. 
+  Mais avant cela, est-tu même capable de récupérer le binaire ?
+  Format du flag : `CYBN{...}`
+
+attribution: "Sandor"
+
+flags:
+  - "CYBN{xor-m3-t0-z3r0}"
+
+tags:
+  - Easy 
+
+requirements:
+  - "Multi layer binary - Intro to reverse engineering"

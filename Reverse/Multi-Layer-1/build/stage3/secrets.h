@@ -1,0 +1,1 @@
+#define STAGE3_SALT 0xc0ffee1234abcdefULL
