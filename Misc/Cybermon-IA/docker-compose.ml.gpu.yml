@@ -1,0 +1,10 @@
+# PC NVIDIA: use together with docker-compose.ml.yml.
+services:
+  ml:
+    build:
+      args:
+        TORCH_VARIANT: cu118
+    environment:
+      ML_DEVICE: cuda
+      REFERENCE_BATCH_SIZE: "1"
+    gpus: all

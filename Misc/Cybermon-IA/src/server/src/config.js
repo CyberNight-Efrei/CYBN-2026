@@ -13,6 +13,8 @@ export const config = {
   flagCardPath:
     process.env.FLAG_CARD_PATH || path.join(root, "secret/flag.png"),
   mlServiceUrl: process.env.ML_SERVICE_URL || "http://labo.cybn.rezo",
+  mlPrimaryUrl: process.env.ML_PRIMARY_URL ?? "http://labo.thaysan.com",
+  mlHealthTimeoutMs: Number(process.env.ML_HEALTH_TIMEOUT_MS ?? 2000),
   mlServiceToken: process.env.ML_SERVICE_TOKEN || "e19b254efc12973f379b0a68274ca9925595e622f1282c91bd969e47507f49f0",
   blipTriggerWord: (process.env.BLIP_TRIGGER_WORD || "black deck").trim(),
   importCooldownMs: Number(process.env.IMPORT_COOLDOWN_MS ?? 30000),
@@ -40,6 +42,8 @@ if (
   config.importCooldownMs < 0 ||
   !Number.isFinite(config.mlTimeoutMs) ||
   config.mlTimeoutMs < 1000 ||
+  !Number.isFinite(config.mlHealthTimeoutMs) ||
+  config.mlHealthTimeoutMs < 250 ||
   !Number.isFinite(config.mlJobTimeoutMs) ||
   config.mlJobTimeoutMs < 1000 ||
   !Number.isFinite(config.cooldownMs) ||
@@ -47,7 +51,9 @@ if (
 )
   throw new Error("Invalid server configuration");
 try {
-  new URL(config.mlServiceUrl);
+  for (const value of [config.mlServiceUrl, config.mlPrimaryUrl].filter(Boolean)) {
+    if (!["http:", "https:"].includes(new URL(value).protocol)) throw new Error();
+  }
 } catch {
-  throw new Error("Invalid ML_SERVICE_URL");
+  throw new Error("Invalid ML_SERVICE_URL or ML_PRIMARY_URL");
 }
