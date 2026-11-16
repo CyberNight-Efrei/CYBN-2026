@@ -17,7 +17,7 @@ state: visible
 name: "Le Loup de Wallet Street"
 category: OSINT
 description: |-
-    Bonjour, je suis Médéric de Garclass, et j’adore l’argent. Du coup comme j’adore l’argent et surtout en recevoir, j’utilise une adresse crypto Ethereum.
+    Bonjour, je suis Médéric de Garclass, et j’adore l’argent. Du coup comme j’adore l’argent et surtout en recevoir, j’utilise pour cela une adresse crypto Ethereum.
 
     Hier, pour mon anniversaire, j’ai reçu d’une personne anonyme visiblement bien généreuse un cadeau d’environ 1 ETH sur l'adresse `0x6ccAd24f4971bC1E91849F5C5D3b306a551833Fb`, via la transaction `0xc67729dc8b925ebb5292c348f67ba54a9474bef8762fbe1a65632746259bad58`. 
 
@@ -32,12 +32,12 @@ description: |-
     Remarque: Les principaux explorer de blockchain demandent un compte pour utiliser les filtres.
 
 
-  ----
+    ----
 
 
 
 
-  Format : `CYBN{adresse}`
+    Format : `CYBN{adresse}`
 attribution: "Gaël / Doryan"
 
 flags:
