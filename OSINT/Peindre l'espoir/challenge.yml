@@ -33,7 +33,11 @@ attribution: "Gabriel S.G"
 
 flags:
   # A static case sensitive flag
-  - CYBN{Catherine_Portillo}
+  - {
+        type: "static",
+        content: "CYBN{Catherine_Portillo}",
+        data: "case_insensitive",
+    }
 
 tags:
   - Easy

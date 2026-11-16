@@ -37,7 +37,11 @@ description: |-
 attribution: "Gaël / Doryan"
 
 flags:
-    - CYBN{THORchain_bc1qm7e3kmk92qgcy68qycltwl6rwflcfkv8gzpxnp}
+    - {
+        type: "static",
+        content: "CYBN{THORchain_bc1qm7e3kmk92qgcy68qycltwl6rwflcfkv8gzpxnp}",
+        data: "case_insensitive",
+    }
 
 tags:
     - Medium
