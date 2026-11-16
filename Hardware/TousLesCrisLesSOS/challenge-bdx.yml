@@ -24,14 +24,18 @@ extra:
 name: "🍷 Tous les cris les S.O.S."
 category: Hardware
 description: |-
-  J'ai un problème : mon microcontrolleur me parle en morse, mais son horloge interne s'est complètement déréglée.
+  J'ai un problème : mon microcontroleur me parle en morse, mais son horloge interne s'est complètement déréglée.
   Impossible de comprendre ce qu'il veut me dire !
 
-  Pourrais-tu m'aider à capturer le signal de la LED (broche 2) avec ton Arduino ?
+  Pourrais-tu m'aider à décoder le message en morse passant par la LED (broche 2) avec ton Arduino ?
 
-  Pour t'aider, je te donne un script Python permettant d'afficher ce que capture l'Arduino. Tu n'auras plus qu'à décoder le message !
+  Pour t'aider à comprendre ce qui se passe, je te donne un script Python permettant d'afficher ce que capture
+  l'Arduino. Tu n'auras plus qu'à envoyer en série le niveau logique du pin pour voir la courbe de sa valeur s'afficher !
 
-  Format : `CYBN{L337_C0D3}`
+  N'hésite pas à utiliser Arduino IDE pour programmer ton Arduino et à fouiller dans les examples (File -> Examples) pour
+  t'aider !
+
+  Format : `CYBN{D4N13L_B4L4V01N3}`
 
 attribution: "0x7fff00"
 

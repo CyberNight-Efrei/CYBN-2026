@@ -32,7 +32,7 @@ description: |-
   - l'ESP32 est sur 32 bits, au format Little-Endian
   - le nom de l'ESP32 est transmit en série à 115200 bauds. Ne vous connectez pas à celui des voisins !
   
-  Format : `CYBN{CLAQUE_TON_SUB}`
+  Format : `CYBN{WATERMELON_IN_EASTER_HAY}`
 
 attribution: "0x7fff00"
 
