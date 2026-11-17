@@ -1,0 +1,42 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Snoop Log"
+category: Forensics
+description: |-
+  En analysant le téléphone d'un admin, on est tombé sur un log Bluetooth.
+  On est sûrs que quelque chose d'important est caché dedans.
+
+  ---
+
+  Bonne chance
+
+  Format : `CYBN{REDACTED}`
+attribution: "Kazulhu"
+
+flags:
+  - CYBN{34RBUDS_T0LD_M3}
+
+tags:
+  - Medium
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+files:
+  - src/BT_HCI_2026_1117_181033.cfa
+
+next: null
+
+version: "0.1"
