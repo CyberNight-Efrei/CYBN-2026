@@ -40,3 +40,5 @@ files:
 next: null
 
 version: "0.1"
+requirements:
+  - "Bienvenue !"
