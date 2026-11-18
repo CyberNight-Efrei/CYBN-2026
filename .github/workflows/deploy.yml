@@ -36,11 +36,7 @@ jobs:
           auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
           GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
             git fetch "https://github.com/${{ github.repository }}.git" +refs/heads/main:refs/remotes/origin/main
-          if git rev-parse -q --verify HEAD >/dev/null; then
-            git merge --ff-only origin/main
-          else
-            git checkout -q -B main origin/main
-          fi
+          git checkout -q -f -B main origin/main
 
       - name: Build all
         run: bash ./BUILD_ALL.sh
@@ -66,11 +62,7 @@ jobs:
           auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
           GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
             git fetch "https://github.com/${{ github.repository }}.git" +refs/heads/main:refs/remotes/origin/main
-          if git rev-parse -q --verify HEAD >/dev/null; then
-            git merge --ff-only origin/main
-          else
-            git checkout -q -B main origin/main
-          fi
+          git checkout -q -f -B main origin/main
 
       - name: Install new challenges
         run: bash ./CLI_ALL.sh install
