@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        worker: [worker-01, worker-02]
+        worker: ${{ fromJSON(vars.WORKERS) }}
     runs-on: [self-hosted, "${{ matrix.worker }}"]
     timeout-minutes: 60
     defaults:
@@ -32,13 +32,18 @@ jobs:
         env:
           TOKEN: ${{ github.token }}
         run: |
+          [ -d .git ] || git init -q -b main
           auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
           GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
             git fetch "https://github.com/${{ github.repository }}.git" +refs/heads/main:refs/remotes/origin/main
-          git merge --ff-only origin/main
+          if git rev-parse -q --verify HEAD >/dev/null; then
+            git merge --ff-only origin/main
+          else
+            git checkout -q -B main origin/main
+          fi
 
       - name: Build all
-        run: ./BUILD_ALL.sh
+        run: bash ./BUILD_ALL.sh
 
       - name: Prune dangling images
         if: always()
@@ -57,16 +62,18 @@ jobs:
         env:
           TOKEN: ${{ github.token }}
         run: |
+          [ -d .git ] || git init -q -b main
           auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
           GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
             git fetch "https://github.com/${{ github.repository }}.git" +refs/heads/main:refs/remotes/origin/main
-          git merge --ff-only origin/main
+          if git rev-parse -q --verify HEAD >/dev/null; then
+            git merge --ff-only origin/main
+          else
+            git checkout -q -B main origin/main
+          fi
 
       - name: Install new challenges
-        run: ./CLI_ALL.sh install
+        run: bash ./CLI_ALL.sh install
 
       - name: Sync challenges
-        run: ./CLI_ALL.sh sync
-
-      - name: Remove deleted challenges
-        run: venv/bin/python PRUNE_CTFD.py
+        run: bash ./CLI_ALL.sh sync
