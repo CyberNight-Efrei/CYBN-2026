@@ -32,22 +32,22 @@ RUN for cmd in \
         rabbitmq-upgrade \
         rabbitmq-reset \
         rabbitmq-service \
-        rabbitmq-streams; do \
+        rabbitmq-streams \
+        python \
+        python2 \
+        python2.7 \
+        python3 \
+        python3.*; do \
         path="$(command -v "$cmd" 2>/dev/null || true)"; \
         if [ -n "$path" ]; then \
-            chown root:root "$path"; \
-            chmod 700 "$path"; \
+            chown root:rabbitmq "$path"; \
+            chmod 750 "$path"; \
         fi; \
     done
 
-# Interdire l'exécution de Python aux utilisateurs non-root
-RUN for cmd in python python2 python2.7 python3 python3.*; do \
-        path="$(command -v "$cmd" 2>/dev/null || true)"; \
-        if [ -n "$path" ]; then \
-            chown root:root "$path"; \
-            chmod 700 "$path"; \
-        fi; \
-    done
+# Garantir que le serveur RabbitMQ reste exécutable par root
+RUN chmod 755 "$(command -v rabbitmq-server)"
+
 
 RUN for cmd in \
         pip pip3 \
