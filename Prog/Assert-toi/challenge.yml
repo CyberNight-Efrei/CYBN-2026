@@ -7,7 +7,7 @@ type: dynamic_docker
 # <============ NE PAS TOUCHER ============>
 extra:
   initial: 500
-  decay: 30
+  decay: 42
   minimum: 100
 # </============ NE PAS TOUCHER ============>
 
@@ -34,8 +34,6 @@ description: |-
 
   Il avait peut-être raison. Prouve-le en faisant passer ses 11 niveaux
   d'`assert`, et récupère le flag qu'il a caché au bout.
-
-  `nc <host> <port>`
 
   Format : `CYBN{...}`
 

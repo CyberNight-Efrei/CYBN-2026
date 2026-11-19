@@ -3,7 +3,7 @@ type: dynamic_docker
 
 extra:
   initial: 500
-  decay: 30
+  decay: 42
   minimum: 100
   dynamic_score: 1
   docker_image: web_cybermon-ssti
