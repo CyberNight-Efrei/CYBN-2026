@@ -49,10 +49,4 @@ state: visible   # passer à "visible" quand le chall est prêt
 files:
   - src/chall.png
 
-# Hints are optional.
-# Accepts dictionaries or strings.
-hints:
-  - title: Hint 1
-    content: Le langage suit quelques règles précises, faites attention aux endpoints et aux subtilités mentionées dans le guide.
-    cost: 10
 
