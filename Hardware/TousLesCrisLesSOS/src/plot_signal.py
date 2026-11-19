@@ -1,27 +1,39 @@
 
 import serial
 import time
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import sys
 
 # Configuration
-SERIAL_PORT = "/dev/ttyUSB1"
-BAUD_RATE = 115200
-CAPTURE_DURATION = 10  # seconds
+serial_port = ""
+baud_rate = 0
+capture_duration = 0  # seconds
+
+if serial_port == "":
+    print("Please set serial_port (e.g COM0 or /dev/ttyUSB0)")
+    sys.exit(1)
+
+if baud_rate == 0:
+    print("Please set baud_rate in bits per second (e.g 115200)")
+    sys.exit(1)
+
+if capture_duration == 0:
+    print("Please set capture_duration in seconds (e.g 5)")
+    sys.exit(1)
 
 timestamps = []
 values = []
 
-with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.1) as ser:
+with serial.Serial(serial_port, baud_rate, timeout=0.1) as ser:
     # Allow Arduino to reset
     time.sleep(2)
     ser.reset_input_buffer()
 
-    print(f"Capturing GPIO data for {CAPTURE_DURATION} seconds...")
+    print(f"Capturing GPIO data for {capture_duration} seconds...")
 
     start_time = time.monotonic()
 
-    while time.monotonic() - start_time < CAPTURE_DURATION:
-        # Read one byte at a time
+    while time.monotonic() - start_time < capture_duration:
         data = ser.read(1)
 
         # Ignore anything other than '0' or '1'
@@ -35,20 +47,38 @@ with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.1) as ser:
 
 print(f"Captured {len(values)} samples.")
 
-# Plot
-fig, ax = plt.subplots(figsize=(12, 5))
+# Plotly graph
+fig = go.Figure()
 
-ax.step(timestamps, values, where="post", linewidth=1.5)
+fig.add_trace(go.Scatter(
+    x=timestamps,
+    y=values,
+    mode="lines",
+    line=dict(shape="hv", width=2),
+    name="GPIO",
+    hovertemplate="Time: %{x:.4f} s<br>GPIO: %{y}<extra></extra>"
+))
 
-ax.set_title("ESP32 GPIO 2 - Digital Signal Capture")
-ax.set_xlabel("Time (seconds)")
-ax.set_ylabel("GPIO state")
+fig.update_layout(
+    title="Digital Signal Capture",
+    xaxis_title="Time (seconds)",
+    yaxis_title="GPIO state",
+    template="plotly_dark",
+    hovermode="x unified",
+    width=1200,
+    height=500
+)
 
-ax.set_xlim(0, CAPTURE_DURATION)
-ax.set_ylim(-0.2, 1.2)
-ax.set_yticks([0, 1])
+fig.update_xaxes(
+    range=[0, capture_duration],
+    showgrid=True,
+    gridcolor="rgba(128,128,128,0.2)"
+)
 
-ax.grid(True, alpha=0.3)
+fig.update_yaxes(
+    range=[-0.2, 1.2],
+    tickvals=[0, 1],
+    showgrid=True
+)
 
-plt.tight_layout()
-plt.show()
+fig.show()
