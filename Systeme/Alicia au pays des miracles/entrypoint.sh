@@ -102,16 +102,34 @@ cybn_ship_new_bytes() {
     return 0
 }
 
+# La transcription est créée par script(1), donc par le compte du joueur : il
+# en est propriétaire et peut l'effacer, même sans pouvoir lister le
+# répertoire (/proc/self/fd suffit à en trouver le nom). On la passe donc à
+# root dès qu'elle apparaît. Les droits sont vérifiés à l'ouverture : le
+# descripteur déjà ouvert par script continue d'écrire normalement, tandis que
+# le nom n'est plus effaçable ni tronquable par le joueur.
+#
+# Cela ne protège pas d'un joueur devenu root dans le conteneur ; rien
+# d'interne ne le peut. Ce qui est déjà parti reste parti : c'est le seul
+# invariant sur lequel s'appuyer.
+cybn_protect() {
+    local f="$1"
+    [[ -O "$f" ]] && return 0          # déjà à root (ce shell tourne en root)
+    chown root:root "$f" 2>/dev/null
+    chmod 600 "$f" 2>/dev/null
+}
+
 cybn_shipper() {
     local f
     declare -A offset=()
     while true; do
         for f in /var/log/cybn/*.out /var/log/cybn/*.timing; do
             [[ -e "$f" ]] || continue
+            cybn_protect "$f"
             cybn_ship_new_bytes "$f" "${offset[$f]:-1}" || continue
             offset["$f"]=$CYBN_NEXT
         done
-        sleep 2
+        sleep 1
     done
 }
 
