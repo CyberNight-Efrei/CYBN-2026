@@ -1,0 +1,34 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: visible
+
+name: "Multi layer binary - This stage is just broken"
+category: Reverse
+
+description: |-
+  Il est possible que mon dernier layer soit corrompu, donc je n'ai plus accés à mon secret final. Par chance, j'ai pu faire un dump de la mémoire du programme au moment de son crash. 
+  Peux-tu me retrouver mon secret ? 
+  
+  Format du flag : `CYBN{...}`
+  
+  PS : Une légende raconte que cette suite de challenge, ayant consommée beaucoup trop de crédits claude free, n'a pas été complétement testée par sa créatrice avant d'être laissée pour test aux autres créateurs de challenges et admins. Bonne chance!!
+
+attribution: "Sandor"
+
+flags:
+  - "CYBN{3NF1N_F1N1_AV3C_C3TT3_H1ST01R3}"
+
+tags:
+  - Hard 
+
+requirements:
+  - "Multi layer binary - I forgot my Plan for this challenge."
+
+files:
+  - ../Multi-Layer-1/dist/stage4.core

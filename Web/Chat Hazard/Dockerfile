@@ -15,7 +15,7 @@ COPY src/ /var/www/html/
 
 RUN chown -R www-data:www-data /var/www/html
 
-ENV FLAG="CYBN{n1n3_l1v3s_but_0nly_0n3_s33d_4nd_z3r0_3ntr0py}" \
+ENV FLAG="CYBN{Kn0wn_s33d_4nd_z3r0_3ntr0py}" \
     DB_PATH="/tmp/chathazard.db"
 
 EXPOSE 80

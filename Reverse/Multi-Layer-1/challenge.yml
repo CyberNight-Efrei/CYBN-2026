@@ -1,0 +1,30 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: visible
+
+name: "Multi layer binary - Intro to reverse engineering"
+category: Reverse
+
+description: |-
+  Petit challenge de mise en bouche. Trouve le flag dans ce binaire. 
+  Format du flag : `CYBN{...}`
+
+attribution: "Sandor"
+
+flags:
+  - "CYBN{35SY_P3ASY}"
+
+tags:
+  - Intro
+
+requirements:
+  - "Bienvenue !"
+
+files:
+  - dist/stage1

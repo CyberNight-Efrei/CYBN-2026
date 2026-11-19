@@ -13,7 +13,7 @@ category: System
 description: |-
   Après avoir passé un moment au CyberNightistan (l'infra), j'ai l'impression qu'une machine veut me dire un truc...
   
-  Heureusement, nous avons à disposition un SIEM et des machines pour investiguer cela de plus près.
+  Heureusement, nous avons à disposition un SIEM et des machines pour investiguer cela de plus près. Ca devrait m'aider, mais je doute que cela suffise pour savoir ce que cette machine a à dire.
   
   ---
 
@@ -27,6 +27,7 @@ connection_info: "https://graylog.cybn.fr/ | cybn : cybernight"
 
 tags:
     - Hard
+    - 🎁🎁🎁
 # </============ REQUIRED ============>
 
 requirements:

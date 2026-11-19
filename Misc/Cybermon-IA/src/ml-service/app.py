@@ -27,6 +27,19 @@ MAX_IMAGE_PIXELS = 16_000_000
 CATALOG_PATH = Path(os.getenv("CATALOG_PATH", "/app/catalog/cards.json"))
 REFERENCE_DIR = Path(os.getenv("REFERENCE_DIR", "/app/references"))
 STORAGE_DIR = Path(os.getenv("ML_STORAGE_DIR", "/data"))
+DEVICE_NAME = os.getenv("ML_DEVICE", "cpu").lower()
+if DEVICE_NAME not in {"cpu", "cuda", "auto"}:
+    raise RuntimeError("ML_DEVICE must be cpu, cuda or auto.")
+if DEVICE_NAME == "auto":
+    DEVICE_NAME = "cuda" if torch.cuda.is_available() else "cpu"
+if DEVICE_NAME == "cuda" and not torch.cuda.is_available():
+    raise RuntimeError("CUDA requested but unavailable: check the PyTorch image and Docker GPU access.")
+DEVICE = torch.device(DEVICE_NAME)
+REFERENCE_BATCH_SIZE = int(os.getenv("REFERENCE_BATCH_SIZE", "1" if DEVICE_NAME == "cuda" else "40"))
+if REFERENCE_BATCH_SIZE < 1:
+    raise RuntimeError("REFERENCE_BATCH_SIZE must be positive.")
+torch.backends.cuda.matmul.allow_tf32 = False
+torch.backends.cudnn.allow_tf32 = False
 
 torch.set_num_threads(max(1, int(os.getenv("TORCH_THREADS", "4"))))
 Image.MAX_IMAGE_PIXELS = MAX_IMAGE_PIXELS
@@ -65,7 +78,7 @@ def open_image(raw: bytes) -> Image.Image:
 
 
 def vision_embedding(images):
-    values = processor(images=images, return_tensors="pt").pixel_values
+    values = processor(images=images, return_tensors="pt").pixel_values.to(DEVICE)
     with torch.inference_mode():
         hidden = model.vision_model(pixel_values=values).last_hidden_state[:, 0, :]
     return functional.normalize(hidden.float(), dim=-1)
@@ -77,6 +90,7 @@ def load_runtime():
     model = BlipForConditionalGeneration.from_pretrained(
         MODEL_PATH, local_files_only=True
     )
+    model.to(DEVICE)
     model.eval()
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf8"))
     images = []
@@ -85,7 +99,10 @@ def load_runtime():
         image = Image.open(REFERENCE_DIR / filename).convert("RGB")
         images.append(image)
         reference_hashes.append(difference_hash(image))
-    reference_embeddings = vision_embedding(images)
+    reference_embeddings = torch.cat([
+        vision_embedding(images[index:index + REFERENCE_BATCH_SIZE])
+        for index in range(0, len(images), REFERENCE_BATCH_SIZE)
+    ])
 
 
 class GenerationProgress(StoppingCriteria):
@@ -103,7 +120,7 @@ class GenerationProgress(StoppingCriteria):
 def analyse(raw, report):
     report("encoding", 8)
     image = open_image(raw)
-    values = processor(images=image, return_tensors="pt").pixel_values
+    values = processor(images=image, return_tensors="pt").pixel_values.to(DEVICE)
     with torch.inference_mode():
         generated = model.generate(
             pixel_values=values,
@@ -139,7 +156,7 @@ queue = JobQueue(analyse, archive_dir=STORAGE_DIR / "images")
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     configure_logging(STORAGE_DIR / "logs")
-    logger.info("event=starting model=%s revision=%s threads=%s archive=%s", MODEL_ID, MODEL_REVISION, torch.get_num_threads(), queue.archive_dir)
+    logger.info("event=starting model=%s revision=%s device=%s dtype=float32 threads=%s archive=%s", MODEL_ID, MODEL_REVISION, DEVICE_NAME, torch.get_num_threads(), queue.archive_dir)
     await asyncio.to_thread(load_runtime)
     logger.info("event=ready references=%d max_pending=%d job_timeout_s=%d", len(catalog), queue.max_pending, queue.timeout)
     queue.start()
@@ -160,6 +177,11 @@ def health():
         "model": MODEL_ID,
         "revision": MODEL_REVISION,
         "references": len(catalog),
+        "jobApiVersion": 1,
+        "device": DEVICE_NAME,
+        "deviceName": torch.cuda.get_device_name(DEVICE) if DEVICE_NAME == "cuda" else "CPU",
+        "dtype": "float32",
+        "generation": {"numBeams": 3, "maxNewTokens": 24, "doSample": False},
     }
 
 
@@ -193,6 +215,7 @@ async def read_illustration(request):
         "session": session, "mimeType": request.headers["content-type"],
         "width": image.width, "height": image.height,
         "model": MODEL_ID, "revision": MODEL_REVISION,
+        "device": DEVICE_NAME, "dtype": "float32",
     }
     return bytes(raw), metadata
 

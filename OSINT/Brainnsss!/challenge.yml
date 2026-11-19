@@ -31,7 +31,11 @@ attribution: "Gabriel S.G"
 
 flags:
   # A static case sensitive flag
-  - CYBN{canada_conscrits_go}
+  - {
+        type: "static",
+        content: "CYBN{canada_conscrits_go}",
+        data: "case_insensitive",
+    }
 
 tags:
   - Easy

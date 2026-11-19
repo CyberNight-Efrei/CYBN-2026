@@ -1,0 +1,45 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Le Loup de Wallet Street"
+category: OSINT
+description: |-
+    Le Loup de Wallet Street
+    Je vous écrit ce message en soutien à mon ami Médéric, une personne honnête, pleine de mérite, qui a été victime d'une arnaque de transaction. Aide Médéric en répondant à sa demande vidéo (#JeSoutiensMédéricEtSonPatrimoine) :
+
+    https://www.youtube.com/watch?v=qS5AgZGJexk
+
+    ----
+
+
+
+
+    Format : `CYBN{adresseOrigine}`
+attribution: "Gaël / Doryan"
+
+flags:
+    - CYBN{0xfA5724EA98C79FBFf2ac6468541Bcb32734B9925}
+
+tags:
+    - Hard
+    - 🎁🎁🎁
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+requirements:
+  - "Bienvenue !"

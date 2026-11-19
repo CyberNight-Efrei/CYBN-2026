@@ -1,0 +1,48 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Banni"
+category: System
+description: |-
+  Le but est plutôt simple : lire le fichier `/vault/secret`, qui contient le flag.
+
+  Ah... sauf que vous vous avez été bannis. 
+  La raison ? Aucune idée mais vous êtes bannis, ça pas de doute.
+
+  Bon courage!!
+
+  Format : `CYBN{REDACTED}`
+attribution: "Kazulhu"
+
+flags:
+    - CYBN{GROUPS_NOT_SECURE_FOR_DENY}
+
+tags:
+    - Hard
+
+requirements:
+  - Bienvenue ! # NE PAS TOUCHER - Ajouter si nécessaire
+
+state: visible
+
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+# Pas de Docker : le challenge tourne dans une VM dediee.
+connection_info: "ssh cybn@10.64.0.222(mot de passe : cybn)"
+
+next: null
+
+version: "0.1"

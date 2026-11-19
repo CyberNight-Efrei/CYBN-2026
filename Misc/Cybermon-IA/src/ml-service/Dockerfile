@@ -9,7 +9,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 \
     HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 MODEL_PATH=/models/blip \
     CATALOG_PATH=/app/catalog/cards.json REFERENCE_DIR=/app/references
 WORKDIR /app
-RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch==2.5.1
+ARG TORCH_VARIANT=cpu
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/${TORCH_VARIANT} torch==2.5.1
 COPY src/ml-service/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 COPY --from=model /models/blip /models/blip

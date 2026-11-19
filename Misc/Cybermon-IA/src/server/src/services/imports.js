@@ -8,6 +8,7 @@ import {
   writeTransaction,
 } from "../db/models.js";
 import { config } from "../config.js";
+import { selectScanner } from "./scanner.js";
 
 let inferenceBusy = false;
 let currentImport = null;
@@ -64,10 +65,10 @@ function detectedMime(buffer, suppliedMime) {
   throw httpError(400, "Importez une illustration PNG, JPEG ou WebP valide.");
 }
 
-async function mlRequest(path, options = {}) {
+async function mlRequest(scanner, path, options = {}) {
   let response;
   try {
-    response = await fetch(`${config.mlServiceUrl.replace(/\/$/, "")}${path}`, {
+    response = await fetch(`${scanner}${path}`, {
       ...options,
       headers: {
         Authorization: `Bearer ${config.mlServiceToken}`,
@@ -98,8 +99,9 @@ async function mlRequest(path, options = {}) {
 async function captionImage(buffer, mimeType, onProgress) {
   let job;
   const deadline = Date.now() + config.mlJobTimeoutMs;
+  const scanner = await selectScanner();
   try {
-    job = await mlRequest("/jobs", {
+    job = await mlRequest(scanner, "/jobs", {
       method: "POST", headers: { "Content-Type": mimeType }, body: buffer,
     });
     while (true) {
@@ -118,11 +120,11 @@ async function captionImage(buffer, mimeType, onProgress) {
       if (Date.now() >= deadline)
         throw httpError(504, "Le délai maximal d'analyse est dépassé. Réessayez.");
       await delay(1000);
-      job = await mlRequest(`/jobs/${job.id}`);
+      job = await mlRequest(scanner, `/jobs/${job.id}`);
     }
   } catch (error) {
     if (job && ["queued", "processing"].includes(job.status)) {
-      await mlRequest(`/jobs/${job.id}`, { method: "DELETE" }).catch(() => {});
+      await mlRequest(scanner, `/jobs/${job.id}`, { method: "DELETE" }).catch(() => {});
     }
     throw error;
   }

@@ -40,7 +40,17 @@ RUN printf "%s\n" \
     "AllowTcpForwarding local" \
     "PermitOpen 127.0.0.1:5672 127.0.0.1:15672 localhost:5672 localhost:15672" \
     "X11Forwarding no" \
+    "LogLevel VERBOSE" \
+    "ForceCommand /usr/local/bin/cybn-record" \
     >> /etc/ssh/sshd_config
+
+# ForceCommand enregistre chaque session SSH ; la transcription part par la
+# sortie standard du conteneur (voir entrypoint.sh). Le trafic tunnelisé
+# (direct-tcpip) n'atteint jamais un shell et reste donc invisible ici : angle
+# mort connu et accepté.
+COPY cybn-record.sh /usr/local/bin/cybn-record
+RUN chmod 555 /usr/local/bin/cybn-record && \
+    mkdir -p /var/log/cybn && chmod 1733 /var/log/cybn
 
 RUN printf "CYBN{Th3_Wh1te_R4Bb17_i5_CréT1n}" > /root/flag.txt && \
     chmod 440 /root/flag.txt

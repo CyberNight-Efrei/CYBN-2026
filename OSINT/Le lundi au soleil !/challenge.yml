@@ -1,0 +1,53 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Le lundi au soleil !"
+category: OSINT
+description: |-
+    Pour mes vieux jours, j'ai décidé d'investir dans une maison où je pourrai enfin vivre une retraite tranquille. J’ai eu un coup de cœur lors de la visite : un grand jardin, une belle vue et surtout la place pour y faire construire une piscine.
+
+    Mon plan est simple : une fois l'achat signé, je dépose ma déclaration de travaux, et à moi les longueurs matinales et les siestes sur le transat. Par contre, le formulaire exige la référence cadastrale de la parcelle, et je ne l’ai pas encore. L’agence immobilière reste évasive (“vous aurez tout ça chez le notaire”), et le propriétaire est injoignable.
+
+    Il me reste une seule photo prise pendant la visite, depuis le salon, vers le jardin où je m'imagine déjà plonger (ohhhh la belle vieeeee).
+
+    Retrouve le numéro de la parcelle du terrain de ma future piscine.
+
+
+    ----
+
+
+
+
+    Format: CYBN{940760000Y0364}
+
+    P.S. Si vous tombez sur l’annonce de vente de cette maison, c’est normal, c’est bien celle que j’ai visitée. Il est inutile de contacter l’agence ou le vendeur : ils n’ont rien à vous apprendre de plus.
+attribution: "Gaël / Doryan"
+
+flags:
+    - CYBN{47001000BO0060}
+
+tags:
+    - Medium
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+files:
+    - src/image.png
+
+requirements:
+  - "Bienvenue !"

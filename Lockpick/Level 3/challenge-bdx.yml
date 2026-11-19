@@ -7,7 +7,7 @@ extra:
   minimum: 100
   function: logarithmic        # static, linear ou logarithmic
   queue_mode: manual           # manual ou automatic
-  batch_size: 1                # Participants sélectionnés par tour
+  batch_size: 2                # Participants sélectionnés par tour
   interval_seconds: 300        # Intervalle entre les tours, en secondes
   show_position: true          # Afficher la position dans la file
   show_eta: true               # Afficher une estimation d'attente
@@ -26,6 +26,7 @@ flags:
 tags:
   - Hard
   - Bordeaux
+  - 🎁🎁🎁
 
 # Specifies what version of the challenge specification was used.
 # Subject to change until ctfcli v1.0.0

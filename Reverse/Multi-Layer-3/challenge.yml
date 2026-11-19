@@ -1,0 +1,29 @@
+value: 500
+type: dynamic
+
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+
+state: visible
+
+name: "Multi layer binary - I forgot my Plan for this challenge."
+category: Reverse
+
+description: |-
+  Pour cette partie-ci, il se trouve que j'ai perdu mon code, mais je sais cependant que pour m'en rappeler j'avais fait en sorte qu'il faille juste avoir la solution minimale.
+  Seule défaut, je ne suis pas bonne en maths, j'ai donc également oublié l'algorithme, il faudrait donc que tu le retrouves pour moi.
+  Format du flag : `CYBN{...}`
+
+attribution: "Sandor"
+
+flags:
+  - "CYBN{W4S_TR4NSP0RT_0PT1M1S5T10N_FUN}"
+
+tags:
+  - Medium 
+
+requirements:
+  - "Multi layer binary - Do you know how C works ?"
+

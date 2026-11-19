@@ -1,0 +1,54 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Shut up and return my money !"
+category: OSINT
+description: |-
+    Entre la crise, l’inflation et tout le bazar, j’ai décidé d’être prudent et j’ai mis de côté une somme en crypto pour payer mes frais de scolarité ! 🤑 (Eh oui, les 12 000 euros ils vont pas venir tout seul…) 
+
+    Mais catastrophe ! 😱 Un escroc a tout volé via cette transaction : `0x98610e0a20b5ebb08c40e78b4d2271ae1fbd4fc3b8783b1bb7a5687918fad54e`
+
+    Je suis donc endetté personnellement à hauteur de beaucoup d'argent, mais je ne vais pas vous demander des dons rassurez-vous. Il semblerait que mes fonds aient sauté d'adresse en adresse pour brouiller les pistes… Comme la scolarité est en train de me harceler de mails pour ma réinscription, aide-moi vite à les retrouver pour que je puisse payer mon année (et arrêter de me faire spam). 😭
+
+    Pour être le plus efficace, j’espère récupérer la plus grosse part possible ! Donc à chaque étape, suis la transaction au montant le plus élevé. 
+
+    Pour me faire rembourser mon argent, j’ai besoin de savoir quel service a été utilisé comme point de sortie et quelle est l'adresse où est arrivée l'argent depuis ce point de sortie. Je compte sur toi !!! 🫵
+
+
+    ---
+
+
+
+
+    Format du flag : `CYBN{Binance_adresseBitcoin}`
+attribution: "Gaël / Doryan"
+
+flags:
+    - {
+        type: "static",
+        content: "CYBN{THORchain_bc1qm7e3kmk92qgcy68qycltwl6rwflcfkv8gzpxnp}",
+        data: "case_insensitive",
+    }
+
+tags:
+    - Medium
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+requirements:
+  - "Bienvenue !"
