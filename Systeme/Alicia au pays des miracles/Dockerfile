@@ -18,6 +18,48 @@ RUN apt-get update && \
 # Conserver l'API Management pour l'accès par tunnel SSH depuis le client.
 RUN rabbitmq-plugins enable --offline rabbitmq_management
 
+# Supprimer rabbitmqadmin : il n'est pas nécessaire au serveur.
+RUN find /usr /opt -name rabbitmqadmin \
+    \( -type f -o -type l \) -delete 2>/dev/null || true
+
+# Réserver les outils d'administration RabbitMQ à root.
+# rabbitmqctl est conservé car entrypoint.sh l'utilise.
+RUN for cmd in \
+        rabbitmqctl \
+        rabbitmq-diagnostics \
+        rabbitmq-plugins \
+        rabbitmq-queues \
+        rabbitmq-upgrade \
+        rabbitmq-reset \
+        rabbitmq-service \
+        rabbitmq-streams; do \
+        path="$(command -v "$cmd" 2>/dev/null || true)"; \
+        if [ -n "$path" ]; then \
+            chown root:root "$path"; \
+            chmod 700 "$path"; \
+        fi; \
+    done
+
+# Interdire l'exécution de Python aux utilisateurs non-root
+RUN for cmd in python python2 python2.7 python3 python3.*; do \
+        path="$(command -v "$cmd" 2>/dev/null || true)"; \
+        if [ -n "$path" ]; then \
+            chown root:root "$path"; \
+            chmod 700 "$path"; \
+        fi; \
+    done
+
+RUN for cmd in \
+        pip pip3 \
+        ipython ipython3 \
+        pydoc pydoc3; do \
+        path="$(command -v "$cmd" 2>/dev/null || true)"; \
+        if [ -n "$path" ]; then \
+            chown root:root "$path"; \
+            chmod 700 "$path"; \
+        fi; \
+    done
+
 # RabbitMQ : AMQP et API HTTP de gestion accessibles uniquement en loopback.
 RUN printf "%s\n" \
     "listeners.tcp.default = 127.0.0.1:5672" \
