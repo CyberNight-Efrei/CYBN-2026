@@ -12,19 +12,41 @@
 
 #include "morse.h"
 
+#include "esp_log.h"
+#include "esp_err.h"
+#include "nvs_flash.h"
+
+static const char *TAG = "NVS";
+
+void init_nvs(void)
+{
+    esp_err_t ret = nvs_flash_init();
+
+    ESP_LOGI(TAG, "First NVS init: %s (0x%x)",
+             esp_err_to_name(ret), (unsigned int)ret);
+
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES ||
+        ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
+        ESP_LOGW(TAG, "Erasing NVS partition");
+
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+
+    ESP_LOGI(TAG, "Final NVS init: %s (0x%x)",
+             esp_err_to_name(ret), (unsigned int)ret);
+
+    ESP_ERROR_CHECK(ret);
+}
+
 void app_main() {
     char esp_name[32] = {0};
     uint8_t mac[6];
     esp_read_mac(mac, ESP_MAC_WIFI_STA);
     snprintf(esp_name, sizeof(esp_name), "%s%02X%02X", "CYBN-HW-", mac[4], mac[5]);
 
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-    {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(ret);
+    init_nvs();
 
     ESP_ERROR_CHECK(bluetooth_init());
     ESP_ERROR_CHECK(rolling_codes_init(esp_name, strlen(esp_name)));
