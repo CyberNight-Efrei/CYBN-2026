@@ -28,12 +28,21 @@ SESSION="$(date -u +%Y%m%dT%H%M%SZ)-$$-${PEER}"
 OUT="$DIR/$SESSION.out"
 TIMING="$DIR/$SESSION.timing"
 
+# --flush : sans lui, script n'écrit son journal que par blocs de 4 Ko. La
+# transcription retarde alors sur la session, et un conteneur détruit
+# brutalement emporte le bloc non vidé -- c'est-à-dire l'activité la plus
+# récente, précisément celle qui compte.
+#
+# --output-limit : la transcription écrit sur le disque du worker ce que le
+# joueur voit passer. Sans borne, un « yes » suffirait à saturer la couche
+# inscriptible du conteneur. 32 Mo est hors d'atteinte d'une session normale
+# (quelques kilooctets) ; les atteindre relève de l'abus.
 if [ -n "$CMD" ]; then
-    exec script --quiet --return \
+    exec script --quiet --return --flush --output-limit 32M \
         --log-out "$OUT" --log-timing "$TIMING" \
         --command "$CMD"
 else
-    exec script --quiet --return \
+    exec script --quiet --return --flush --output-limit 32M \
         --log-out "$OUT" --log-timing "$TIMING"
 fi
 
