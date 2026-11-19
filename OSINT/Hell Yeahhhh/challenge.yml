@@ -1,0 +1,70 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Hell Yeahhhh ! 🤘"
+category: OSINT
+description: |-
+    Alerte générale ! 🚨 Un intrus s'est introduit sur le serveur de la CyberNight 👀 
+
+    Le suspect est accusé d'avoir hacké les enceintes de l'EFREI pour mettre en boucle le dernier album de Muse. (En vrai c'est tellement un banger que ça devrait pas être puni mais bon...)
+
+    C'est désormais votre devoir d'arrêter ce dangereux fanatique du métal ! La dernière fois que nous avons croisé sa route était, vous vous en doutez, lors d'un concert...
+
+    Il avait pris une photo où on identifiait clairement son visage, sauf que notre stagiaire l'a perdue ! (Pfff, les jeunes de nos jours...)
+
+    Aide-nous à rattraper cette bêtise en retrouvant la fameuse photo et nous dire quelle chanson il écoutait à ce moment-là ainsi que le bloc où il était assis lors de ce concert.
+
+    ----
+
+
+
+
+    Format : `CYBN{B12_Bohemian-Rhapsody}`
+attribution: "Gaël / Doryan"
+
+flags:
+    - {
+        type: "static",
+        content: "CYBN{E09_Mr-Jack}",
+        data: "case_insensitive",
+    }
+
+    - {
+        type: "static",
+        content: "CYBN{E9_Mr-Jack}",
+        data: "case_insensitive",
+    }
+    - {
+        type: "static",
+        content: "CYBN{E09_Mr.-Jack}",
+        data: "case_insensitive",
+    }
+    - {
+        type: "static",
+        content: "CYBN{E9_Mr.-Jack}",
+        data: "case_insensitive",
+    }
+
+
+tags:
+    - Hard
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+requirements:
+  - "Bienvenue !"
