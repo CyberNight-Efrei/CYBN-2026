@@ -66,6 +66,3 @@ jobs:
 
       - name: Install new challenges
         run: bash ./CLI_ALL.sh install
-
-      - name: Sync challenges
-        run: bash ./CLI_ALL.sh sync
