@@ -21,7 +21,7 @@ description: |-
   elle affiche juste un message étrange. Est-ce qu'on peut récupérer un ticket ?
 
   Format : `CYBN{...}`
-attribution: "Crumble"
+attribution: "libéreziT4!"
 
 flags:
     - {
