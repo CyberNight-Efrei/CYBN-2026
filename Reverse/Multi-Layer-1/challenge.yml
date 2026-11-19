@@ -4,7 +4,7 @@ type: dynamic
 extra:
   initial: 500
   decay: 30
-  minimum: 100
+  minimum: 50
 
 state: visible
 

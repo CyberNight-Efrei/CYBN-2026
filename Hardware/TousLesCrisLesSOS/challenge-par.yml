@@ -8,7 +8,7 @@ type: queue
 extra:
   initial: 500
   decay: 30
-  minimum: 100
+  minimum: 50
   function: logarithmic        # static, linear ou logarithmic
   queue_mode: manual           # manual ou automatic
   batch_size: 1                # Participants sélectionnés par tour
