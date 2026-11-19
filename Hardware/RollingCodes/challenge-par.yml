@@ -15,7 +15,7 @@ extra:
   interval_seconds: 3600        # Intervalle entre les tours, en secondes
   show_position: true          # Afficher la position dans la file
   show_eta: true               # Afficher une estimation d'attente
-  selected_message: "C'est à ton tour ! Tu peux maintenant venir en **salle XXX**."
+  selected_message: "C'est à ton tour ! Tu peux maintenant venir en **salle A106**."
 
 # </============ NE PAS TOUCHER ============>
 
