@@ -7,7 +7,7 @@
 
 #define MORSE_GPIO GPIO_NUM_2
 
-#define MORSE_DELAY 50
+#define MORSE_DELAY 10
 
 #define FLAG "C3_S01R_0N_M4NG3_DU_R1Z"
 
