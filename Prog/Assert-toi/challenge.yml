@@ -56,9 +56,4 @@ state: visible
 
 # <============ OPTIONAL ============>
 
-hints:
-  - title: Par où commencer ?
-    content: "Le manuel de référence Lua 5.4, section 2.4 « Metatables and Metamethods », liste tout ce dont tu as besoin."
-    cost: 0
-
 version: "3.0"
