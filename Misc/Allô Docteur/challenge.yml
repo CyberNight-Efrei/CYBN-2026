@@ -1,0 +1,58 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+# Choisir UN seul type : dynamic, dynamic_docker ou queue
+type: dynamic
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Allô Docteur ?"
+category: Misc
+
+description: |- 
+  On vous a fait venir dans l'espoir de déchiffrer un message venant d'une civilisation lointaine.
+  Heureusement, votre hiérarchie a mis à disposition un guide sur lequel vous pouvez vous reposer pour accomplir cette tâche.
+  Votre supérieur vous mets en garde, il a déja vu ce genre de dessins, mais il affirme ne jamais avoir vu certains de ces symboles !
+  Alors concentrez vous sur l'essentiel, faites confiance au guide, et restituez le message **exactement** tel qu'il est écrit.
+
+  guide : https://shermansplanet.com/gallifreyan/guide.pdf
+  
+  Format : `CYBN{Wibbly-Wobbly-Crypto-Stuff?}`
+
+attribution: "eleforester"
+
+flags:
+  # A static case sensitive flag
+  - CYBN{Time-Lords-Krakk-Kodes!}
+
+tags:
+  - Medium
+
+requirements:
+  - Bienvenue ! # NE PAS TOUCHER - Ajouter si nécessaire
+
+state: visible   # passer à "visible" quand le chall est prêt
+
+
+# </============ REQUIRED ============>
+
+
+# Only files provided to challengers.
+# NO directories, accept archives (.zip, .7z, .tgz)
+files:
+  - src/chall.png
+
+# Hints are optional.
+# Accepts dictionaries or strings.
+hints:
+  - title: Hint 1
+    content: Le langage suit quelques règles précises, faites attention aux endpoints et aux subtilités mentionées dans le guide.
+    cost: 10
+

@@ -1,0 +1,55 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# <============ NE PAS TOUCHER ============>
+value: 500
+type: dynamic
+
+extra:
+    initial: 500
+    decay: 30
+    minimum: 100
+
+state: visible
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "L'ultime bafouille'"
+category: OSINT
+description: |-
+    J'ai rendu visite à mon oncle il y a peu, et il m'a conté cette histoire :
+
+    "Il y a fort fort longtemps, en 2010, le journal de l'école ReName a eu un scoop ! Une interview EXCLUSIVE d'un "dinosaure" de l'EFREI, un professeur émérite bien connu des étudiants.
+
+    Moi, je l'aimais bien ce monsieur, mais je n'ai jamais retrouvé l'article et je ne parviens pas à remettre le doigt sur le nom du professeur. Eh oui, la mémoire, c’est comme les vieux serveurs : ça finit par perdre des données !
+
+    Toutefois, s'il y a bien une chose que je n'ai pas oublié, c'est son mot de la fin. Il avait cité une grande figure, et cette citation m’a marqué au point de me suivre pendant toutes ces années.
+
+    Si tu pouvais me retrouver cette interview, ça me rafraîchirais sûrement la mémoire !"
+
+    Je suis toujours fasciné par les histoires de mon oncle, alors aide-moi à retrouver cette fameuse interview pour avoir l'origine du proverbe cité en conclusion et identifier la personne qui l’a repris dans sa propre formule.
+
+    ----
+
+
+
+
+    Format : `CYBN{Italie_Einstein}`
+attribution: "Gaël / Doryan"
+
+flags:
+    - {
+        type: "static",
+        content: "CYBN{Corse_Nietzsche}",
+        data: "case_insensitive",
+    }
+
+tags:
+    - Intro
+# </============ REQUIRED ============>
+
+
+# <============ OPTIONAL ============>
+
+requirements:
+  - "Bienvenue !"

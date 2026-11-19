@@ -27,7 +27,7 @@ description: |-
 
   Format : `CYBN{chernarus_volontaires_wait}`
 
-attribution: "Gabriel S.G"
+attribution: "eleforester"
 
 flags:
   # A static case sensitive flag

@@ -17,27 +17,17 @@ state: visible
 name: "Le Loup de Wallet Street"
 category: OSINT
 description: |-
-    Bonjour, je suis Médéric de Garclass, et j’adore l’argent. Du coup comme j’adore l’argent et surtout en recevoir, j’utilise pour cela une adresse crypto Ethereum.
+    Le Loup de Wallet Street
+    Je vous écrit ce message en soutien à mon ami Médéric, une personne honnête, pleine de mérite, qui a été victime d'une arnaque de transaction. Aide Médéric en répondant à sa demande vidéo (#JeSoutiensMédéricEtSonPatrimoine) :
 
-    Hier, pour mon anniversaire, j’ai reçu d’une personne anonyme visiblement bien généreuse un cadeau d’environ 1 ETH sur l'adresse `0x6ccAd24f4971bC1E91849F5C5D3b306a551833Fb`, via la transaction `0xc67729dc8b925ebb5292c348f67ba54a9474bef8762fbe1a65632746259bad58`. 
-
-    Bon, j’ai beau aimer l’argent, je n’ai pas envie de devenir le dindon de la farce (sauf quand il s’agit d’en manger pour mon anniversaire bien entendu)… Le montant me paraît trop généreux pour être honnête et semble venir d'un token Ethereum ! 
-
-    Alors avant de toucher au pactole, je veux être certain qu'il ne vient pas d'une activité douteuse. Les fonds sont passés par FixedFloat, un service d'échange qui permet de convertir une crypto en une autre. Le problème est que l'historique de l'adresse est énorme. 
-
-    J'ai demandé à John Cyberneuille, et entre deux maintenances système ils m'a dit qu'il existait des filtres notamment d'origine, de date, de valeur. Mais je ne comprends riennnnnn à comment m'en servir. 
-
-    Aide-moi à remonter la piste (car certes j’aime bien prendre de l’argent aux autres, mais pas question que ça m’arrive !), pour savoir quelle est l'adresse d'où provenaient les fonds avant d'entrer dans FixedFloat. 
-
-    Remarque: Les principaux explorer de blockchain demandent un compte pour utiliser les filtres.
-
+    https://www.youtube.com/watch?v=qS5AgZGJexk
 
     ----
 
 
 
 
-    Format : `CYBN{adresse}`
+    Format : `CYBN{adresseOrigine}`
 attribution: "Gaël / Doryan"
 
 flags:
