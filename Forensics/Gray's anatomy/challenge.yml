@@ -1,0 +1,57 @@
+# <============ NE PAS TOUCHER ============>
+value: 500
+# </============ NE PAS TOUCHER ============>
+
+# Choisir UN seul type : dynamic, dynamic_docker ou queue
+type: dynamic
+
+# <============ NE PAS TOUCHER ============>
+extra:
+  initial: 500
+  decay: 30
+  minimum: 100
+# </============ NE PAS TOUCHER ============>
+
+# <============ REQUIRED ============>
+name: "Gray's anatomy"
+category: Forensics
+
+description: |-
+  Je me suis rendu compte aujourd'hui que les accès RDP étaient encore ouverts sur ma machine. Le mec du support l'a jamais coupé.
+  
+  Comment je le sais ? Mon équipe sécu à identifié des alertes sur mon ordi, donc j'imagine bien que c'était la porte ouverte aux petits malins :)
+  
+  On va vérifier ensemble si l'équipe sécu à bien trouver tout ce qu'il s'est passé. Heureusement qu'on exporte tous les logs hehe
+  
+  ---
+  
+  Identifie, dans le cadre de la compromission du poste de travail :
+  
+  - L'IP source de la connexion interactive malveillante
+  - Le chemin complet du fichier malveillant déposé
+  - Le nom donné à la persistance
+  - L'IP du serveur malveillant
+  
+  Format : `CYBN{10.0.2.12_C:\ProgramData\fichier.txt_NomPersitance_192.168.45.123}`
+
+attribution: "NozZy"
+
+
+flags:
+  # A static case sensitive flag
+  - CYBN{192.168.52.1_C:\Users\Public\Music\784dcff34b5a4c06b3dd8c729cf2243c\7639839a5e4a4511b93bb9ed654c2919.ps1_FirefoxUpdater_172.20.101.12}
+  - CYBN{192.168.52.1_C:\Users\Public\Music\784dcff34b5a4c06b3dd8c729cf2243c\7639839a5e4a4511b93bb9ed654c2919.ps1_\FirefoxUpdater_172.20.101.12}
+
+tags:
+  - Medium
+
+requirements:
+  - Bienvenue ! # NE PAS TOUCHER - Ajouter si nécessaire
+
+state: visible   # passer à "visible" quand le chall est prêt
+
+connection_info: "https://graylog.cybn.fr/ | cybn : cybernight"
+
+
+# Specifies the version of the challenge specification.
+version: "3.0"
