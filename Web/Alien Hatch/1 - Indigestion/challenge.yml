@@ -7,7 +7,7 @@ type: dynamic_docker
 # <============ NE PAS TOUCHER ============>
 extra:
   initial: 500
-  decay: 42
+  decay: 15
   minimum: 100
 # </============ NE PAS TOUCHER ============>
 

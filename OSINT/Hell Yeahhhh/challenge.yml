@@ -1,4 +1,4 @@
-# This file represents the base specification of your challenge. It is used by
+﻿# This file represents the base specification of your challenge. It is used by
 # other tools to install and deploy your challenge.
 
 # <============ NE PAS TOUCHER ============>
@@ -7,25 +7,25 @@ type: dynamic
 
 extra:
     initial: 500
-    decay: 30
+    decay: 15
     minimum: 100
 
 state: visible
 # </============ NE PAS TOUCHER ============>
 
 # <============ REQUIRED ============>
-name: "Hell Yeahhhh ! 🤘"
+name: "Hell Yeahhhh ! ðŸ¤˜"
 category: OSINT
 description: |-
-    Alerte générale ! 🚨 Un intrus s'est introduit sur le serveur de la CyberNight 👀 
+    Alerte gÃ©nÃ©rale ! ðŸš¨ Un intrus s'est introduit sur le serveur de la CyberNight ðŸ‘€ 
 
-    Le suspect est accusé d'avoir hacké les enceintes de l'EFREI pour mettre en boucle le dernier album de Muse. (En vrai c'est tellement un banger que ça devrait pas être puni mais bon...)
+    Le suspect est accusÃ© d'avoir hackÃ© les enceintes de l'EFREI pour mettre en boucle le dernier album de Muse. (En vrai c'est tellement un banger que Ã§a devrait pas Ãªtre puni mais bon...)
 
-    C'est désormais votre devoir d'arrêter ce dangereux fanatique du métal ! La dernière fois que nous avons croisé sa route était, vous vous en doutez, lors d'un concert...
+    C'est dÃ©sormais votre devoir d'arrÃªter ce dangereux fanatique du mÃ©tal ! La derniÃ¨re fois que nous avons croisÃ© sa route Ã©tait, vous vous en doutez, lors d'un concert...
 
-    Il avait pris une photo où on identifiait clairement son visage, sauf que notre stagiaire l'a perdue ! (Pfff, les jeunes de nos jours...)
+    Il avait pris une photo oÃ¹ on identifiait clairement son visage, sauf que notre stagiaire l'a perdue ! (Pfff, les jeunes de nos jours...)
 
-    Aide-nous à rattraper cette bêtise en retrouvant la fameuse photo et nous dire quelle chanson il écoutait à ce moment-là ainsi que le bloc où il était assis lors de ce concert.
+    Aide-nous Ã  rattraper cette bÃªtise en retrouvant la fameuse photo et nous dire quelle chanson il Ã©coutait Ã  ce moment-lÃ  ainsi que le bloc oÃ¹ il Ã©tait assis lors de ce concert.
 
     ----
 
@@ -33,7 +33,7 @@ description: |-
 
 
     Format : `CYBN{B12_Bohemian-Rhapsody}`
-attribution: "Gaël / Doryan"
+attribution: "GaÃ«l / Doryan"
 
 flags:
     - {
