@@ -1,170 +1,79 @@
-# Résolution du challenge — Alicia au pays des miracles
+En se connectant au serveur, rien de notable n'apparait. Aucune vraie note exploitable, pas de présence de ``sudo``.
 
-Ce document décrit la résolution depuis le début, avec les commandes à exécuter et le rôle de chacune.
+En revanche, en regardant les process à l'aide de la commande ``ps``, par exemple avec les arguments `ps aux`, on voit le peu de processus en train de fonctionner sur le serveur :
+![img.png](img.png)
 
-> Les commandes ci-dessous supposent que le service RabbitMQ Management écoute dans le conteneur du challenge sur `127.0.0.1:15672`, que le vhost est `/` et que la file recherchée s'appelle `root`.
+Beaucoup de termes indiquent un service appelé ``rabbitmq``, cohérent avec la référence du Lapin de Alice au Pays des Merveilles du titre.
 
-## 1. Se connecter au challenge en SSH
+Internet nous apprendra que ``rabbitmq`` est un service permettant de gérer des données en fil d'attente (queue). En gros y'a de la donnée contenue dedans.
 
-Depuis ta machine, utilise l'adresse et le port SSH fournis par la plateforme CTF :
+On tente des commandes ``rabbit``, mais rien n'existe.
 
+Sur internet, on peut chercher qu'il existe une API avec laquelle intéragir sur ce service, but you may observe that :
 ```bash
-ssh -p <PORT_SSH> alicia@<ADRESSE_DU_SERVEUR>
+alicia@e64c309e88ad:~$ curl
+bash: curl: command not found
+alicia@e64c309e88ad:~$ wget
+bash: wget: command not found
+alicia@e64c309e88ad:~$ python3
+bash: /usr/bin/python3: Permission denied
 ```
 
-Dans la configuration de développement fournie, l'utilisateur indiqué est `alicia` et le mot de passe est `miracle`. Les identifiants réellement utilisables sont ceux configurés pour l'instance déployée.
+Ce qui est pas mal chiant.
 
-Vérifier l'identité et les permissions :
-
+On vérifie les configurations du serveur :
 ```bash
-whoami
-id
+alicia@e64c309e88ad:~$ cat /etc/rabbitmq/rabbitmq.conf
+listeners.tcp.default = 127.0.0.1:5672
+management.tcp.ip = 127.0.0.1
+management.tcp.port = 15672
+loopback_users.guest = true
 ```
 
-## 2. Vérifier que l'API HTTP de RabbitMQ répond
+Le service est alors exposé sur le port 5672, mais uniquement en localhost. Une seconde API de management existe aussi sur le port 15672.
 
+Analysons : 
+- localhost uniquement, impossible d'y accéder en dehors de la VM
+- pas de client local dans la VM, donc impossible d'accéder facilement à l'API
+- j'ai la flemme de faire ça en ``bash``
+
+On va donc chercher à résoudre le premier problème : faire sauter la limitation à localhost, grâce au concept de **port forwarding**
+
+Le protocole SSH permet de rediriger les ports ouverts localement sur le système cible, pour le rediriger vers le système source.
+
+Pour ce faire, utilisons le paramètre ``-L`` en se connectant, de telle sorte que : `-L <port_local>:<hote_distant>:<port_distant>`
+Donc par exemple :
 ```bash
-curl -sS -u guest:guest \
-  http://127.0.0.1:15672/api/overview
+ssh alicia@challenges.cybn.fr -p 10111 -L 15672:localhost:15672
 ```
 
-RabbitMQ crée généralement un utilisateur par défaut `guest` avec le mot de passe `guest`. Par défaut, cet utilisateur est limité aux connexions locales. Ici, la requête vise `127.0.0.1` depuis le conteneur lui-même, ce qui explique l'utilisation de `guest:guest`.
+Une fois connecté, on peut ouvrir ``localhost:15672`` dans un navigateur par exemple :
+![img_1.png](img_1.png)
 
-Si cette commande renvoie `401 Unauthorized`, l'authentification n'est pas acceptée. Si elle renvoie `Connection refused`, l'API Management n'écoute pas à cette adresse ou le service n'est pas disponible.
-
-## 3. Lister les files d'attente du vhost `/`
-
+Désormais, besoin de se connecter.
+Mais fort heuresement, dans la configuration on a vu : 
 ```bash
-curl -sS -u guest:guest \
-  'http://127.0.0.1:15672/api/queues/%2F'
+loopback_users.guest = true
 ```
 
-`%2F` est l'encodage URL du nom de vhost `/`. Dans la réponse JSON, repérer la file appelée `root`.
+Petite recherche internet, et on trouve que cela active le compte ``guest:guest``. Suffit de s'y connecter du coup.
 
-Pour afficher les noms des files avec Python 3, si disponible :
+Ensuite, on cherche la donnée, dans les "queues" :
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+![img_4.png](img_4.png)
 
+On voit un petit password intéressant : ``IsItARootPasswordISee???``
+
+Comme indiqué dans le contenu, c'est probablement le moit de passe du compte ``root``. On test, et comme par magie, ça marche :)
 ```bash
-curl -sS -u guest:guest \
-  'http://127.0.0.1:15672/api/queues/%2F' \
-  | python3 -c 'import json,sys; [print(q["name"], "messages=", q.get("messages"), "ready=", q.get("messages_ready")) for q in json.load(sys.stdin)]'
+alicia@e64c309e88ad:~$ su root
+Password:
+root@e64c309e88ad:/home/alicia# cd
+root@e64c309e88ad:~# ls
+flag.txt
+root@e64c309e88ad:~# cat flag.txt
+CYBN{Th3_Wh1te_R4Bb17_i5_CréT1n}
 ```
 
-## 4. Consulter les informations de la file `root`
-
-```bash
-curl -sS -u guest:guest \
-  'http://127.0.0.1:15672/api/queues/%2F/root'
-```
-
-Cette réponse donne notamment le nombre de messages dans la file. Si RabbitMQ renvoie `queue_not_found`, la file `root` n'existe pas dans ce vhost sur cette instance : vérifie que l'image et le script d'entrée du challenge ont bien été reconstruits et redéployés.
-
-## 5. Lire la payload de la file sans la retirer
-
-```bash
-curl -sS -u guest:guest \
-  -H 'content-type: application/json' \
-  -X POST \
-  'http://127.0.0.1:15672/api/queues/%2F/root/get' \
-  -d '{"count":5,"ackmode":"ack_requeue_true","encoding":"auto","truncate":50000}'
-```
-
-La réponse est un tableau JSON. Le champ `payload` contient le texte du message. Le paramètre `ackmode: ack_requeue_true` demande à RabbitMQ de remettre les messages lus dans la file, ce qui évite de les consommer définitivement.
-
-Pour afficher seulement les valeurs du champ `payload` (nécessite Python 3) :
-
-```bash
-curl -sS -u guest:guest \
-  -H 'content-type: application/json' \
-  -X POST \
-  'http://127.0.0.1:15672/api/queues/%2F/root/get' \
-  -d '{"count":5,"ackmode":"ack_requeue_true","encoding":"auto","truncate":50000}' \
-  | python3 -c 'import json,sys; [print(m.get("payload", "")) for m in json.load(sys.stdin)]'
-```
-
-La payload configurée pour ce challenge est :
-
-```text
-IsItARootPasswordISee???
-```
-
-## 6. Utiliser la payload comme mot de passe root
-
-Quitter éventuellement le shell courant, puis, depuis le shell `alicia`, lancer :
-
-```bash
-su - root
-```
-
-Lorsque le mot de passe est demandé, saisir :
-
-```text
-IsItARootPasswordISee???
-```
-
-Vérifier que le changement d'utilisateur a réussi :
-
-```bash
-whoami
-id
-```
-
-La commande `whoami` doit afficher `root` si l'élévation de privilèges a réussi.
-
-## 7. Rechercher le flag
-
-Commencer par examiner le répertoire root :
-
-```bash
-ls -la /root
-find /root -maxdepth 3 -type f -print 2>/dev/null
-```
-
-Rechercher ensuite les fichiers dont le nom contient `flag` :
-
-```bash
-find / -type f -iname '*flag*' 2>/dev/null
-```
-
-Pour rechercher une chaîne de flag typique dans les emplacements courants :
-
-```bash
-grep -R --binary-files=without-match -n 'CYBN{' \
-  /root /home /opt /var 2>/dev/null
-```
-
-Lire le fichier identifié avec `cat`, par exemple :
-
-```bash
-cat /chemin/du/fichier_trouvé
-```
-
-Remplacer `/chemin/du/fichier_trouvé` par le chemin réellement obtenu avec `find` ou `grep`.
-
-## 8. Dépannage rapide
-
-### L'API ne répond pas
-
-```bash
-curl -i -u guest:guest http://127.0.0.1:15672/api/overview
-```
-
-Vérifier que RabbitMQ est démarré et que le plugin Management est activé dans l'image du challenge.
-
-### La file `root` est introuvable
-
-```bash
-curl -sS -u guest:guest 'http://127.0.0.1:15672/api/queues/%2F'
-curl -sS -u guest:guest 'http://127.0.0.1:15672/api/queues/%2F/root'
-```
-
-Confirmer que la file est créée dans le vhost `/` et que le conteneur exécute la version attendue de `entrypoint.sh`.
-
-### La lecture renvoie un tableau vide
-
-La file existe mais ne contient alors aucun message prêt à être lu. Vérifier les journaux du conteneur et que la fonction d'initialisation publie bien la payload après avoir créé la file.
-
----
-
-## Référence technique
-
-Ces commandes utilisent l'API HTTP de RabbitMQ : `GET /api/overview`, `GET /api/queues/%2F`, `GET /api/queues/%2F/root` et `POST /api/queues/%2F/root/get`. Documentation : <https://www.rabbitmq.com/docs/http-api-reference>.
+> CYBN{Th3_Wh1te_R4Bb17_i5_CréT1n}

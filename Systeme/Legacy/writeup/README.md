@@ -1,8 +1,29 @@
-un serveur FTP en écriture permet alors d'écrire des fichiers dans le dossier utilisateur
+Le serveur web permet de lire et écrire des fichiers dans le dossier courant.
 
-on va donc pouvoir écrire une clé SSH, et cela permettra de s'y connecter, puisque le serveur refuse les mots de passe
+On tente de lire un fichier commun, et on apprend que l'on se situe dans le dossier ``/home/app``
+![img.png](img.png)
 
-on peut alors naviguer dans les dossiers de l'application, et rencontrer le mot de passe root dans le fichier ``/opt/Application/config.ini``
+En parallèle, si l'on tente de se connecter au service SSH, on obtient cette erreur :
+```bash
+app@challenges.cybn.fr: Permission denied (publickey).
+```
+
+Le serveur n'accepte que des **clés publiques**.
+
+Les deux infos ensemble assopciées : et si on lisait les clés du compte ``app``, dans le fichier `/home/app/.ssh/authorized_keys` (soit `.ssh/authorized_keys`)
+![img_1.png](img_1.png)
+
+On voit bien qu'une clé existe, mais on ne la possède pas.
+Le bloc-note est en écriture, on peut alors la remplacer ou simplement ajouter la notre :
+![img_2.png](img_2.png)
+
+Une fois bien ajouté, on retente de se connecter au serveur :
+```bash
+ssh app@challenges.cybn.fr -p 10207
+app@016598c631aa:~$
+```
+
+On peut alors naviguer dans les dossiers de l'application `/opt/Application`, comme indique dans le fichier `note.txt`, et rencontrer le mot de passe root dans le fichier ``/opt/Application/config.ini``
 
 Grâce à ce dernier, on peut se connecter au compte ``root`` et lire le flag :
 
@@ -10,7 +31,6 @@ Grâce à ce dernier, on peut se connecter au compte ``root`` et lire le flag :
 cat /root/flag.txt
 CYBN{AtT3nT10n_@_JuL13_l4_RH}
 ```
-
 
 ---
 
