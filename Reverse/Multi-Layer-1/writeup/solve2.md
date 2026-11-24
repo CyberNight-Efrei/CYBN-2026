@@ -7,7 +7,7 @@ But following a bit the functions you easily find
 
 xored flag is bytes_20F0 
 xor key is bytes 2104
-
+```
 >>> import pwn
 >>> xored_flag= [
 ...   25, 154, 85, 208, 33, 187, 120, 236, 119, 174, 
@@ -16,3 +16,4 @@ xor key is bytes 2104
 >>> xor_key=[90, 195,  23, 158]
 >>> pwn.xor(xored_flag,xor_key)
 b'CYBN{xor-m3-t0-z3r0}'
+```
