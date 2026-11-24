@@ -1,5 +1,7 @@
 # Rolling Codes Writeup
 
+## Intended
+
 On remarque que les codes sont générés avec ce PRNG :
 https://github.com/avrdudes/avr-libc/blob/main/libc/stdlib/random.c
 
@@ -18,3 +20,11 @@ pair CC:DB:A7:2D:E0:6A
 > pin 5935
 python wu.py
 ```
+
+## Unintended
+
+L'état du PRNG se reset à chaque reboot. On peut donc démarrer l'ESP32, obtenir code1, obtenir code2, redémarrer l'ESP32, obtenir code1, envoyer code2, et voilà !
+
+CWE-337 (Predictable Seed in Pseudo-Random Number Generator)
+
+(merci à ThaySan pour cette remarque)
