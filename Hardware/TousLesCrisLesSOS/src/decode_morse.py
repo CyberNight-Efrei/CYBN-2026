@@ -20,11 +20,11 @@ if BAUD == 0:
     sys.exit(1)
 
 if POINT == 0:
-    print("Please set POINT in seconds")
+    print("Please set POINT in ms")
     sys.exit(1)
 
 if TRAIT == 0:
-    print("Please set TRAIT in seconds")
+    print("Please set TRAIT in ms")
     sys.exit(1)
 
 if PAUSE_SYMBOLE == 0:

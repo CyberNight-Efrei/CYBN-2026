@@ -1,17 +1,19 @@
 #include <stdint.h>
 #include <string.h>
-#include <stdbool.h>
 #include "freertos/FreeRTOS.h"
 #include "esp_log.h"
 #include "esp_bt.h"
 #include "esp_bt_main.h"
 #include "esp_gap_bt_api.h"
 #include "esp_spp_api.h"
+#include "nvs.h"
+#include "nvs_flash.h"
 
 #include "rolling_codes.h"
 #include "crypto.h"
 
 #define FLAG "CYBN{la_stack_bluetooth_etait_galere_a_implementer_mdr}"
+#define SEED 0x81b5d610
 
 #define SPP_TAG "ROLLING_CODES"
 #define SPP_SERVER_NAME "ROLLING_CODES_SERVER"
@@ -41,6 +43,7 @@ static enum conn_status_t {
 } conn_status = NOT_CONNECTED;
 
 static uint32_t conn_handle;
+static nvs_handle_t nvs_page_handle;
 
 static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
@@ -79,6 +82,10 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
             conn_handle = param->open.handle;
             uint32_t p = previous_code;
             previous_code = next_code();
+
+            ESP_ERROR_CHECK(nvs_set_u32(nvs_page_handle, "seed", p));
+            ESP_ERROR_CHECK(nvs_commit(nvs_page_handle));
+
             esp_spp_write(param->open.handle, sizeof(p), (uint8_t *)(&p));
             ESP_LOGI(SPP_TAG, "Handle %d connected", conn_handle);
             ESP_LOGI(SPP_TAG, "Initializing auth. p: %x", p);
@@ -170,7 +177,21 @@ esp_err_t rolling_codes_init(char name[], uint8_t name_length)
 {
     memcpy(local_device_name, name, name_length);
 
-    code_init();
+    ESP_ERROR_CHECK(nvs_open("settings", NVS_READWRITE, &nvs_page_handle));
+
+    uint32_t seed;
+
+    esp_err_t err = nvs_get_u32(nvs_page_handle, "seed", &seed);
+
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        seed = SEED;
+        ESP_ERROR_CHECK(nvs_set_u32(nvs_page_handle, "seed", seed));
+        ESP_ERROR_CHECK(nvs_commit(nvs_page_handle));
+    } else {
+        ESP_ERROR_CHECK(err);
+    }
+
+    code_init(seed);
     previous_code = next_code();
 
     esp_err_t ret;

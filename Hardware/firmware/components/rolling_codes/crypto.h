@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void code_init();
+void code_init(uint32_t seed);
 
 uint32_t next_code();
 

@@ -1,11 +1,14 @@
 #include <Arduino.h>
+#include <EEPROM.h>
 
-#define SEED 0x0
+#define SEED 0x1
 #define KEY 0x0
 #define ROUNDS 3431937419U
 #define FLAG "CYBN{NOT_A_FLAG}"
 
 #define BT_STATE_PIN 2
+#define SEED_INIT_ADDRESS 0
+#define SEED_ADDRESS 1
 
 static enum conn_status_t {
     NOT_CONNECTED,
@@ -34,7 +37,19 @@ void setup()
     Serial.print("AT+NAMECYBERNIGHT-SMARTLOCK");
     Serial.flush();
 
-    randomSeed(SEED);
+    uint8_t seed_init;
+    uint32_t seed;
+    EEPROM.get(SEED_INIT_ADDRESS, seed_init);
+    if (seed_init != 0)
+    {
+        EEPROM.get(SEED_ADDRESS, seed);
+    }
+    else
+    {
+        seed = SEED;
+        EEPROM.put(SEED_INIT_ADDRESS, (uint8_t)1)
+    }
+    randomSeed(seed);
 
     // Simulate some codes
     for (uint32_t i = 0; i < ROUNDS; i++)
@@ -64,6 +79,7 @@ void loop()
         break;
     case NOT_AUTHENTICATED:
         Serial.write((uint8_t *)&code, sizeof(code));
+        EEPROM.put(SEED_ADDRESS, code);
         code = random() ^ KEY;
         conn_status = WAITING_FOR_CODE;
         break;

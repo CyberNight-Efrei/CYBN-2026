@@ -38,10 +38,9 @@
 #define RANDOM_MAX 0x7fffffffL
 
 #define KEY 0x7fff00
-#define SEED 0x81b5d610
 #define ROUNDS 67
 
-static long do_random(unsigned long *ctx)
+static long do_random(uint32_t *ctx)
 {
     /*
      * Compute x = (7^5 * x) mod (2^31 - 1)
@@ -51,7 +50,7 @@ static long do_random(unsigned long *ctx)
      * Park and Miller, Communications of the ACM, vol. 31, no. 10,
      * October 1988, p. 1195.
      */
-    long hi, lo, x;
+    int32_t hi, lo, x;
 
     x = *ctx;
     /* Can't be initialized with 0, so use another value. */
@@ -62,24 +61,24 @@ static long do_random(unsigned long *ctx)
     x = 16807L * lo - 2836L * hi;
     if (x < 0)
         x += 0x7fffffffL;
-    return ((*ctx = x) % ((unsigned long)RANDOM_MAX + 1));
+    return ((*ctx = x) % ((uint32_t)RANDOM_MAX + 1));
 }
 
-static unsigned long next = 1;
+static uint32_t next = 1;
 
-static long random(void)
+static int32_t random(void)
 {
     return do_random(&next);
 }
 
-static void srandom(unsigned long seed)
+static void srandom(uint32_t seed)
 {
     next = seed;
 }
 
-void code_init()
+void code_init(uint32_t seed)
 {
-    srandom(SEED);
+    srandom(seed);
     // because why not
     for (uint8_t i = 0; i < ROUNDS; i++)
     {
